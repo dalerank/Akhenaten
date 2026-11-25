@@ -1,4 +1,5 @@
 #include "building_burning_ruin.h"
+#include "city/city_maintenance.h"
 #include "core/xvalue.h"
 
 #include "game/undo.h"
@@ -146,7 +147,7 @@ bool building_burning_ruin::update() {
         return false;
     }
 
-    const int fire_spread_direction = g_city.maintenance.fire_spread_direction;
+    const int fire_spread_direction = city_maintenance().fire_spread_direction;
     int dir1 = ((fire_spread_direction - 1) + 8) % 8;
     int dir2 = (fire_spread_direction + 1) % 8;
 

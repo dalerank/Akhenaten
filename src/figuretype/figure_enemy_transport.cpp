@@ -1,4 +1,5 @@
 #include "figure_enemy_transport.h"
+#include "city/city_maintenance.h"
 
 #include "city/city.h"
 #include "city/city_buildings.h"
@@ -248,7 +249,7 @@ void figure_enemy_transport::action_go_to_landing() {
         } else if (map_terrain_is(land, TERRAIN_BUILDING | TERRAIN_CANAL | TERRAIN_WALL | TERRAIN_GATEHOUSE)) {
             building* b = building_at(land);
             if (b && b->id) {
-                g_city.maintenance.destroy_by_enemy(b);
+                city_maintenance().destroy_by_enemy(b);
             }
         }
         unload(land);

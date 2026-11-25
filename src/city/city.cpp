@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_maintenance.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
@@ -83,7 +84,7 @@ city_t g_city;
 events::typed_queue g_city_events;
 
 static void city_subscribe_events() {
-    g_city.maintenance.subscribe_events();
+    city_maintenance_t::subscribe_events();
     g_city.resource.subscribe_events();
     g_city.food_supply.subscribe_events();
     city_finance_t::subscribe_events();
@@ -103,7 +104,6 @@ void city_t::init() {
     zero_fill(houses);
     zero_fill(military);
     zero_fill(industry);
-    zero_fill(maintenance);
     zero_fill(resource);
     zero_fill(food_supply);
     zero_fill(map);

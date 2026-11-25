@@ -14,7 +14,6 @@
 #include "grid/point.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
-#include "city/city_maintenance.h"
 #include "building/building_house_demands.h"
 
 struct empire_city;
@@ -25,7 +24,6 @@ struct city_t {
     house_demands houses;
     city_military_t military;
     city_industry_t industry;
-    city_maintenance_t maintenance;
 
     city_resources_t resource;
     city_food_supply_t food_supply;

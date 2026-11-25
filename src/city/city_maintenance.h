@@ -23,10 +23,13 @@ struct city_maintenance_t {
     void collapse_building(building *b);
     void flood_building(building *b);
     void destroy_by_enemy(building *b);
-    void subscribe_events();
+    static void subscribe_events();
+    void reset();
     void check_kingdome_access();
     void update_fire_direction();
     void update_burning_ruins();
 
     int find_nearest_enemy_formation(tile2i tile);
 };
+
+city_maintenance_t& city_maintenance();

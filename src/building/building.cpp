@@ -2,6 +2,7 @@
 #include "io/gamefiles/lang.h"
 #include "game/sound_effect.h"
 #include "city/building_index.h"
+#include "city/city_maintenance.h"
 
 #include <new>
 

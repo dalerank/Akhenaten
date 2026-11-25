@@ -1,4 +1,5 @@
 #include "scenario_invasion.h"
+#include "city/city_maintenance.h"
 #include "city/city_kingdome_relations.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -778,7 +779,7 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
     } else if (map_terrain_is(invasion_tile, TERRAIN_BUILDING | TERRAIN_CANAL | TERRAIN_GATEHOUSE | TERRAIN_WALL)) {
         building* b = building_at(invasion_tile);
         if (b && b->id) {
-            g_city.maintenance.destroy_by_enemy(b);
+            city_maintenance().destroy_by_enemy(b);
         }
     }
 

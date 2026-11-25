@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_maintenance.h"
 #include "grid/desirability_chunks.h"
 
 #include "building/building_road.h"
@@ -99,7 +100,7 @@ static void __test_map_routing_update_water() {
 ANK_FUNCTION(__test_map_routing_update_water);
 
 static void __test_check_kingdome_access() {
-    g_city.maintenance.check_kingdome_access();
+    city_maintenance().check_kingdome_access();
 }
 ANK_FUNCTION(__test_check_kingdome_access);
 

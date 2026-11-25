@@ -1,4 +1,5 @@
 #include "boilerplate.h"
+#include "city/city_maintenance.h"
 #include "boilerplate_detail.h"
 #include "io/og_save/og_save.h"
 #include "io/og_save/og_load.h"
@@ -476,7 +477,7 @@ void GamestateIO::start_loaded_file() {
     figure_route_clean();
     g_city.map.update_road_network();
     building_ferry::update_routes();
-    g_city.maintenance.check_kingdome_access();
+    city_maintenance().check_kingdome_access();
 
     // tiles
     g_simulation.run_load(LOAD_PHASE_MAP_TILES);

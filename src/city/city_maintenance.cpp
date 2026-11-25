@@ -127,10 +127,16 @@ void city_maintenance_t::flood_building(building *b) {
     b->destroy_by_flooded();
 }
 
+city_maintenance_t& city_maintenance() {
+    return xvalue<city_maintenance_t>::ref();
+}
+
+void city_maintenance_t::reset() {
+    *this = {};
+}
+
 void city_maintenance_t::subscribe_events() {
-    events::subscribe([this] (event_advance_month) {
-        update_fire_direction();
-    });
+    events::subscribe([](event_advance_month) { city_maintenance().update_fire_direction(); });
 }
 
 void city_maintenance_t::update_fire_direction() {
@@ -395,24 +401,25 @@ void city_maintenance_t::update_burning_ruins() {
 class maintenance_system : public sim_system {
 public:
     const char* name() const override { return "maintenance"; }
+    void on_reset() override { city_maintenance().reset(); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_kingdome_access, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 21) {
                               return;
                           }
-                          g_city.maintenance.check_kingdome_access();
+                          city_maintenance().check_kingdome_access();
                       }});
         schedule.add({sim_step_burning_ruins, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 43) {
                               return;
                           }
-                          g_city.maintenance.update_burning_ruins();
+                          city_maintenance().update_burning_ruins();
                       }});
         schedule.add({sim_step_building_destroying, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 44) {
                               return;
                           }
-                          g_city.maintenance.check_building_destroying();
+                          city_maintenance().check_building_destroying();
                       }});
     }
 };

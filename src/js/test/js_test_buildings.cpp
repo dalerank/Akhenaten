@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_maintenance.h"
 #include "widget/city/placement_preview.h"
 
 #include "building/building.h"
@@ -146,7 +147,7 @@ static int __test_building_destroy_by_enemy(int bid) {
     if (!b || !b->is_valid()) {
         return 0;
     }
-    g_city.maintenance.destroy_by_enemy(b);
+    city_maintenance().destroy_by_enemy(b);
     return 1;
 }
 ANK_FUNCTION_1(__test_building_destroy_by_enemy);
@@ -181,7 +182,7 @@ static int __test_destroy_buildings_of_type(int type) {
     for (int id : ids) {
         building* b = building_get(id);
         if (b && b->is_valid()) {
-            g_city.maintenance.destroy_by_enemy(b);
+            city_maintenance().destroy_by_enemy(b);
         }
     }
     return (int)ids.size();
@@ -642,7 +643,7 @@ static int __test_building_fire_duration(int bid) {
 ANK_FUNCTION_1(__test_building_fire_duration);
 
 static void __test_city_check_building_destroying() {
-    g_city.maintenance.check_building_destroying();
+    city_maintenance().check_building_destroying();
 }
 ANK_FUNCTION(__test_city_check_building_destroying);
 
