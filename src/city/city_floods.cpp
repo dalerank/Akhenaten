@@ -36,7 +36,7 @@ floods_t& floods() {
 class floods_system : public sim_system {
 public:
     const char* name() const override { return "floods"; }
-    void on_reset() override {}
+    void on_reset() override { floods() = floods_t{}; }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_floods, SIM_PHASE_TICK_BEGIN, [](int) { floods().tick_update(false); }});
     }

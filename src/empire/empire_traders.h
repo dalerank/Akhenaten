@@ -42,7 +42,7 @@ ANK_CONFIG_PROPERTY(empire_trader, current_position, is_ship, is_active, id, tra
 
 class empire_traders_manager {
 public:
-    void init();
+    void reset();
     void update();
     void create_trader(int trade_route_id, int destination_city_id);
     void remove_trader(int trader_id);

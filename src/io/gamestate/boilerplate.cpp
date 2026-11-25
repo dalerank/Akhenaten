@@ -446,7 +446,7 @@ void GamestateIO::start_loaded_file() {
         // traders / empire
         g_empire_map.init_scenario();
         g_empire.init_cities();
-        g_empire_traders.init();
+        g_empire_traders.reset();
 
         // set up events
         scenario_revolt_init();

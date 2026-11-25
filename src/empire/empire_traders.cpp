@@ -149,7 +149,8 @@ void empire_trader::complete_trade() {
     }
 }
 
-void empire_traders_manager::init() {
+void empire_traders_manager::reset() {
+    traders = {};
     clear_all();
 }
 
@@ -323,7 +324,7 @@ vec2i empire_traders_manager::get_position_on_route(int route_id, int point_inde
 class empire_traders_system : public sim_system {
 public:
     const char* name() const override { return "empire_traders"; }
-    void on_reset() override {}
+    void on_reset() override { g_empire_traders.reset(); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_empire_traders, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 32) {

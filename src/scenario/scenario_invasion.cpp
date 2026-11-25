@@ -1005,7 +1005,7 @@ const enemy_properties_t &invasion_data_t::get_prop(e_enemy_type type) {
 class scenario_invasion_system : public sim_system {
 public:
     const char* name() const override { return "scenario_invasion"; }
-    void on_reset() override {}
+    void on_reset() override { g_invasions.clear(); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add(
           {sim_step_invasion_bind_resolutions, SIM_PHASE_MONTH, [](int) { g_invasions.process_bind_resolutions(); }});

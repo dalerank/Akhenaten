@@ -372,6 +372,7 @@ public:
     const char* name() const override { return "buildings"; }
     void on_reset() override {
         city_building_stats().reset();
+        city_building_stats().reset_tracked_buildings_counters();
         building_storage_clear_all();
         building_clear_all();
     }

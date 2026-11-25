@@ -65,8 +65,6 @@ void game_file_editor_clear_data(void) {
     game.start_session();
     city_init_custom_map();
     events::emit(event_building_menu_update{"enable_all"});
-    g_empire_traders.init();
-    g_invasions.clear();
 }
 
 static void clear_map_data(void) {
