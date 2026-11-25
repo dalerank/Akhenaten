@@ -1,4 +1,5 @@
 #include "build_planner.h"
+#include "city/city_resource.h"
 #include "city/city_finance.h"
 
 #include "building/building.h"
@@ -138,7 +139,7 @@ void build_planner::update_requirements_check() {
     /////// special requirements
     //
     if (needResources()) {
-        if (g_city.resource.yards_stored((e_resource)additional_req_param1) < additional_req_param2) {
+        if (city_resource().yards_stored((e_resource)additional_req_param1) < additional_req_param2) {
             // immediate_warning_id = additional_req_param3;
             can_place = CAN_NOT_BUT_GREEN;
         }

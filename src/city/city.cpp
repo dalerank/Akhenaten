@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_resource.h"
 #include "city/city_food_supply.h"
 #include "city/city_maintenance.h"
 #include "city/city_kingdome_relations.h"
@@ -86,7 +87,7 @@ events::typed_queue g_city_events;
 
 static void city_subscribe_events() {
     city_maintenance_t::subscribe_events();
-    g_city.resource.subscribe_events();
+    city_resources_t::subscribe_events();
     city_food_supply_t::subscribe_events();
     city_finance_t::subscribe_events();
 }
@@ -102,7 +103,6 @@ void city_t::init() {
 
     zero_fill(buildings);
     zero_fill(figures);
-    zero_fill(resource);
     zero_fill(map);
 
     g_simulation.reset_systems();
@@ -138,10 +138,6 @@ void city_t::init_mission_resources(const resource_allow_vec& resources) {
     for (const auto &r: resources) {
         fobj->add_sell_resource(r.type);
     }
-}
-
-e_resource city_t::allowed_foods(int i) {
-    return resource.food_types_allowed[i];
 }
 
 void city_t::set_max_happiness(int max) {
@@ -209,21 +205,6 @@ bool city_t::generate_trader_from(empire_city &city) {
     return false;
 }
 
-bool city_t::is_food_allowed(e_resource resource) {
-    bool result = false;
-    for (int i = 0; i < 4; i++) {
-        if (g_city.allowed_foods(i) == resource) {
-            result = true;
-        }
-    }
-    // for etc etc todo: other resources?
-    return result;
-}
-
-void city_t::set_allowed_food(int i, e_resource r) {
-    resource.food_types_allowed[i] = r;
-}
-
 int stack_units_by_resource(int resource) {
     switch (resource) {
     default:
@@ -261,21 +242,6 @@ bool city_t::can_produce_resource(e_resource resource) {
 void city_t::set_produce_resource(e_resource resource, bool v) {
     auto &c = ourcity();
     c.sells_resource[resource] = v;
-}
-
-void city_t::update_allowed_foods() {
-    int food_index = 0;
-
-    std::fill_n(std::begin(resource.food_types_allowed), RESOURCES_FOODS_MAX, RESOURCE_NONE);
-
-    for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
-        bool can_import_food = g_empire.can_import_resource(resource, false);
-        bool can_produce_food = can_produce_resource(resource);
-        if (can_import_food || can_produce_food) {
-            set_allowed_food(food_index, resource);
-            food_index++;
-        }
-    }
 }
 
 bool city_t::available_resource(e_resource resource) {

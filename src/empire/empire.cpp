@@ -1,4 +1,5 @@
 #include "empire.h"
+#include "city/city_resource.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 
@@ -258,7 +259,7 @@ int empire_t::count_luxury_goods_kinds() {
     int kinds[LUXURY_KIND_MAX] = {};
     kinds[LUXURY_JEWELRY] = g_city.buildings.count_industry_total(RESOURCE_LUXURY_GOODS) > 0;
 
-    const e_trade_status status = g_city.resource.trade_status[RESOURCE_LUXURY_GOODS];
+    const e_trade_status status = city_resource().trade_status[RESOURCE_LUXURY_GOODS];
     const bool imports = (status == TRADE_STATUS_IMPORT || status == TRADE_STATUS_IMPORT_AS_NEEDED);
     for (int id = 1; imports && id < MAX_CITIES; id++) {
         const empire_city& city = cities[id];
@@ -385,7 +386,7 @@ bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
     }
 
     city_resource_handle hresource{ resource };
-    const int stored = g_city.resource.yards_stored(resource);
+    const int stored = city_resource().yards_stored(resource);
     switch (hresource.trade_status()) {
     case TRADE_STATUS_EXPORT:
         if (stored <= hresource.trading_amount()) {
@@ -429,7 +430,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         return false;
     }
 
-    return g_city.resource.yards_stored(resource) < import_stock_limit(resource);
+    return city_resource().yards_stored(resource) < import_stock_limit(resource);
 }
 
 int empire_t::import_stock_limit(e_resource resource) {

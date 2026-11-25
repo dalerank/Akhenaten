@@ -57,7 +57,7 @@ textid stone_text(const int *p, bool sandstone_ok) {
     if (waiting == 0 || !sandstone_ok || p[MAUSOLEUM_PROGRESS_MATERIAL] == 0) {
         return {178, 59};
     }
-    return g_city.resource.is_stockpiled(RESOURCE_SANDSTONE) ? textid{178, 100} : textid{178, 24};
+    return city_resource().is_stockpiled(RESOURCE_SANDSTONE) ? textid{178, 100} : textid{178, 24};
 }
 
 textid building_text(const int *p, bool sandstone_ok) {

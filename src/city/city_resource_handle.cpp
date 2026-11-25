@@ -1,4 +1,5 @@
 #include "city_resource_handle.h"
+#include "city/city_resource.h"
 
 #include "empire/empire.h"
 #include "city/city.h"
@@ -19,25 +20,25 @@ void city_resource_handle::cycle_trade_import() {
     if (!g_empire.can_import_resource(resource, true))
         return;
 
-    switch (g_city.resource.trade_status[resource]) {
+    switch (city_resource().trade_status[resource]) {
     default:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_IMPORT_AS_NEEDED;
+        city_resource().trade_status[resource] = TRADE_STATUS_IMPORT_AS_NEEDED;
         break;
     case TRADE_STATUS_IMPORT_AS_NEEDED:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_IMPORT;
+        city_resource().trade_status[resource] = TRADE_STATUS_IMPORT;
         break;
     case TRADE_STATUS_IMPORT:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_NONE;
+        city_resource().trade_status[resource] = TRADE_STATUS_NONE;
         break;
     }
 }
 
 e_trade_status city_resource_handle::trade_status() {
-    return g_city.resource.trade_status[resource];
+    return city_resource().trade_status[resource];
 }
 
 void city_resource_handle::cycle_trade_status() {
-    auto &trade_status = g_city.resource.trade_status[resource];
+    auto& trade_status = city_resource().trade_status[resource];
     trade_status = (e_trade_status)((int)trade_status + 1);
     if (trade_status > TRADE_STATUS_EXPORT) {
         trade_status = TRADE_STATUS_NONE;
@@ -61,19 +62,19 @@ void city_resource_handle::cycle_trade_export() {
     if (!g_empire.can_export_resource(resource, true))
         return;
 
-    switch (g_city.resource.trade_status[resource]) {
+    switch (city_resource().trade_status[resource]) {
     default:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_EXPORT_SURPLUS;
-        g_city.resource.stockpiled[resource] = false;
+        city_resource().trade_status[resource] = TRADE_STATUS_EXPORT_SURPLUS;
+        city_resource().stockpiled[resource] = false;
         break;
 
     case TRADE_STATUS_EXPORT_SURPLUS:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
-        g_city.resource.stockpiled[resource] = false;
+        city_resource().trade_status[resource] = TRADE_STATUS_EXPORT;
+        city_resource().stockpiled[resource] = false;
         break;
 
     case TRADE_STATUS_EXPORT:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_NONE;
+        city_resource().trade_status[resource] = TRADE_STATUS_NONE;
         break;
     }
 }
@@ -87,11 +88,11 @@ int city_resource_handle::industry_total() {
 }
 
 int city_resource_handle::yards_stored() {
-    return g_city.resource.yards_stored(resource);
+    return city_resource().yards_stored(resource);
 }
 
 bool city_resource_handle::is_stockpiled() {
-    return  g_city.resource.is_stockpiled(resource);
+    return city_resource().is_stockpiled(resource);
 }
 
 bool city_resource_handle::can_produce() {
@@ -107,19 +108,19 @@ bool city_resource_handle::can_export(bool check) {
 }
 
 int city_resource_handle::trading_amount() {
-    return g_city.resource.trading_amount[resource];
+    return city_resource().trading_amount[resource];
 }
 
 void city_resource_handle::change_trading_amount(int delta) {
-    g_city.resource.trading_amount[resource] = calc_bound(g_city.resource.trading_amount[resource] + delta, 0, 10000);
+    city_resource().trading_amount[resource] = calc_bound(city_resource().trading_amount[resource] + delta, 0, 10000);
 }
 
 void city_resource_handle::toggle_stockpiled() {
-    g_city.resource.toggle_stockpiled(resource);
+    city_resource().toggle_stockpiled(resource);
 }
 
 bool city_resource_handle::is_mothballed() {
-    return g_city.resource.is_mothballed(resource);
+    return city_resource().is_mothballed(resource);
 }
 
 int stack_proper_quantity(int full, int resource) {

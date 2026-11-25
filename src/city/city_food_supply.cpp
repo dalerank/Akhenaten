@@ -82,7 +82,7 @@ static int food_supply_imports() {
 
         const trade_route& route = c.get_route();
         for (e_resource r = RESOURCES_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
-            const e_trade_status status = g_city.resource.trade_status[r];
+            const e_trade_status status = city_resource().trade_status[r];
             if ((status != TRADE_STATUS_IMPORT && status != TRADE_STATUS_IMPORT_AS_NEEDED) || !c.sells_resource[r]) {
                 continue;
             }

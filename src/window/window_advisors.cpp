@@ -27,7 +27,7 @@ void window_advisors_prepare_opening() {
     city_avg_coverage().update();
     city_health().update_month();
 
-    g_city.resource.calculate_food_stocks_and_supply_wheat();
+    city_resource().calculate_food_stocks_and_supply_wheat();
     g_formations.calculate_figures();
 }
 

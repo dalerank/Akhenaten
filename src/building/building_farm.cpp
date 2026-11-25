@@ -354,7 +354,7 @@ void building_farm::spawn_figure_harvests() {
 
             // OG building_figure.c: grain harvest also sends a fixed 100-load straw cart (not progress-based).
             if (base.output.resource_second != RESOURCE_NONE
-                && !g_city.resource.is_mothballed(base.output.resource_second)) {
+                && !city_resource().is_mothballed(base.output.resource_second)) {
                 const int secondary = 100;
                 produced_resources(base.output.resource_second, secondary);
                 figure *f2 = create_cartpusher(base.output.resource_second, secondary,
@@ -381,7 +381,7 @@ void building_farm::spawn_figure_harvests() {
             create_cartpusher(base.output.resource, primary, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
 
             if (base.output.resource_second != RESOURCE_NONE
-                && !g_city.resource.is_mothballed(base.output.resource_second)) {
+                && !city_resource().is_mothballed(base.output.resource_second)) {
                 const int secondary = 100;
                 produced_resources(base.output.resource_second, secondary);
                 figure *f2 = create_cartpusher(base.output.resource_second, secondary,

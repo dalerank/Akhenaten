@@ -176,7 +176,7 @@ building_id laborer_yard_for_getting(building *near, e_resource resource, int mi
     if (!near || resource == RESOURCE_NONE || min_amount <= 0) {
         return 0;
     }
-    if (g_city.resource.is_stockpiled(resource)) {
+    if (city_resource().is_stockpiled(resource)) {
         return 0;
     }
 

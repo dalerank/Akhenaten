@@ -4,7 +4,6 @@
 
 #include "game/player_record.h"
 #include "city/buildings.h"
-#include "city/city_resource.h"
 #include "city/map.h"
 #include "city/coverage.h"
 #include "city/city_figures.h"
@@ -13,12 +12,11 @@
 #include "city/city_buildings.h"
 
 struct empire_city;
+struct simulation_time_t;
 
 struct city_t {
     city_buildings_t buildings;
     city_figures_t figures;
-
-    city_resources_t resource;
 
 
     city_map_t map;
@@ -29,14 +27,10 @@ struct city_t {
 
     void init_custom_map();
     void init_campaign_mission();
-    void init_mission_resources(const resource_allow_vec &resources);
-    e_resource allowed_foods(int i);
-    bool is_food_allowed(e_resource resource);
-    void set_allowed_food(int i, e_resource r);
+    void init_mission_resources(const resource_allow_vec& resources);
 
     bool generate_trader_from(empire_city &city);
     bool available_resource(e_resource resource);
-    void update_allowed_foods();
     bool can_produce_resource(e_resource resource);
     void set_produce_resource(e_resource resource, bool v);
 

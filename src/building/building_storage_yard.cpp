@@ -241,7 +241,7 @@ bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, v
 }
 
 building_id building_storage_yard_for_getting(building* src, e_resource resource, bool full_only, tile2i& dst) {
-    if (!src || g_city.resource.is_stockpiled(resource)) {
+    if (!src || city_resource().is_stockpiled(resource)) {
         return 0;
     }
     int min_dist = 10000;
@@ -417,7 +417,7 @@ static bool contains_non_stockpiled_food(building* b, const resource_list &foods
     }
 
     e_resource resource = space->resource();
-    if (g_city.resource.is_stockpiled(resource)) {
+    if (city_resource().is_stockpiled(resource)) {
         return false;
     }
 
@@ -431,7 +431,7 @@ static bool contains_non_stockpiled_food(building* b, const resource_list &foods
 storage_worker_task building_storage_yard_determine_getting_up_resources(building* b) {
     building_storage_yard* warehouse = b->dcast_storage_yard();
     for (e_resource check_resource = RESOURCES_MIN; check_resource < RESOURCES_MAX; ++check_resource) {
-        if (!warehouse->is_getting(check_resource) || g_city.resource.is_stockpiled(check_resource)) {
+        if (!warehouse->is_getting(check_resource) || city_resource().is_stockpiled(check_resource)) {
             continue;
         }
 
@@ -454,7 +454,7 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
         int lacking = requesting - total_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
-        if (room >= 0 && lacking > 0 && g_city.resource.yards_stored(check_resource) - total_stored > 0) {
+        if (room >= 0 && lacking > 0 && city_resource().yards_stored(check_resource) - total_stored > 0) {
             if (!warehouse->for_getting(check_resource, 0)) { // any other place contain this resource..?
                 continue;
             }
@@ -538,8 +538,8 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    auto try_send = [&] (e_resource resource) -> storage_worker_task {
-        if (g_city.resource.is_stockpiled(resource)) {
+    auto try_send = [&](e_resource resource) -> storage_worker_task {
+        if (city_resource().is_stockpiled(resource)) {
             return { STORAGEYARD_TASK_NONE };
         }
 
@@ -575,7 +575,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
 }
 
 storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(building * b) {
-    if (g_city.buildings.count_active(BUILDING_SHIPWRIGHT) <= 0 || g_city.resource.is_stockpiled(RESOURCE_TIMBER)) {
+    if (g_city.buildings.count_active(BUILDING_SHIPWRIGHT) <= 0 || city_resource().is_stockpiled(RESOURCE_TIMBER)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -604,7 +604,7 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
 }
 
 storage_worker_task building_storageyard_deliver_beer_to_senet_house(building *b) {
-    if (g_city.buildings.count_active(BUILDING_SENET_HOUSE) <= 0 || g_city.resource.is_stockpiled(RESOURCE_BEER)) {
+    if (g_city.buildings.count_active(BUILDING_SENET_HOUSE) <= 0 || city_resource().is_stockpiled(RESOURCE_BEER)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -648,7 +648,7 @@ storage_worker_task building_storageyard_deliver_resource_to_zoo(building *b) {
 
     const e_resource resources[] = { RESOURCE_GAMEMEAT, RESOURCE_STRAW };
     for (e_resource resource : resources) {
-        if (g_city.resource.is_stockpiled(resource)) {
+        if (city_resource().is_stockpiled(resource)) {
             continue;
         }
 
@@ -682,7 +682,7 @@ storage_worker_task building_storageyard_deliver_resource_to_zoo(building *b) {
 }
 
 storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(building *b) {
-    if (g_city.resource.is_stockpiled(RESOURCE_PAPYRUS)) {
+    if (city_resource().is_stockpiled(RESOURCE_PAPYRUS)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -743,7 +743,7 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
             continue;
         }
 
-        if (g_city.resource.is_stockpiled(check_resource)) {
+        if (city_resource().is_stockpiled(check_resource)) {
             continue;
         }
 

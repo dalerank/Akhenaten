@@ -1,4 +1,5 @@
 #include "building_bazaar.h"
+#include "city/city_resource.h"
 
 #include "figure/figure.h"
 #include "building/building_type.h"
@@ -92,7 +93,7 @@ struct resource_data {
     }
 
     void update_good(e_resource resource, building &b, int distance) {
-        if (g_city.resource.is_stockpiled(resource)) {
+        if (city_resource().is_stockpiled(resource)) {
             return;
         }
 
@@ -145,10 +146,14 @@ void scan_bazaar_storages(building_bazaar &bazaar, resource_data *resources, boo
             }
 
             const int minimal_amount = bazaar.current_params().minimal_pick_food_amount;
-            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD1].update_food(city_resource().allowed_foods(INVENTORY_FOOD1), b, distance,
+              minimal_amount);
+            resources[INVENTORY_FOOD2].update_food(city_resource().allowed_foods(INVENTORY_FOOD2), b, distance,
+              minimal_amount);
+            resources[INVENTORY_FOOD3].update_food(city_resource().allowed_foods(INVENTORY_FOOD3), b, distance,
+              minimal_amount);
+            resources[INVENTORY_FOOD4].update_food(city_resource().allowed_foods(INVENTORY_FOOD4), b, distance,
+              minimal_amount);
 
         } else if (b.dcast_granary() || b.type == BUILDING_GRANARY || b.type == BUILDING_GRANARY_UP) {
             if (g_scenario.kingdom_supplies_grain) {
@@ -156,19 +161,23 @@ void scan_bazaar_storages(building_bazaar &bazaar, resource_data *resources, boo
             }
 
             const int minimal_amount = bazaar.current_params().minimal_pick_food_amount;
-            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD1].update_food(city_resource().allowed_foods(INVENTORY_FOOD1), b, distance,
+              minimal_amount);
+            resources[INVENTORY_FOOD2].update_food(city_resource().allowed_foods(INVENTORY_FOOD2), b, distance,
+              minimal_amount);
+            resources[INVENTORY_FOOD3].update_food(city_resource().allowed_foods(INVENTORY_FOOD3), b, distance,
+              minimal_amount);
+            resources[INVENTORY_FOOD4].update_food(city_resource().allowed_foods(INVENTORY_FOOD4), b, distance,
+              minimal_amount);
 
         } else if (b.type == BUILDING_STORAGE_YARD) {
             auto sy_food = [&](int inv) {
-                e_resource res = g_city.allowed_foods(inv);
-                if (!res || g_city.resource.is_stockpiled(res)) {
+                e_resource res = city_resource().allowed_foods(inv);
+                if (!res || city_resource().is_stockpiled(res)) {
                     return;
                 }
                 // OG: bazaars take SY food only while that food is being imported.
-                const e_trade_status st = g_city.resource.trade_status[res];
+                const e_trade_status st = city_resource().trade_status[res];
                 if (st != TRADE_STATUS_IMPORT && st != TRADE_STATUS_IMPORT_AS_NEEDED) {
                     return;
                 }
@@ -277,7 +286,7 @@ bool building_bazaar::needs_food_variety() const {
     int target = desired_variety();
     int available = 0;
     for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-        if (g_city.allowed_foods(foodi) && idx_accepted(foodi)) {
+        if (city_resource().allowed_foods(foodi) && idx_accepted(foodi)) {
             available++;
         }
     }
@@ -529,7 +538,7 @@ void fill_og_food_items(building_bazaar &bazaar, const resource_data *resources,
     int n = 0;
     items[0] = items[1] = items[2] = items[3] = -1;
     for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+        if (!bazaar.idx_accepted(foodi) || !city_resource().allowed_foods(foodi) || !resources[foodi].num_buildings) {
             continue;
         }
         if (d.inventory[foodi].value == 0) {
@@ -540,7 +549,7 @@ void fill_og_food_items(building_bazaar &bazaar, const resource_data *resources,
         }
     }
     for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+        if (!bazaar.idx_accepted(foodi) || !city_resource().allowed_foods(foodi) || !resources[foodi].num_buildings) {
             continue;
         }
         if (d.inventory[foodi].value < 600) {
@@ -603,7 +612,7 @@ building *pick_og_food_destination(building_bazaar &bazaar, const resource_data 
     auto &d = bazaar.runtime_data();
 
     for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+        if (!bazaar.idx_accepted(foodi) || !city_resource().allowed_foods(foodi) || !resources[foodi].num_buildings) {
             continue;
         }
         if (d.inventory[foodi].value == 0) {
@@ -615,7 +624,7 @@ building *pick_og_food_destination(building_bazaar &bazaar, const resource_data 
     int16_t lowest = 50;
     int chosen = -1;
     for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+        if (!bazaar.idx_accepted(foodi) || !city_resource().allowed_foods(foodi) || !resources[foodi].num_buildings) {
             continue;
         }
         if (d.inventory[foodi].value < lowest) {
@@ -625,7 +634,8 @@ building *pick_og_food_destination(building_bazaar &bazaar, const resource_data 
     }
     if (chosen < 0) {
         for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-            if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+            if (
+              !bazaar.idx_accepted(foodi) || !city_resource().allowed_foods(foodi) || !resources[foodi].num_buildings) {
                 continue;
             }
             if (d.inventory[foodi].value < 600) {
@@ -826,10 +836,10 @@ void building_bazaar::on_create(int orientation) {
 // The food slots follow the city's allowed foods, which update_month recomputes.
 void building_bazaar::sync_inventory_types() {
     auto& d = runtime_data();
-    d.inventory[INVENTORY_FOOD1].type = g_city.allowed_foods(INVENTORY_FOOD1);
-    d.inventory[INVENTORY_FOOD2].type = g_city.allowed_foods(INVENTORY_FOOD2);
-    d.inventory[INVENTORY_FOOD3].type = g_city.allowed_foods(INVENTORY_FOOD3);
-    d.inventory[INVENTORY_FOOD4].type = g_city.allowed_foods(INVENTORY_FOOD4);
+    d.inventory[INVENTORY_FOOD1].type = city_resource().allowed_foods(INVENTORY_FOOD1);
+    d.inventory[INVENTORY_FOOD2].type = city_resource().allowed_foods(INVENTORY_FOOD2);
+    d.inventory[INVENTORY_FOOD3].type = city_resource().allowed_foods(INVENTORY_FOOD3);
+    d.inventory[INVENTORY_FOOD4].type = city_resource().allowed_foods(INVENTORY_FOOD4);
     d.inventory[INVENTORY_GOOD1].type = RESOURCE_POTTERY;
     d.inventory[INVENTORY_GOOD2].type = RESOURCE_LUXURY_GOODS;
     d.inventory[INVENTORY_GOOD3].type = RESOURCE_LINEN;

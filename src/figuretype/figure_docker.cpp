@@ -1,4 +1,5 @@
 #include "figure_docker.h"
+#include "city/city_resource.h"
 
 #include "building/building.h"
 #include "building/building_storage_yard.h"
@@ -123,7 +124,7 @@ int figure_docker::import_loads(building_storage_yard *warehouse, e_resource res
     }
 
     const int accept_room = warehouse->accepting_amount(resource) - warehouse->amount(resource);
-    const int stock_room = g_empire.import_stock_limit(resource) - g_city.resource.yards_stored(resource);
+    const int stock_room = g_empire.import_stock_limit(resource) - city_resource().yards_stored(resource);
     const int amount = std::min({ max_amount, free_room, accept_room, stock_room });
     return amount > 0 ? amount / docker_load() : 0;
 }
@@ -216,7 +217,7 @@ int figure_docker::try_export_resource(building *b, e_resource resource, empire_
 
     city_resource_handle hresource{ resource };
     const int keep = hresource.trading_amount();
-    max_amount = std::min(max_amount, g_city.resource.yards_stored(resource) - keep);
+    max_amount = std::min(max_amount, city_resource().yards_stored(resource) - keep);
 
     auto take_one_load = [&]() -> bool {
         // remove_export pays a full load, so only rooms holding a whole load are taken from.

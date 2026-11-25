@@ -139,7 +139,7 @@ int building_monument_workers_onsite(building *b, e_figure_type figure_type) {
 }
 
 int building_monument_get_monument(tile2i tile, e_resource resource, int road_network_id, tile2i &dst) {
-    if (g_city.resource.is_stockpiled(resource)) {
+    if (city_resource().is_stockpiled(resource)) {
         return 0;
     }
 

@@ -206,7 +206,7 @@ granary_task_status building_granary::determine_worker_task() {
 
     for (const auto &r : resource_list::foods) {
         int now = amount(r.type);
-        const int gettable = (int)g_city.resource.gettable(r.type) - now;
+        const int gettable = (int)city_resource().gettable(r.type) - now;
         const bool can_take = gettable > ONE_LOAD;
         if (!is_getting(r.type) || !can_take) {
             continue;
@@ -267,7 +267,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
     if (!resource_is_food(resource))
         return 0;
 
-    if (g_city.resource.is_stockpiled(resource) && !force_on_stockpile) {
+    if (city_resource().is_stockpiled(resource) && !force_on_stockpile) {
         return 0;
     }
 
@@ -387,7 +387,7 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
     if (!resource_is_food(resource))
         return 0;
 
-    if (g_city.resource.is_stockpiled(resource)) {
+    if (city_resource().is_stockpiled(resource)) {
         return 0;
     }
 

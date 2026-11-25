@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_resource.h"
 #include "city/city_houses.h"
 #include "city/coverage.h"
 #include "city/city_mission.h"
@@ -227,37 +228,37 @@ int __city_resource_food_supply_months() {
 ANK_FUNCTION(__city_resource_food_supply_months)
 
 int __city_resource_food_types_available_num() {
-    return g_city.resource.food_types_available_num();
+    return city_resource().food_types_available_num();
 }
 ANK_FUNCTION(__city_resource_food_types_available_num)
 
 int __city_resource_food_types_eaten_max() {
-    return g_city.resource.food_types_eaten_max();
+    return city_resource().food_types_eaten_max();
 }
 ANK_FUNCTION(__city_resource_food_types_eaten_max)
 
 int __city_resource_granary_total_stored() {
-    return g_city.resource.granary_total_stored;
+    return city_resource().granary_total_stored;
 }
 ANK_FUNCTION(__city_resource_granary_total_stored)
 
 int __city_resource_food_needed_per_month() {
-    return g_city.resource.food_needed_per_month;
+    return city_resource().food_needed_per_month;
 }
 ANK_FUNCTION(__city_resource_food_needed_per_month)
 
 int __city_resource_luxury_goods_kinds() {
-    return g_city.resource.luxury_goods_kinds;
+    return city_resource().luxury_goods_kinds;
 }
 ANK_FUNCTION(__city_resource_luxury_goods_kinds)
 
 int __city_resource_food_produced_last_month() {
-    return g_city.resource.food_produced_last_month();
+    return city_resource().food_produced_last_month();
 }
 ANK_FUNCTION(__city_resource_food_produced_last_month)
 
 int __city_resource_food_consumed_last_month() {
-    return g_city.resource.food_consumed_last_month();
+    return city_resource().food_consumed_last_month();
 }
 ANK_FUNCTION(__city_resource_food_consumed_last_month)
 
@@ -333,7 +334,9 @@ tile2i __city_bookmark_get(int index) {
 }
 ANK_FUNCTION_1(__city_bookmark_get)
 
-e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
+e_resource __city_allowed_foods(int index) {
+    return city_resource().allowed_foods(index);
+}
 ANK_FUNCTION_1(__city_allowed_foods)
 
 int __city_workers_diff() {

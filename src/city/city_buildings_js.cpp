@@ -1,4 +1,5 @@
 #include "js/js_game.h"
+#include "city/city_resource.h"
 
 #include "city/city.h"
 #include "city/city_advisors.h"
@@ -100,7 +101,7 @@ bool __city_resource_can_import(int resource, bool check_if_import) {
 ANK_FUNCTION_2(__city_resource_can_import)
 
 int __city_resource_trade_status(int resource) {
-    return (int)g_city.resource.trade_status[(e_resource)resource];
+    return (int)city_resource().trade_status[(e_resource)resource];
 }
 ANK_FUNCTION_1(__city_resource_trade_status)
 
@@ -234,7 +235,7 @@ int __city_get_random_building_id_by_type(int type) { return building_id_random(
 ANK_FUNCTION_1(__city_get_random_building_id_by_type)
 
 bool __city_resource_is_mothballed(int resource) {
-    return g_city.resource.is_mothballed((e_resource)resource);
+    return city_resource().is_mothballed((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_resource_is_mothballed)
 

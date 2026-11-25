@@ -142,10 +142,10 @@ void GamestateLoadDetail::post_load() {
 
     // building counts / storage
     city_resource_determine_available();
-    g_city.update_allowed_foods();
+    city_resource().update_allowed_foods();
     g_city.buildings.update_counters();
     g_city.on_post_load();
-    g_city.resource.calculate_stocks();
+    city_resource().calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     building_storage_reset_building_ids();
     city_avg_coverage().update();

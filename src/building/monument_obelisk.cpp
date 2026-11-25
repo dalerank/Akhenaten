@@ -153,7 +153,7 @@ int building_obelisk::placement_amount(e_resource r) const {
 }
 
 int building_obelisk::yards_available(e_resource r) {
-    return g_city.resource.yards_stored_staffed(r);
+    return city_resource().yards_stored_staffed(r);
 }
 
 bool building_obelisk::has_unfinished_obelisk() {

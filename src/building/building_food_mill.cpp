@@ -204,7 +204,7 @@ granary_task_status building_food_mill::determine_worker_task() {
 
     for (const auto &r : resource_list::foods) {
         const int now = amount(r.type);
-        const bool can_take = uint16_t(g_city.resource.gettable(r.type) - now) > ONE_LOAD;
+        const bool can_take = uint16_t(city_resource().gettable(r.type) - now) > ONE_LOAD;
         if (is_getting(r.type) && can_take) {
             return {GRANARY_TASK_GETTING, r.type};
         }

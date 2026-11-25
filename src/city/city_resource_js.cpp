@@ -11,17 +11,17 @@
 #include <cstdio>
 
 int __city_yards_stored(int resource) {
-    return g_city.resource.yards_stored((e_resource)resource);
+    return city_resource().yards_stored((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_yards_stored)
 
 int __city_yards_stored_staffed(int resource) {
-    return g_city.resource.yards_stored_staffed((e_resource)resource);
+    return city_resource().yards_stored_staffed((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_yards_stored_staffed)
 
 int __city_resource_stored(int resource) {
-    return g_city.resource.stored((e_resource)resource);
+    return city_resource().stored((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_resource_stored)
 
@@ -69,7 +69,7 @@ ANK_FUNCTION_1(__city_resource_id_by_name)
 bvariant_map __city_resources_available() {
     city_resource_determine_available();
     bvariant_map out;
-    const auto &av = g_city.resource.available();
+    const auto& av = city_resource().available();
     for (const auto &r : av) {
         out[resource_name(r.type)] = (int32_t)r.type;
     }
@@ -80,7 +80,7 @@ ANK_FUNCTION(__city_resources_available)
 bvariant_map __city_resources_available_market_goods() {
     city_resource_determine_available();
     bvariant_map out;
-    const auto &av = g_city.resource.available_market_goods();
+    const auto& av = city_resource().available_market_goods();
     for (const auto &r : av) {
         out[resource_name(r.type)] = (int32_t)r.type;
     }
@@ -91,7 +91,7 @@ ANK_FUNCTION(__city_resources_available_market_goods)
 bvariant_map __city_resources_available_foods() {
     city_resource_determine_available();
     bvariant_map out;
-    const auto &av = g_city.resource.available_foods();
+    const auto& av = city_resource().available_foods();
     for (const auto &r : av) {
         out[resource_name(r.type)] = (int32_t)r.type;
     }
@@ -158,9 +158,9 @@ void __city_resource_note_consumed(int resource, int amount) {
     }
 
     const auto r = (e_resource)resource;
-    g_city.resource.res_this_month.consumed[r] += (uint16_t)amount;
+    city_resource().res_this_month.consumed[r] += (uint16_t)amount;
     if (r > RESOURCE_NONE && r < RESOURCES_FOODS_MAX) {
-        g_city.resource.food_types_eaten[r] = 1;
+        city_resource().food_types_eaten[r] = 1;
     }
 }
 ANK_FUNCTION_2(__city_resource_note_consumed)

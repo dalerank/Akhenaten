@@ -1,4 +1,5 @@
 #include "building_storage.h"
+#include "city/city_resource.h"
 #include "core/xvalue.h"
 
 #include "building/building.h"
@@ -74,7 +75,7 @@ int building_storage_create(int building_type, int building_id) {
                 storages_data().slots[i].storage.resource_max_accept[r] = 3200;
                 storages_data().slots[i].storage.resource_max_get[r] = 3200;
             }
-            const resource_list &resources = g_city.resource.available();
+            const resource_list& resources = city_resource().available();
             for (const auto &r: resources) {
                 e_resource resource = r.type;
                 switch (building_type) {

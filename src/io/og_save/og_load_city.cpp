@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_resource.h"
 #include "city/city_houses.h"
 #include "city/military.h"
 #include "city/coverage.h"
@@ -91,19 +92,19 @@ namespace og {
         g_city.map.entry_point = tile2i(p.entry_point_x, p.entry_point_y);
         g_city.map.exit_point = tile2i(p.exit_point_x, p.exit_point_y);
         for (int i = 0; i < 36; i++) {
-            assign(g_city.resource.trade_status[i], p.trade_status[i]);
+            assign(city_resource().trade_status[i], p.trade_status[i]);
         }
         for (int i = 0; i < 36; i++) {
-            assign(g_city.resource.trading_amount[i], p.trading_amount[i]);
+            assign(city_resource().trading_amount[i], p.trading_amount[i]);
         }
         for (int i = 0; i < 36; i++) {
-            assign(g_city.resource.mothballed[i], p.mothballed[i]);
+            assign(city_resource().mothballed[i], p.mothballed[i]);
         }
         for (int i = 0; i < 36; i++) {
-            assign(g_city.resource.stockpiled[i], p.stockpiled[i]);
+            assign(city_resource().stockpiled[i], p.stockpiled[i]);
         }
-        assign(g_city.resource.food_supply_months, p.food_supply_months);
-        assign(g_city.resource.granaries.operating, p.granaries_operating);
+        assign(city_resource().food_supply_months, p.food_supply_months);
+        assign(city_resource().granaries.operating, p.granaries_operating);
         assign(city_population().percentage_plebs, p.percentage_plebs);
         assign(city_population().working_age, p.working_age);
         assign(city_labor().workers_available, p.workers_available);
@@ -268,10 +269,10 @@ namespace og {
         assign(g_city.buildings.mission_post_operational, p.mission_post_operational);
         g_city.buildings.main_native_meeting = tile2i(p.main_native_meeting_x, p.main_native_meeting_y);
         assign(city_finance().wage_rate_paid_last_year, p.wage_rate_paid_last_year);
-        assign(g_city.resource.food_needed_per_month, p.food_needed_per_month);
-        assign(g_city.resource.granaries.understaffed, p.granaries_understaffed);
-        assign(g_city.resource.granaries.not_operating, p.granaries_not_operating);
-        assign(g_city.resource.granaries.not_operating_with_food, p.granaries_not_operating_with_food);
+        assign(city_resource().food_needed_per_month, p.food_needed_per_month);
+        assign(city_resource().granaries.understaffed, p.granaries_understaffed);
+        assign(city_resource().granaries.not_operating, p.granaries_not_operating);
+        assign(city_resource().granaries.not_operating_with_food, p.granaries_not_operating_with_food);
         assign(city_gods().ra_150_export_profits_months_left, p.ra_exports_bonus_months);
         assign(city_gods().angry_message_delay, p.gods_angry_message_delay);
         assign(city_taxes().estimated_income, p.estimated_tax_income);
@@ -300,7 +301,7 @@ namespace og {
             assign(g_city.map.largest_road_networks[i].id, p.largest_road_networks[i].id);
             assign(g_city.map.largest_road_networks[i].size, p.largest_road_networks[i].size);
         }
-        assign(g_city.resource.luxury_goods_kinds, p.luxury_goods_kinds);
+        assign(city_resource().luxury_goods_kinds, p.luxury_goods_kinds);
         assign(city_houses().missing.second_luxury, p.houses_missing_second_luxury);
         assign(city_entertainment().senet_house_has_plays, p.senet_house_has_plays);
         assign(city_mission().fired_message_shown, p.fired_message_shown);
@@ -312,7 +313,7 @@ namespace og {
             assign(city_gods().gods[i].happy_ankhs, p.god_happy_bolts[i]);
         }
         for (int i = 0; i < 9; i++) {
-            assign(g_city.resource.granary_food_stored[i], p.granary_food_stored[i]);
+            assign(city_resource().granary_food_stored[i], p.granary_food_stored[i]);
         }
         assign(city_gods().ra_slightly_increased_trading_months_left, p.ra_trade_bonus_months);
         assign(city_gods().ra_harshly_reduced_trading_months_left, p.ra_trade_penalty_months);

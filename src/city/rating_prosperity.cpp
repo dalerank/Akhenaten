@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/city_resource.h"
 #include "city/city_population.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"
@@ -129,7 +130,7 @@ namespace {
         in.exports = last.income.exports;
         in.workers_needed = city_labor().workers_needed >= 1;
         in.unemployment = city_labor().unemployment_percentage;
-        in.food_types = g_city.resource.food_types_eaten_max();
+        in.food_types = city_resource().food_types_eaten_max();
         in.wages = (city_finance().wage_rate_paid_last_year / 12) - city_finance().wages_kingdome
                    - temple_complex_wage_bonus();
         in.huts_share = calc_percentage(city_population().people_in_shanties, city_population().current);

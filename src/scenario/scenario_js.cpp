@@ -161,7 +161,7 @@ int __scenario_burial_provisions_dispatch(int resource, int amount) {
         }
     }
     bp.dispatched += removed;
-    g_city.resource.calculate_stocks();
+    city_resource().calculate_stocks();
     return removed;
 }
 ANK_FUNCTION_2(__scenario_burial_provisions_dispatch)

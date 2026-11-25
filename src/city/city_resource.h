@@ -87,9 +87,17 @@ struct city_resources_t {
     int food_types_available_num() const;
     int food_types_eaten_max();
 
-    void subscribe_events();
+    e_resource allowed_foods(int i) const { return food_types_allowed[i]; }
+    bool is_food_allowed(e_resource resource) const;
+    void set_allowed_food(int i, e_resource r) { food_types_allowed[i] = r; }
+    void update_allowed_foods();
+
+    static void subscribe_events();
     void advance_month();
+    void reset();
 };
+
+city_resources_t& city_resource();
 
 
 int city_resource_food_supply_months();

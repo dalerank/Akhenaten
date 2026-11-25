@@ -103,7 +103,7 @@ private:
             if (waiting == 0 || !sandstone_ok || p[SUN_TEMPLE_PROGRESS_MATERIAL] == 0) {
                 return {k_lang, 56};
             }
-            return g_city.resource.is_stockpiled(RESOURCE_SANDSTONE) ? textid{k_lang, 100} : textid{k_lang, 24};
+            return city_resource().is_stockpiled(RESOURCE_SANDSTONE) ? textid{k_lang, 100} : textid{k_lang, 24};
         }
 
         return {k_lang, 53};

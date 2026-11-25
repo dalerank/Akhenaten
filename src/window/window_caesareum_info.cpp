@@ -1,4 +1,5 @@
 #include "building/monument_caesareum.h"
+#include "city/city_resource.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -50,17 +51,17 @@ namespace {
 
     // OG monument_resource_available: true means the yards cannot cover the waiting masons.
     bool resource_short(e_resource r, int amount) {
-        if (amount > g_city.resource.yards_stored(r)) {
+        if (amount > city_resource().yards_stored(r)) {
             return true;
         }
         if (amount <= 0) {
             return false;
         }
-        return g_city.resource.is_stockpiled(r) != 0;
+        return city_resource().is_stockpiled(r) != 0;
     }
 
     textid material_shortage_text(e_resource r) {
-        const bool stockpiled = g_city.resource.is_stockpiled(r) != 0;
+        const bool stockpiled = city_resource().is_stockpiled(r) != 0;
         if (r == RESOURCE_GRANITE) {
             return {k_lang_monuments, (uint16_t)(stockpiled ? 102 : 25)};
         }

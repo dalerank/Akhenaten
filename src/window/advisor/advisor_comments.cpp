@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_resource.h"
 #include "city/city_food_supply.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
@@ -740,9 +741,9 @@ advisor_city_state advisor_city_state_current() {
     s.unemployment_percentage = city_labor().unemployment_percentage;
     s.workers_needed = city_labor().workers_needed;
     s.kingdom_supplies_grain = g_scenario.kingdom_supplies_grain;
-    s.food_supply_months = g_city.resource.food_supply_months;
-    s.food_stored_total = (int)g_city.resource.granary_total_stored;
-    s.food_needed_per_month = g_city.resource.food_needed_per_month;
+    s.food_supply_months = city_resource().food_supply_months;
+    s.food_stored_total = (int)city_resource().granary_total_stored;
+    s.food_needed_per_month = city_resource().food_needed_per_month;
     s.population = city_population().current;
     s.food_supply_percentage = city_food_supply().percentage();
     s.health = city_health().value;

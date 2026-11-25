@@ -313,7 +313,7 @@ void building_house::consume_goods(int day) {
         uint16_t& stock = runtime_data().inventory[slot];
         const int spent = std::min<int>(amount, stock);
         stock = (uint16_t)(stock - spent);
-        g_city.resource.res_this_month.consumed[resource] += (uint16_t)spent;
+        city_resource().res_this_month.consumed[resource] += (uint16_t)spent;
     };
 
     consume(INVENTORY_GOOD4, m.beer * mul, RESOURCE_BEER);
@@ -754,7 +754,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         return e_house_none;
     }
 
-    if (jewelry >= 2 && g_city.resource.luxury_goods_kinds < 2) {
+    if (jewelry >= 2 && city_resource().luxury_goods_kinds < 2) {
         ++demands->missing.second_luxury;
         return e_house_none;
     }

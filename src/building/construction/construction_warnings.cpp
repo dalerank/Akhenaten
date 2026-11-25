@@ -1,4 +1,5 @@
 #include "construction_warnings.h"
+#include "city/city_resource.h"
 #include "city/city_food_supply.h"
 #include "city/city_labor.h"
 
@@ -41,13 +42,13 @@ namespace {
 
         int active(e_resource r) const { return r == RESOURCE_NONE ? 0 : g_city.buildings.count_industry_active(r); }
         int total(e_resource r) const { return r == RESOURCE_NONE ? 0 : g_city.buildings.count_industry_total(r); }
-        int stored(e_resource r) const { return r == RESOURCE_NONE ? 0 : g_city.resource.yards_stored(r); }
+        int stored(e_resource r) const { return r == RESOURCE_NONE ? 0 : city_resource().yards_stored(r); }
         bool can_produce(e_resource r) const { return r != RESOURCE_NONE && g_city.can_produce_resource(r); }
         bool can_import(e_resource r) const { return g_empire.can_import_resource(r, true); }
         bool could_import(e_resource r) const { return g_empire.can_import_resource(r, false); }
 
         bool imported(e_resource r) const {
-            const e_trade_status status = g_city.resource.trade_status[r];
+            const e_trade_status status = city_resource().trade_status[r];
             return status == TRADE_STATUS_IMPORT || status == TRADE_STATUS_IMPORT_AS_NEEDED;
         }
 
@@ -127,7 +128,7 @@ namespace {
                     warn(g.build);
                 } else if (!can_import(g.product)) {
                     warn(g.no_route);
-                } else if (g.import_only ? g_city.resource.trade_status[g.product] != TRADE_STATUS_IMPORT
+                } else if (g.import_only ? city_resource().trade_status[g.product] != TRADE_STATUS_IMPORT
                                          : !imported(g.product)) {
                     warn(g.not_imported);
                 }
@@ -268,7 +269,7 @@ void construction_warnings_check_house_plots() {
         return;
     }
     const int produced
-      = calc_percentage<int>(city_food_supply().percentage(), g_city.resource.food_consumed_last_month());
+      = calc_percentage<int>(city_food_supply().percentage(), city_resource().food_consumed_last_month());
     if (!g_scenario.kingdom_supplies_grain && produced < rules.min_food_produced_percent) {
         pass.warn(rules.eating_more_than_produced);
     }
@@ -276,7 +277,7 @@ void construction_warnings_check_house_plots() {
     if (!first_mission && city_labor().unemployment_percentage > rules.max_unemployment_percent) {
         pass.warn(rules.too_few_jobs);
     }
-    if ((int)g_city.resource.granary_total_stored <= g_city.resource.food_needed_per_month / 2) {
+    if ((int)city_resource().granary_total_stored <= city_resource().food_needed_per_month / 2) {
         pass.warn(rules.low_food);
     }
 }

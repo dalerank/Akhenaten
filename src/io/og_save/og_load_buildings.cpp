@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_resource.h"
 
 #include "building/building.h"
 #include "building/building_bazaar.h"
@@ -263,7 +264,7 @@ namespace og {
             }
             ::building* b = building_get(building_id(id));
             for (int slot = INVENTORY_MIN_FOOD; slot < INVENTORY_MAX_FOOD; ++slot) {
-                const int food = g_city.allowed_foods(slot) - RESOURCE_GRAIN;
+                const int food = city_resource().allowed_foods(slot) - RESOURCE_GRAIN;
                 if (food < 0 || food >= 8) {
                     continue;
                 }

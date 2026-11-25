@@ -1,4 +1,5 @@
 #include "city_trade.h"
+#include "city/city_resource.h"
 #include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
@@ -27,7 +28,7 @@ void city_trade_t::update() {
 
     num_sea_routes = 0;
     num_land_routes = 0;
-    g_city.resource.luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
+    city_resource().luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
 
     // Update trade problems
     if (land_trade_problem_duration > 0) {

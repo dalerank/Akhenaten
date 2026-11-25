@@ -107,7 +107,7 @@ void building_industry::og_start_new_production() {
 
 void building_industry::update_animation() {
     building_impl::update_animation();
-    if (g_city.resource.is_mothballed(base.output.resource)) {
+    if (city_resource().is_mothballed(base.output.resource)) {
         base.play_animation = false;
     }
 }
@@ -140,7 +140,7 @@ void building_industry::update_production() {
         return;
     }
 
-    if (g_city.resource.is_mothballed(base.output.resource)) {
+    if (city_resource().is_mothballed(base.output.resource)) {
         return;
     }
 

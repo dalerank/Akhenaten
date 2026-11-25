@@ -1,4 +1,5 @@
 #include "city_labor.h"
+#include "city/city_resource.h"
 #include "city/city_labor.h"
 #include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
@@ -83,7 +84,7 @@ static bool labor_category_in_priority_pool(e_labor_category cat) {
 
 bool city_labor_t::is_industry_disabled(building* b) const {
     int resource = b->output.resource;
-    return g_city.resource.mothballed[resource];
+    return city_resource().mothballed[resource];
 }
 
 int city_labor_t::workers_allocated(int category) const {

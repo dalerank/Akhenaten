@@ -94,9 +94,9 @@ void info_window_pyramid::init(object_info &c) {
             int masons_active = g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD);
             int bricklayers_total = g_city.buildings.count_total(BUILDING_BRICKLAYERS_GUILD);
             int bricklayers_active = g_city.buildings.count_active(BUILDING_BRICKLAYERS_GUILD);
-            bool stone_stockpiled = g_city.resource.is_stockpiled(RESOURCE_STONE);
-            bool lime_stockpiled = g_city.resource.is_stockpiled(RESOURCE_LIMESTONE);
-            bool bricks_stockpiled = g_city.resource.is_stockpiled(RESOURCE_BRICKS);
+            bool stone_stockpiled = city_resource().is_stockpiled(RESOURCE_STONE);
+            bool lime_stockpiled = city_resource().is_stockpiled(RESOURCE_LIMESTONE);
+            bool bricks_stockpiled = city_resource().is_stockpiled(RESOURCE_BRICKS);
             int stone_ready = city_resource_ready_for_using(RESOURCE_STONE);
             int lime_ready = city_resource_ready_for_using(RESOURCE_LIMESTONE);
             int timber_ready = city_resource_ready_for_using(RESOURCE_TIMBER);

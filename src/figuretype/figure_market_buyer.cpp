@@ -1,4 +1,5 @@
 #include "figure_market_buyer.h"
+#include "city/city_resource.h"
 
 #include "market.h"
 #include "building/building_house.h"
@@ -392,7 +393,7 @@ void distribute_market_resources_og(building *b, building *market) {
     }
 
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        e_resource resource = g_city.allowed_foods(i);
+        e_resource resource = city_resource().allowed_foods(i);
         if (!resource) {
             continue;
         }
@@ -453,8 +454,8 @@ int figure_market_buyer::og_buy_food_slot(int index, building *storage_b) {
         return 0;
     }
 
-    e_resource resource = g_city.allowed_foods(slot);
-    if (!resource || g_city.resource.is_stockpiled(resource)) {
+    e_resource resource = city_resource().allowed_foods(slot);
+    if (!resource || city_resource().is_stockpiled(resource)) {
         return 0;
     }
 
@@ -489,7 +490,7 @@ int figure_market_buyer::og_buy_goods_slot(int index, building *storage_b) {
     auto &d = runtime_data();
     const int slot = d.resources[index];
     e_resource resource = inventory_good_resource(slot);
-    if (!resource || g_city.resource.is_stockpiled(resource)) {
+    if (!resource || city_resource().is_stockpiled(resource)) {
         return 0;
     }
 
@@ -697,7 +698,7 @@ int figure_market_buyer::take_food_from_storage(building* market, building* b) {
         if (inv < INVENTORY_FOOD1 || inv > INVENTORY_FOOD4) {
             return 0;
         }
-        e_resource resource = g_city.allowed_foods(inv);
+        e_resource resource = city_resource().allowed_foods(inv);
         if (!resource) {
             return 0;
         }
@@ -731,7 +732,7 @@ int figure_market_buyer::take_food_from_storage(building* market, building* b) {
             if ((taken_slots && taken_slots[foodi]) || !bazaar->idx_accepted(foodi)) {
                 continue;
             }
-            e_resource res = g_city.allowed_foods(foodi);
+            e_resource res = city_resource().allowed_foods(foodi);
             if (!res || storage->amount(res) < 100) {
                 continue;
             }

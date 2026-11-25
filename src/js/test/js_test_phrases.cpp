@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_resource.h"
 #include "city/coverage.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
@@ -66,7 +67,7 @@ ANK_FUNCTION_1(__test_city_problem_other_loaded)
 // Puts the city into a state with no problem at all: every OG weight is calm.
 static void __test_city_problem_calm() {
     city_health().value = 100;
-    g_city.resource.food_supply_months = 12;
+    city_resource().food_supply_months = 12;
     for (auto& category : city_labor().categories) {
         category.workers_allocated = 0;
         category.workers_needed = 0;
@@ -88,7 +89,7 @@ static void __test_city_problem_set(xstring key, int value) {
     if (key == "health") {
         city_health().value = value;
     } else if (key == "food_months") {
-        g_city.resource.food_supply_months = (uint8_t)value;
+        city_resource().food_supply_months = (uint8_t)value;
     } else if (key == "kingdom") {
         city_kingdome().rating = (uint8_t)value;
     } else if (key == "entertainment") {

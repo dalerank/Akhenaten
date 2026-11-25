@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_resource.h"
 #include "city/city_religion.h"
 
 #include "building/building.h"
@@ -92,8 +93,8 @@ static void __test_city_set_trade(int resource, int status, int trading_amount) 
     if (resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
         return;
     }
-    g_city.resource.trade_status[resource] = (e_trade_status)status;
-    g_city.resource.trading_amount[resource] = (int16_t)trading_amount;
+    city_resource().trade_status[resource] = (e_trade_status)status;
+    city_resource().trading_amount[resource] = (int16_t)trading_amount;
 }
 ANK_FUNCTION_3(__test_city_set_trade);
 
@@ -105,7 +106,7 @@ ANK_FUNCTION(__test_trade_update_export_keep);
 // What the trade checks read as stored in yards, without placing a connected yard.
 static void __test_city_set_yards_stored(int resource, int amount) {
     if (resource > RESOURCE_NONE && resource < RESOURCES_MAX) {
-        g_city.resource.stored_in_storages[resource] = (uint16_t)amount;
+        city_resource().stored_in_storages[resource] = (uint16_t)amount;
     }
 }
 ANK_FUNCTION_2(__test_city_set_yards_stored);
@@ -226,8 +227,8 @@ static void __test_empire_city_luxury_source(int slot, int name_id, int route_id
 ANK_FUNCTION_3(__test_empire_city_luxury_source);
 
 static int __test_city_update_luxury_goods_kinds() {
-    g_city.resource.luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
-    return g_city.resource.luxury_goods_kinds;
+    city_resource().luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
+    return city_resource().luxury_goods_kinds;
 }
 ANK_FUNCTION(__test_city_update_luxury_goods_kinds);
 
@@ -273,7 +274,7 @@ static int __test_yards_stored(int resource) {
     if (resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
         return 0;
     }
-    return g_city.resource.yards_stored(static_cast<e_resource>(resource));
+    return city_resource().yards_stored(static_cast<e_resource>(resource));
 }
 ANK_FUNCTION_1(__test_yards_stored);
 
@@ -281,7 +282,7 @@ static int __test_yards_stored_staffed(int resource) {
     if (resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
         return 0;
     }
-    return g_city.resource.yards_stored_staffed(static_cast<e_resource>(resource));
+    return city_resource().yards_stored_staffed(static_cast<e_resource>(resource));
 }
 ANK_FUNCTION_1(__test_yards_stored_staffed);
 
@@ -830,7 +831,7 @@ static int __test_granary_add_allowed_food(int bid, int food_index, int amount) 
     if (!granary || !b->is_valid() || food_index < 0 || food_index >= INVENTORY_MAX_FOOD || amount <= 0) {
         return 0;
     }
-    e_resource res = g_city.allowed_foods(food_index);
+    e_resource res = city_resource().allowed_foods(food_index);
     if (res == RESOURCE_NONE) {
         return 0;
     }
@@ -946,7 +947,7 @@ static int __test_granary_find_getting_source(int bid) {
     if (!granary || !b->is_valid()) {
         return 0;
     }
-    g_city.resource.calculate_stocks();
+    city_resource().calculate_stocks();
     return granary->find_storage_for_getting().building_id;
 }
 ANK_FUNCTION_1(__test_granary_find_getting_source);
@@ -975,7 +976,7 @@ static int __test_granary_clear_allowed_food(int bid, int food_index) {
     if (!granary || !b->is_valid() || food_index < 0 || food_index >= INVENTORY_MAX_FOOD) {
         return 0;
     }
-    e_resource res = g_city.allowed_foods(food_index);
+    e_resource res = city_resource().allowed_foods(food_index);
     if (res == RESOURCE_NONE) {
         return 0;
     }
@@ -988,7 +989,7 @@ static int __test_city_allowed_food(int food_index) {
     if (food_index < 0 || food_index >= INVENTORY_MAX_FOOD) {
         return 0;
     }
-    return (int)g_city.allowed_foods(food_index);
+    return (int)city_resource().allowed_foods(food_index);
 }
 ANK_FUNCTION_1(__test_city_allowed_food);
 
@@ -996,7 +997,7 @@ static int __test_set_allowed_food(int food_index, int resource) {
     if (food_index < 0 || food_index >= INVENTORY_MAX_FOOD) {
         return 0;
     }
-    g_city.set_allowed_food(food_index, (e_resource)resource);
+    city_resource().set_allowed_food(food_index, (e_resource)resource);
     // Refresh bazaar slot types so accept toggles / display match the new foods.
     buildings_valid_do(
       [](building& b) {
@@ -1011,12 +1012,12 @@ ANK_FUNCTION_2(__test_set_allowed_food);
 
 // The month's and the week's food consumption, each a no-op unless its model is the active one.
 static void __test_city_consume_food_monthly() {
-    g_city.resource.consume_food_monthly();
+    city_resource().consume_food_monthly();
 }
 ANK_FUNCTION(__test_city_consume_food_monthly);
 
 static void __test_city_consume_food_weekly() {
-    g_city.resource.consume_food_weekly(g_simulation.simtime);
+    city_resource().consume_food_weekly(g_simulation.simtime);
 }
 ANK_FUNCTION(__test_city_consume_food_weekly);
 
@@ -1026,8 +1027,8 @@ static int __test_city_food_consumption_percentage() {
 ANK_FUNCTION(__test_city_food_consumption_percentage);
 
 static int __test_city_recalc_granary_stored(int resource) {
-    g_city.resource.calculate_available_food();
-    return (int)g_city.resource.granary_stored((e_resource)resource);
+    city_resource().calculate_available_food();
+    return (int)city_resource().granary_stored((e_resource)resource);
 }
 ANK_FUNCTION_1(__test_city_recalc_granary_stored);
 
@@ -1103,7 +1104,7 @@ static int __test_food_mill_find_getting_source(int bid) {
     if (!mill || !b->is_valid()) {
         return 0;
     }
-    g_city.resource.calculate_stocks();
+    city_resource().calculate_stocks();
     return mill->find_storage_for_getting().building_id;
 }
 ANK_FUNCTION_1(__test_food_mill_find_getting_source);
@@ -1135,7 +1136,7 @@ static int __test_food_mill_spawn_figure(int bid) {
           }
       },
       {BUILDING_GRANARY, BUILDING_STORAGE_YARD});
-    g_city.resource.calculate_stocks();
+    city_resource().calculate_stocks();
     const bool before = mill->has_figure_of_type(0, FIGURE_STORAGEYARD_CART);
     mill->spawn_figure();
     const bool after = mill->has_figure_of_type(0, FIGURE_STORAGEYARD_CART);

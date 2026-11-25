@@ -31,10 +31,10 @@ namespace {
             return {178, 140};
         }
         const int marble_needed = p.stonemasons_waiting * building_pharos_lighthouse::MATERIAL_PER_LOAD;
-        const bool marble_short = marble_needed > g_city.resource.yards_stored(RESOURCE_MARBLE)
-                                  || (marble_needed > 0 && g_city.resource.is_stockpiled(RESOURCE_MARBLE));
+        const bool marble_short = marble_needed > city_resource().yards_stored(RESOURCE_MARBLE)
+                                  || (marble_needed > 0 && city_resource().is_stockpiled(RESOURCE_MARBLE));
         if (p.stonemasons_waiting && marble_short && p.material) {
-            return g_city.resource.is_stockpiled(RESOURCE_MARBLE) ? textid{178, 101} : textid{178, 26};
+            return city_resource().is_stockpiled(RESOURCE_MARBLE) ? textid{178, 101} : textid{178, 26};
         }
         if (lh.has_free_spot(FIGURE_STONEMASON)) {
             if (!built(BUILDING_WORK_CAMP)) {

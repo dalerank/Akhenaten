@@ -1,4 +1,5 @@
 #include "building_impl.h"
+#include "city/city_resource.h"
 #include "io/gamefiles/lang.h"
 #include "game/sound_effect.h"
 

@@ -101,7 +101,7 @@ static bool request_can_comply(const event_ph_t& event) {
     if (event.item.value == RESOURCE_DEBEN) {
         return city_finance().treasury >= event.amount.value;
     }
-    return g_city.resource.stored((e_resource)event.item.value) >= event.amount.value * 100;
+    return city_resource().stored((e_resource)event.item.value) >= event.amount.value * 100;
 }
 
 static void troops_request_start(event_ph_t& e);

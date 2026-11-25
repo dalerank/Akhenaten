@@ -248,7 +248,7 @@ int building_sun_temple::placement_amount(e_resource r) const {
 }
 
 int building_sun_temple::yards_available(e_resource r) {
-    return g_city.resource.yards_stored_staffed(r);
+    return city_resource().yards_stored_staffed(r);
 }
 
 bool building_sun_temple::has_completed_sun_temple() {
