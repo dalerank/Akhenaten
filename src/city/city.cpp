@@ -106,7 +106,6 @@ void city_t::init() {
     zero_fill(maintenance);
     zero_fill(resource);
     zero_fill(food_supply);
-    zero_fill(monuments);
     zero_fill(map);
 
     g_simulation.reset_systems();

@@ -1,14 +1,14 @@
 #include "city/city_monuments.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
-#include "city/city.h"
+#include "core/xvalue.h"
 #include "game/sim_schedule.h"
 
 #include "game/game_events.h"
 #include "js/js_register.h"
 
-void city_monuments_t::update_month() {
-
+city_monuments_t& city_monuments() {
+    return xvalue<city_monuments_t>::ref();
 }
 
 void city_monuments_t::advance_year() {
@@ -19,7 +19,7 @@ class monuments_system : public sim_system {
 public:
     const char* name() const override { return "monuments"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_monuments_year, SIM_PHASE_YEAR, [](int) { g_city.monuments.advance_year(); }});
+        schedule.add({sim_step_monuments_year, SIM_PHASE_YEAR, [](int) { city_monuments().advance_year(); }});
     }
 };
 
