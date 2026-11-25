@@ -153,7 +153,7 @@ namespace og {
             d.unreachable_ticks = og.unreachable_ticks;
             d.tax_coverage = og.house_tax_coverage;
             d.days_without_food = og.house_months_without_food;
-            house.base.tax_income_or_storage = (int16_t)std::min<int32_t>(h.tax_income, INT16_MAX);
+            d.tax_income = h.tax_income;
         }
 
         void load_bazaar(::building_bazaar& bazaar, const building& og) {
