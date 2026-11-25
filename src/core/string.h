@@ -13,6 +13,10 @@ struct textid {
     bool valid() const { return group > 0; }
     pcstr c_str() const;
     pcstr c_str_safe(pcstr def) const;
+
+    using lookup_fn = pcstr (*)(int group, int id);
+    static void set_lookup(lookup_fn fn);
+    static pcstr lookup(int group, int id);
     textid &operator=(std::initializer_list<int> v) {
         if (v.size() > 0) group = *v.begin();
         if (v.size() > 1) id = *(v.begin() + 1);

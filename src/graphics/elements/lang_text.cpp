@@ -10,6 +10,7 @@
 #include "game/game_config.h"
 #include "game/game.h"
 #include "content/vfs.h"
+#include "core/app_module.h"
 
 #if defined(GAME_PLATFORM_ANDROID)
 #include "platform/android/android.h"
@@ -212,6 +213,10 @@ bool lang_android_load_localization_base_en_direct(pcstr path) {
     return android_load_localization_base_en_direct(path);
 }
 #endif
+
+void ANK_REGISTER_APPLICATION_MODULE(register_localization_lookup) {
+    textid::set_lookup(lang_get_string);
+}
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_config_arch.r("game_languages", game_languages);

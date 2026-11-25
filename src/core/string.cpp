@@ -3,7 +3,7 @@
 #include <cstring>
 #include <ctype.h>
 
-#include <io/gamefiles/lang.h>
+#include "core/xvalue.h"
 
 uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength) {
     int length = 0;
@@ -214,8 +214,21 @@ pcstr strstr_rev(pcstr string, pcstr sub_string) {
     return nullptr;
 }
 
+struct textid_lookup_t {
+    textid::lookup_fn fn = nullptr;
+};
+
+void textid::set_lookup(lookup_fn fn) {
+    xvalue<textid_lookup_t>::ref().fn = fn;
+}
+
+pcstr textid::lookup(int group, int id) {
+    const lookup_fn fn = xvalue<textid_lookup_t>::ref().fn;
+    return fn ? fn(group, id) : nullptr;
+}
+
 pcstr textid::c_str_safe(pcstr def) const {
-    pcstr text = valid() ? (pcstr)lang_get_string(group, id) : nullptr;
+    pcstr text = valid() ? lookup(group, id) : nullptr;
 
     return text ? text : def;
 }

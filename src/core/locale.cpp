@@ -2,7 +2,6 @@
 
 #include "core/string.h"
 #include "core/log.h"
-#include "io/gamefiles/lang.h"
 
 #include <stdint.h>
 

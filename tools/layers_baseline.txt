@@ -248,7 +248,6 @@ core/calc.h -> grid/point.h
 core/encoding/korean.cpp -> graphics/image.h
 core/encoding/simp_chinese.cpp -> graphics/image.h
 core/encoding/trad_chinese.cpp -> graphics/image.h
-core/locale.cpp -> io/gamefiles/lang.h
 core/memory_manager.cpp -> dev/debug.h
 core/profiler.cpp -> dev/debug.h
 core/random.h -> grid/point.h

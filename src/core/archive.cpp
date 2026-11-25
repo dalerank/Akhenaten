@@ -1,5 +1,6 @@
 #include "core/archive.h"
 #include "core/log.h"
+#include "core/string.h"
 
 #include "graphics/animation.h"
 #include "graphics/image_desc.h"
@@ -308,8 +309,6 @@ void archive::getglobal(std::string_view name) {
     js_getglobal((js_State *)state, name.data());
 }
 
-pcstr lang_get_string(int group, int index);
-
 static js_StringNode property_group = js_intern("group");
 static js_StringNode property_id = js_intern("id");
 
@@ -330,7 +329,7 @@ xstring archive::r_string_impl(pcstr name, pcstr def) {
             js_getindex(vm, -1, 1); gx.y = !vm->isundefined(-1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
         }
 
-        result = lang_get_string(gx.x, gx.y);
+        result = textid::lookup(gx.x, gx.y);
     } else if (vm->isobject(-1)) {
         get_prop(vm, property_group);
         int group = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1);
@@ -339,7 +338,7 @@ xstring archive::r_string_impl(pcstr name, pcstr def) {
         get_prop(vm, property_id);
         int id = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1);
         js_pop(vm, 1);
-        result = lang_get_string(group, id);
+        result = textid::lookup(group, id);
     }
     js_pop(vm, 1);
     return result;
