@@ -61,4 +61,7 @@ public:
     virtual void figure_action() override;
     virtual void update_animation() override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
+
+protected:
+    void start_shot(const figure* prey);
 };

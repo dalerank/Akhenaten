@@ -93,6 +93,12 @@ void figure_hunter::on_spear_miss() {
     advance_action(ACTION_8_RECALCULATE);
 }
 
+void figure_hunter::start_shot(const figure* prey) {
+    base.wait_ticks = 0;
+    base.direction = calc_missile_shooter_direction(tile(), prey->tile);
+    advance_action(ACTION_15_OSTRICH_HUNTER_HUNT);
+}
+
 void figure_hunter::figure_before_action() {
     building *b = home();
     if (b->state != BUILDING_STATE_VALID) {
@@ -226,13 +232,12 @@ void figure_hunter::figure_action() {
         if (dist >= params.attack_distance) {
             const bool finished = do_goto(prey->tile, terrain, ACTION_15_OSTRICH_HUNTER_HUNT, ACTION_8_RECALCULATE);
             if (finished) {
-                base.wait_ticks = 0;
+                start_shot(prey);
             } else if (direction() == DIR_FIGURE_REROUTE) {
                 advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
             }
         } else {
-            base.wait_ticks = 0;
-            advance_action(ACTION_15_OSTRICH_HUNTER_HUNT);
+            start_shot(prey);
         }
         break;
 
@@ -254,22 +259,10 @@ void figure_hunter::figure_action() {
             break;
         }
 
-        const int16_t shot = ++base.wait_ticks;
-        if (shot == params.shoot_tick) {
-            base.direction = calc_missile_shooter_direction(tile(), prey->tile);
-            const e_figure_type mtype = missile_type();
-            base.animctx.restart([this, mtype] {
-                if (!base.target_figure_id) {
-                    return;
-                }
-                figure *f = figure_get(base.target_figure_id);
-                if (!f || prey_is_downed(f)) {
-                    return;
-                }
-                figure_missile::create(id(), tile(), f->tile, mtype);
-            });
+        if (base.wait_ticks == params.shoot_tick) {
+            figure_missile::create(id(), tile(), prey->tile, missile_type());
         }
-        if (shot > params.shoot_timeout) {
+        if (++base.wait_ticks > params.shoot_timeout) {
             advance_action(ACTION_8_RECALCULATE);
         }
     } break;

@@ -39,9 +39,9 @@ function run_test() {
     __test_figure_set_action(hunter, ACTION_8_RECALCULATE)
 
     var hunting = false
-    for (var i = 0; i < 40; i++) {
+    for (var i = 0; i < 800; i++) {
         test_figure_set_speed(prey, 0)
-        __test_pump_frames(20)
+        __test_run_ticks(1)
         if (__figure_get_action_state(hunter) == ACTION_15_OSTRICH_HUNTER_HUNT) {
             hunting = true
             break
