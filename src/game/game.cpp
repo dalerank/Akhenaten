@@ -3,6 +3,9 @@
 #include "city/ratings.h"
 #include "city/city_migration.h"
 #include "game/simulation.h"
+#include "game/game_events.h"
+#include "grid/grid.h"
+#include "figure/figure_names.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_barracks.h"
@@ -244,6 +247,16 @@ void game_t::frame_end() {
     animation = true;
 
     execute_frame_end_events();
+}
+
+void game_t::start_session() {
+    grid_xx::init_all_grids();
+    g_simulation.reset_systems();
+    events::start_session();
+    init_state();
+    animation_timers_init();
+    figure_name_init();
+    grid_xx::clear_all_grids();
 }
 
 void game_t::init_state() {

@@ -10,7 +10,6 @@
 #include "city/city_victory.h"
 #include "city/city_message.h"
 #include "game/game_events.h"
-#include "game/simulation.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
 #include "figure/enemy_army.h"
@@ -63,15 +62,9 @@
 
 
 void game_file_editor_clear_data(void) {
-    grid_xx::init_all_grids();
-
-    g_simulation.reset_systems();
-    events::start_session();
+    game.start_session();
     city_init_custom_map();
-    game.init_state();
-    game.animation_timers_init();
     events::emit(event_building_menu_update{"enable_all"});
-    figure_name_init();
     g_empire_traders.init();
     g_invasions.clear();
 }

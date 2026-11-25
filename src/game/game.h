@@ -126,6 +126,7 @@ struct game_t {
     void frame_end();
 
     void init_state();
+    void start_session();
 
     void city_sounds_frame_begin();
     void before_start_simulation();

@@ -33,7 +33,6 @@
 #include "game/game.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
-#include "game/simulation.h"
 #include "game/undo.h"
 #include "grid/bridge_grid.h"
 #include "grid/building.h"
@@ -75,15 +74,7 @@ const int GamestateLoadDetail::read_file_version(const char* filename, int offse
 
 void GamestateLoadDetail::pre_load() {
     OZZY_PROFILER_FUNCTION();
-    grid_xx::init_all_grids();
-
-    g_simulation.reset_systems();
-    events::start_session();
-    game.init_state();
-    game.animation_timers_init();
-    figure_name_init();
-    grid_xx::clear_all_grids();
-
+    game.start_session();
     map_image_context_init();
     map_random_init();
 
