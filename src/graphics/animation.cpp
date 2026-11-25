@@ -90,10 +90,6 @@ void animation_context::update(bool refresh_only) {
         if (frame >= max_frames * frame_duration) {
             was_finished = !loop;
             frame = loop ? 0 : (max_frames * frame_duration - 1);
-            if (on_finished_cb) {
-                on_finished_cb();
-                on_finished_cb = nullptr;
-            }
         }
         tick_updated = true;
         return;

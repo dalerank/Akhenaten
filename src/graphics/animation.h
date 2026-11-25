@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/archive.h"
-#include "core/xfunction.h"
 #include "graphics/image_desc.h"
 #include "graphics/animkeys.h"
 #include "core/system_time.h"
@@ -55,7 +54,6 @@ struct animation_context {
     bool was_finished = false;
     bool tick_updated = false;
     xstring path;
-    xfunction<void()> on_finished_cb;
 
     void setup(const animation_t &anim);
     void update(bool refresh_only);
@@ -63,9 +61,9 @@ struct animation_context {
     inline bool ticks() const { return max_frames > 0 || base > 0; }
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start_frame() const { return base + offset; }
-    inline void restart() { was_finished = false; frame = sframe; }
-    inline void restart(xfunction<void()> cb) {
-        restart(); on_finished_cb = std::move(cb);
+    inline void restart() {
+        was_finished = false;
+        frame = sframe;
     }
     inline bool finished() const {
         if (was_finished) return true;

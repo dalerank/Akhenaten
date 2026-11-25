@@ -211,7 +211,6 @@ void figure_clear_all() {
         int figure_id = f->id;
         f->clear_impl();
         f->debug_lines_clear();
-        f->animctx.on_finished_cb = nullptr;
         memset(f, 0, sizeof(figure));
         f->state = FIGURE_STATE_NONE;
         f->id = figure_id;
