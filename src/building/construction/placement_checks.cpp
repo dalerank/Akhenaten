@@ -8,6 +8,8 @@
 #include "building/building_road.h"
 #include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/city_figures.h"
 #include "city/city_temple_complexes.h"
 #include "game/game_config.h"
 #include "grid/building.h"

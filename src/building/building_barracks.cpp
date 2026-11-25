@@ -13,6 +13,7 @@
 #include "grid/road_access.h"
 #include "game/game_config.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_temple_complexes.h"
 #include "game/game.h"
 #include "graphics/elements/ui.h"

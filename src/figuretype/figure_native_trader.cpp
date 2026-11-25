@@ -1,4 +1,5 @@
 #include "figure_native_trader.h"
+#include "building/building.h"
 
 #include "empire/trader_handler.h"
 #include "figure/figure.h"

@@ -1,11 +1,12 @@
 #include "road_access.h"
+#include "city/map.h"
+#include "city/city_buildings.h"
 
 #include "building/building.h"
 #include "building/building_roadblock.h"
 #include "building/building_static_params.h"
 #include "building/building_type.h"
 #include "building/rotation.h"
-#include "city/city.h"
 #include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/grid.h"

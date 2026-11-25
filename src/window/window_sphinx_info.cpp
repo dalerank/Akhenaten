@@ -3,6 +3,7 @@
 
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "graphics/elements/ui.h"

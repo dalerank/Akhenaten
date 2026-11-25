@@ -8,6 +8,7 @@
 #include "grid/tiles.h"
 #include "grid/road_access.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "graphics/animation.h"
 #include "game/game_events.h"
 #include "widget/debug_console.h"

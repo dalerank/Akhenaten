@@ -14,6 +14,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/profiler.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "city/city_bookmarks.h"
 #include "city/city_floods.h"
 #include "city/entertainment.h"

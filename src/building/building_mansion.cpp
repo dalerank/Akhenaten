@@ -4,6 +4,8 @@
 #include "city/city_sentiment.h"
 
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/city_figures.h"
 #include "city/city_finance.h"
 #include "city/city_message.h"
 #include "city/city_warnings.h"

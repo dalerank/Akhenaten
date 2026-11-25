@@ -4,6 +4,8 @@
 
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/city_figures.h"
 #include "city/city_message.h"
 #include "construction/build_planner.h"
 #include "figure/figure.h"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "window_info.h"
+#include "building/building_type.h"
 #include "core/typename.h"
 
 class building;

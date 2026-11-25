@@ -1,7 +1,9 @@
 #include "figure_enemy.h"
+#include "core/calc.h"
 #include "city/city_figures.h"
 
 #include "city/city.h"
+#include "city/map.h"
 #include "city/sound.h"
 #include "city/city_warnings.h"
 #include "figure/combat.h"

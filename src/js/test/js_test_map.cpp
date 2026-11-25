@@ -4,6 +4,7 @@
 
 #include "building/building_road.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "city/city_figures.h"
 #include "city/city_malaria_risk.h"
 #include "city/city_recorded_paths.h"

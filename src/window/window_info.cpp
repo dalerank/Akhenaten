@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "overlays/city_overlay.h"
 #include "core/calc.h"

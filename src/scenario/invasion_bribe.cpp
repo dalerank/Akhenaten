@@ -2,6 +2,7 @@
 #include "city/city_kingdome_relations.h"
 
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_finance.h"
 #include "city/city_message.h"
 #include "core/log.h"

@@ -1,6 +1,6 @@
 #include "road_network.h"
+#include "city/map.h"
 
-#include "city/city.h"
 #include "core/profiler.h"
 #include "grid/grid.h"
 #include "grid/routing/routing_terrain.h"

@@ -2,6 +2,7 @@
 #include "city/buildings.h"
 
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "figure/figure.h"
 #include "grid/water.h"
 #include "js/js_register.h"

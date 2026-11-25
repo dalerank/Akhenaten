@@ -1,4 +1,5 @@
 #include "animal_hyena.h"
+#include "core/calc.h"
 #include "game/game_events.h"
 
 #include "city/city.h"

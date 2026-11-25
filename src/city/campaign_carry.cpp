@@ -5,6 +5,8 @@
 #include "building/monument_royal_tomb.h"
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_figures.h"
+#include "city/map.h"
 #include "city/city_buildings.h"
 #include "city/city_message.h"
 #include "core/vec2i.h"

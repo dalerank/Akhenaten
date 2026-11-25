@@ -8,6 +8,7 @@
 #include "city/buildings.h"
 #include "city/city_finance.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "city/city_message.h"
 #include "city/city_resource.h"
 #include "core/calc.h"

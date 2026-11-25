@@ -1,6 +1,7 @@
 #pragma once
 
 #include "window/window_building_info.h"
+#include "figure/formation.h"
 
 struct batalion_info_window : public building_info_window_t<batalion_info_window> {
     batalion_info_window();

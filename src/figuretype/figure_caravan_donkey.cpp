@@ -1,4 +1,5 @@
 #include "figure_caravan_donkey.h"
+#include "city/city_figures.h"
 
 #include "empire/trader_handler.h"
 #include "figuretype/figure_kingdome_trader.h"

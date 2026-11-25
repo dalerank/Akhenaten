@@ -1,4 +1,5 @@
 #include "building_farm.h"
+#include "figure/figure.h"
 
 #include "city/city.h"
 #include "core/calc.h"

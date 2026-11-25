@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building.h"
+#include "figure/formation.h"
 #include "window/window_building_info.h"
 
 class buffer;

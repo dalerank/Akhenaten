@@ -1,4 +1,5 @@
 #include "malaria_risk.h"
+#include "city/city_buildings.h"
 
 #include "building/building.h"
 #include "building/building_type.h"
@@ -11,7 +12,6 @@
 #include "grid/trees.h"
 #include "io/io_buffer.h"
 #include "scenario/map.h"
-#include "city/city.h"
 
 grid_xx g_malaria_risk_grid(FS_INT8);
 

@@ -7,6 +7,7 @@
 #include "city/city_health.h"
 #include "city/city_labor.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_population.h"
 #include "city/city_problems.h"
 #include "core/bstring.h"

@@ -3,6 +3,7 @@
 #include "grid/orientation.h"
 
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "figure/action.h"
 #include "figure/figure.h"
 #include "game/undo.h"

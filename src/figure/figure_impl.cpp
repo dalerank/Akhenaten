@@ -8,6 +8,8 @@
 #include "figuretype/figure_cartpusher.h"
 #include "game/game_config.h"
 #include "city/city.h"
+#include "city/city_figures.h"
+#include "city/map.h"
 #include "city/city_population.h"
 #include "city/city_recorded_paths.h"
 #include "city/city_resource.h"

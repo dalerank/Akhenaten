@@ -4,6 +4,7 @@
 #include "building/building.h"
 #include "city/entertainment.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "core/profiler.h"

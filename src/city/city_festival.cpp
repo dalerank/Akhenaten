@@ -9,6 +9,8 @@
 #include "buildings.h"
 #include "city/constants.h"
 #include "city/city.h"
+#include "city/buildings.h"
+#include "city/city_buildings.h"
 #include "city/city_local_cults.h"
 #include "city/city_message.h"
 #include "core/random.h"

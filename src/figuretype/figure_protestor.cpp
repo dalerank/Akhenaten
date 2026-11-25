@@ -2,6 +2,7 @@
 
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_buildings.h"
 #include "core/calc.h"
 #include "core/random.h"

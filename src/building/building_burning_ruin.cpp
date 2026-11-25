@@ -4,6 +4,7 @@
 
 #include "game/undo.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "core/random.h"
 #include "core/profiler.h"
 #include "grid/building_tiles.h"

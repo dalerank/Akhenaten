@@ -1,6 +1,8 @@
 #include "figure_homeless.h"
 
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/map.h"
 #include "core/profiler.h"
 #include "core/calc.h"
 #include "core/random.h"

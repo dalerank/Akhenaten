@@ -1,4 +1,5 @@
 #include "map.h"
+#include "grid/desirability.h"
 #include "city/military.h"
 #include "game/simulation.h"
 #include "core/app_module.h"

@@ -6,6 +6,7 @@
 #include "building/building_storage.h"
 #include "building/building_wall.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_victory.h"
 #include "city/city_message.h"
 #include "game/game_events.h"

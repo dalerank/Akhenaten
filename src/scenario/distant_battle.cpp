@@ -19,6 +19,7 @@
 #include "game/simulation.h"
 #include "empire/empire.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
 #include "scenario/request.h"

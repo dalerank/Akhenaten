@@ -3,6 +3,7 @@
 
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"

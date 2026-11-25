@@ -1,15 +1,9 @@
 #pragma once
 
-#include <stdint.h>
-
+#include "core/variant.h"
+#include "core/xstring.h"
 #include "game/player_record.h"
-#include "city/buildings.h"
-#include "city/map.h"
-#include "city/coverage.h"
-#include "grid/point.h"
-#include "grid/desirability.h"
-#include "city/city_figures.h"
-#include "city/city_buildings.h"
+#include "game/resource.h"
 
 struct empire_city;
 struct simulation_time_t;
@@ -29,7 +23,6 @@ struct city_t {
 
     void figures_generate_criminals();
 
-
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 
     empire_city& ourcity();
@@ -48,14 +41,6 @@ struct city_t {
 
     bvariant get_property(xstring domain, xstring name) const;
     void on_post_load();
-
-    template <typename T>
-    void reload_system(T &system) {
-        call_unload_if_exists(system);
-        const bool ok = g_config_arch.r(system.esid(), system);
-        call_init_if_exists(system);
-        verify_no_crash_var(ok, "Variable not exist in config: %s", system.esid());
-    }
 };
 
 pcstr city_player_name();

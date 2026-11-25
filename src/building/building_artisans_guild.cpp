@@ -1,8 +1,10 @@
 #include "building_artisans_guild.h"
+#include "city/city_buildings.h"
 
 #include "building/monument_royal_tomb.h"
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "figure/figure.h"
 #include "figuretype/figure_tomb_artisan.h"
 #include "game/resource.h"

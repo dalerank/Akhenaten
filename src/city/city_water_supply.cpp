@@ -1,4 +1,6 @@
 #include "city/city.h"
+#include "city/buildings.h"
+#include "city/city_buildings.h"
 
 #include "core/profiler.h"
 #include "grid/water.h"

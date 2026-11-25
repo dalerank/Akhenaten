@@ -7,6 +7,7 @@
 #include "game/sound_effect.h"
 
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "figure/enemy_army.h"

@@ -43,6 +43,8 @@
 #include "overlays/city_overlay.h"
 #include "sound/sound_building.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/city_figures.h"
 #include "figure/figure.h"
 #include "figure/route.h"
 #include "figuretype/figure_cartpusher.h"

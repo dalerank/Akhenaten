@@ -4,6 +4,7 @@
 
 #include "building/building.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_recorded_paths.h"
 #include "game/game_events.h"
 #include "city/city_warnings.h"

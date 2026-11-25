@@ -3,6 +3,7 @@
 #include "building/building_shipyard.h"
 #include "building/building_warship_wharf.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "core/calc.h"
 #include "figure/combat.h"

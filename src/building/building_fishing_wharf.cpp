@@ -2,6 +2,7 @@
 #include "grid/orientation.h"
 
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_temple_complexes.h"
 #include "grid/water.h"
 #include "grid/building.h"

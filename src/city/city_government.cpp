@@ -1,4 +1,6 @@
 #include "city/city.h"
+#include "city/buildings.h"
+#include "city/city_buildings.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"

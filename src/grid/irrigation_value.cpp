@@ -1,4 +1,5 @@
 #include "irrigation_value.h"
+#include "city/city_buildings.h"
 #include "grid/irrigation_value_chunks.h"
 
 #include "building/building.h"
@@ -14,7 +15,6 @@
 #include "grid/canals.h"
 #include "io/io_buffer.h"
 #include "scenario/map.h"
-#include "city/city.h"
 
 
 irrigation_value_t g_irrigation_value;

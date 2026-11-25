@@ -34,6 +34,7 @@
 #include "scenario/editor.h"
 #include "js/js_register.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "dev/debug.h"
 #include "scenario/distant_battle.h"

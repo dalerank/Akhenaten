@@ -1,10 +1,13 @@
 #include "figure_enemy_spearman.h"
+#include "building/building.h"
+#include "core/calc.h"
 #include "city/city_figures.h"
 #include "game/sound_effect.h"
 #include "game/game_events.h"
 
 #include "core/profiler.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "city/sound.h"
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"

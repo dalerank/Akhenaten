@@ -1,5 +1,7 @@
 #include "city/city_houses.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/coverage.h"
 #include "city/city_houses_chunks.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"

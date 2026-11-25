@@ -1,4 +1,5 @@
 #include "city/object_info.h"
+#include "city/city_figures.h"
 
 #include "window/window_info.h"
 #include "figure/figure.h"

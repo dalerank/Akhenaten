@@ -8,6 +8,7 @@
 #include "widget/city/ornaments.h"
 #include "window/building/common.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_buildings.h"
 #include "city/city_warnings.h"
 #include "graphics/view/view.h"

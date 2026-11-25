@@ -4,6 +4,7 @@
 #include "building/monuments.h"
 #include "figuretype/figure_stonemason.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_labor.h"
 #include "core/calc.h"
 #include "figure/figure.h"

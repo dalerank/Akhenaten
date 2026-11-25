@@ -17,6 +17,7 @@
 #include "city/city_labor.h"
 
 #include "city/city.h"
+#include "city/map.h"
 #include "city/city_population.h"
 #include "city/city_taxes.h"
 #include "city/sound.h"

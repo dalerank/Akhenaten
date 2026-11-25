@@ -3,6 +3,7 @@
 
 #include "building/building.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_population.h"
 #include "city/city_buildings.h"
 #include "content/vfs.h"

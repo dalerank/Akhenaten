@@ -11,6 +11,8 @@ BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
 #include "city/object_info.h"
 #include "city/buildings.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/city_figures.h"
 #include "core/calc.h"
 #include "core/svector.h"
 #include "game/resource.h"

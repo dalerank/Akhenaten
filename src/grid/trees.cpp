@@ -1,6 +1,6 @@
 #include "trees.h"
+#include "city/map.h"
 
-#include "city/city.h"
 #include "core/profiler.h"
 #include "core/xvalue.h"
 #include "game/resource.h"

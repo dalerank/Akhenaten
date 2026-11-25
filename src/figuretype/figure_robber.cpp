@@ -8,6 +8,7 @@
 #include "building/building_mansion.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "city/city_buildings.h"
 #include "city/city_message.h"
 #include "city/city_warnings.h"

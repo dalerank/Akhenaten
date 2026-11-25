@@ -8,6 +8,7 @@
 #include "building/building_granary.h"
 #include "city/entertainment.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city.h"
 #include "core/profiler.h"
 #include "figure/figure.h"

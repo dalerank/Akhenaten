@@ -6,6 +6,7 @@
 #include "building/building.h"
 #include "building/building_farm.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_plagues.h"
 #include "city/city_buildings.h"
 #include "city/city_floods.h"

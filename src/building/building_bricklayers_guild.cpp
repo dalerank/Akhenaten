@@ -5,6 +5,7 @@
 #include "building/monument_pyramid_engine.h"
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "core/random.h"
 #include "figuretype/figure_bricklayer.h"
 #include "game/game.h"

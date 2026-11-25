@@ -1,8 +1,8 @@
 #include "natives.h"
+#include "city/city_buildings.h"
 
 #include "building/building.h"
 #include "city/buildings.h"
-#include "city/city.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "graphics/image.h"

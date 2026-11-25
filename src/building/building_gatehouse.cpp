@@ -16,6 +16,7 @@
 #include "construction/build_planner.h"
 #include "grid/image.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "grid/road_access.h"
 #include "grid/orientation.h"
 #include "grid/routing/routing_terrain.h"

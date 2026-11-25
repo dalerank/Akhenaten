@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_buildings.h"
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"

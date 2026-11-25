@@ -1,4 +1,5 @@
 #include "city_overlay_architect_reach.h"
+#include "city/city_figures.h"
 
 #include "building/building.h"
 #include "city/city_buildings.h"

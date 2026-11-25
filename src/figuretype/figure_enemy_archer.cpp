@@ -5,6 +5,7 @@
 
 #include "core/profiler.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "city/sound.h"
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"

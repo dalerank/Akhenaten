@@ -5,6 +5,7 @@
 
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/map.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "figure/figure.h"

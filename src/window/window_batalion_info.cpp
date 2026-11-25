@@ -1,4 +1,5 @@
 ﻿#include "window_batalion_info.h"
+#include "city/city_figures.h"
 #include "city/buildings.h"
 
 #include "figure/formation.h"

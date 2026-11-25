@@ -13,6 +13,7 @@
 #include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_population.h"
 #include "core/profiler.h"
 #include "empire/empire.h"

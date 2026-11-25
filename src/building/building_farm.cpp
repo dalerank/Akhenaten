@@ -7,6 +7,8 @@
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/city_figures.h"
 #include "city/city_plagues.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"

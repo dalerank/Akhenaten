@@ -1,4 +1,5 @@
 #include "desirability.h"
+#include "city/city_buildings.h"
 #include "grid/desirability_chunks.h"
 
 #include "building/building.h"
@@ -10,7 +11,6 @@
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "scenario/map.h"
-#include "city/city.h"
 #include "js/js_game.h"
 
 desirability_t ANK_VARIABLE_N(g_desirability, "desirability");
