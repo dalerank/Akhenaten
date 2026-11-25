@@ -252,7 +252,7 @@ static void landscape_size_selected(int size) {
 
 static void button_generate_map(int param1, int param2) {
     for (int i = 0; i < 6; i++) {
-        s_landscape_sizes[i] = lang_get_string(44, 121 + i);
+        s_landscape_sizes[i] = localization().get_string(44, 121 + i);
     }
     stop(1);
     window_select_list_show_text(g_screen.dialog_offset.x + 50, g_screen.dialog_offset.y + 50,

@@ -742,8 +742,8 @@ int main(int argc, char** argv) {
     g_app.subscribe_events();
     platform.append_startup_log("Startup: language reload");
 
-    lang_reload_localized_files();
-    lang_reload_localized_tables();
+    localization().reload_files();
+    localization().reload_tables();
 
     platform.append_startup_log("Startup: first frame");
     run_and_draw();

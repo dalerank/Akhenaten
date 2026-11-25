@@ -526,7 +526,7 @@ int js_vm_load_file_and_exec(pcstr path) {
 
 #if defined(GAME_PLATFORM_ANDROID)
     if (strcmp(path, ":localization_base_en.js") == 0) {
-        if (lang_android_load_localization_base_en_direct(path)) {
+        if (localization().android_load_base_en_direct(path)) {
             logs::info("Loaded localization base directly on Android: %s", path);
             return 1;
         }

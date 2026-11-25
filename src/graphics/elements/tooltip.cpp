@@ -108,7 +108,7 @@ void tooltip_context::draw_overlay_tooltip() {
                 overlay_string[offset++] = ',';
                 overlay_string[offset++] = ' ';
             }
-            pcstr extra_value = (pcstr)lang_get_string(extra_value_text_groups[i], extra_value_text_ids[i]);
+            pcstr extra_value = (pcstr)localization().get_string(extra_value_text_groups[i], extra_value_text_ids[i]);
             overlay_string.append(extra_value);
         }
         text = overlay_string;
@@ -223,7 +223,7 @@ void tooltip_handle(const mouse* m, xfunction<void(tooltip_context*)> func) {
 }
 
 void tooltip_context::set(int t, textid tx) {
-    text = tx.valid() ? lang_get_string(tx) : "";
+    text = tx.valid() ? localization().get_string(tx) : "";
 }
 
 void tooltip_context::set(int t, pcstr tx) {

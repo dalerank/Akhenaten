@@ -87,7 +87,7 @@ void building_info_window::common_info_background(object_info& c) {
     textid workers = { c.group_id, 8 };
     pcstr reason_str = nullptr;
     if (!b->has_road_access) {
-        reason_str = lang_text_from_key("#building_no_road_access");
+        reason_str = localization().text_from_key("#building_no_road_access");
     } else if (!b->num_workers) {
         reason.id = 9;
         reason_str = ui::str(reason);
@@ -130,7 +130,7 @@ void building_info_window::window_info_background(object_info &c) {
         // use model.laborers (== max_workers at create). Prefer live max_workers.
         const int needed = b->max_workers > 0 ? b->max_workers : laborers;
         bstring64 tip;
-        pcstr fmt = lang_text_from_key("#workers_staffing_tooltip");
+        pcstr fmt = localization().text_from_key("#workers_staffing_tooltip");
         if (fmt && *fmt && fmt[0] != '#') {
             tip.printf(fmt, b->num_workers, needed);
         } else {

@@ -18,7 +18,7 @@
 #include "grid/building_tiles.h"
 #include "grid/road_access.h"
 #include "grid/terrain.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "io/io_buffer.h"
 #include "js/js_register.h"
 
@@ -291,7 +291,7 @@ int building_obelisk::building_image_get() const {
 
 static xstring granite_need_warning(e_building_type t, int need) {
     const int lang_id = (t == BUILDING_LARGE_OBELISK) ? 84 : 83;
-    pcstr tmpl = lang_get_string(19, lang_id);
+    pcstr tmpl = localization().get_string(19, lang_id);
     bstring256 msg;
     if (tmpl && tmpl[0]) {
         msg.printf(tmpl, need);

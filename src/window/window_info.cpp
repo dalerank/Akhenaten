@@ -35,7 +35,7 @@
 #include "window/window_figure_info.h"
 #include "window/window_city.h"
 #include "widget/widget_sidebar.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "core/log.h"
 #include "dev/debug.h"
 #include "js/js_register.h"
@@ -357,7 +357,7 @@ void common_info_window::init(object_info &c) {
 
 void common_info_window::draw_tooltip(tooltip_context *c) {
     textid tx = get_tooltip(def_object_info);
-    pcstr tooltip = tx.valid() ? (pcstr)lang_get_string(tx) : nullptr;
+    pcstr tooltip = tx.valid() ? (pcstr)localization().get_string(tx) : nullptr;
     int button_id = ui::button_hover(&mouse::get());
     if (button_id > 0 && !(tooltip && *tooltip)) {
         tooltip = ui::button_tooltip(button_id - 1);

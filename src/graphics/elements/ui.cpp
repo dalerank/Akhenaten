@@ -17,7 +17,7 @@
 #include "graphics/elements/tooltip.h"
 #include "graphics/image.h"
 #include "resource/icons.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "core/crc32.h"
 #include "js/js_game.h"
 #include "js/js.h"
@@ -547,7 +547,7 @@ bool ui::handle_mouse(const mouse* m) {
         rich_text_t* rt = g_state.rich_text_targets[i];
         const int link_id = rt->get_clicked_link(m);
         if (link_id >= 0) {
-            const xstring next_id = lang_get_message_id(link_id);
+            const xstring next_id = localization().message_key(link_id);
             if (!next_id.empty() && next_id != "unknow_message") {
                 window_message_dialog_show(next_id.c_str(), -1, nullptr);
                 handle = true;
@@ -588,15 +588,15 @@ void ui::set_active_text_input(einput* w) {
 }
 
 pcstr ui::str(int group, int id) {
-    return (pcstr)lang_get_string(group, id);
+    return (pcstr)localization().get_string(group, id);
 }
 
 pcstr ui::str_from_key(pcstr key) {
-    return lang_text_from_key(key);
+    return localization().text_from_key(key);
 }
 
 pcstr ui::resource_name(e_resource r) {
-    return (pcstr)lang_get_string(23, r);
+    return (pcstr)localization().get_string(23, r);
 }
 
 int ui::button_hover(const mouse* m) {
@@ -826,7 +826,7 @@ image_button& ui::imgcancel_button(vec2i pos, ui::button_onclick_cb cb) {
 }
 
 int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int box_width) {
-    pcstr str = (pcstr)lang_get_string(group, number);
+    pcstr str = (pcstr)localization().get_string(group, number);
     return label(str, pos, font, flags, box_width);
 }
 
@@ -860,7 +860,8 @@ int ui::label_amount(int group, int number, int amount, vec2i pos, e_font font, 
     const int amount_offset = (amount == 1 || amount == -1) ? 0 : 1;
     const int number_width
       = amount >= 0 ? number_abs(amount, ' ', postfix, at, font) : number_abs(-amount, '-', postfix, at, font);
-    return number_width + text_abs(lang_get_string(group, number + amount_offset), at + vec2i{number_width, 0}, font);
+    return number_width
+           + text_abs(localization().get_string(group, number + amount_offset), at + vec2i{number_width, 0}, font);
 }
 
 int ui::label_percent(int amount, vec2i pos, e_font font) {
@@ -887,7 +888,7 @@ int ui::label_year(int year, vec2i pos, e_font font) {
 
 int ui::label_colored(textid tx, vec2i pos, e_font font, color color, int box_width) {
     const vec2i offset = g_state.offset();
-    pcstr str = lang_get_string(tx);
+    pcstr str = localization().get_string(tx);
     push(cmd_t::text_colored, Pos{offset + pos}, Font{font}, TextColor{color}, BoxWidth{box_width},
       Caption{str ? str : ""});
     return box_width > 0 ? box_width : text_get_width(str, font);
@@ -1111,7 +1112,7 @@ void ui::element::load(archive arch, element* parent, element::items& items) {
 }
 
 pcstr ui::element::text_from_key(pcstr key) {
-    return lang_text_from_key(key);
+    return localization().text_from_key(key);
 }
 
 void ui::element::update_pos(const margini& r) {
@@ -1749,7 +1750,7 @@ void ui::elabel::load(archive arch, element* parent, items& elems) {
     set_ref(TEXTFN, arch.r_function("textfn"));
     set_ref(ONDRAW, arch.r_function("ondraw"));
     if (_text[0] == '#') {
-        _text = lang_text_from_key(_text.c_str());
+        _text = localization().text_from_key(_text.c_str());
     }
 
     if (!_text.empty() && strchr(_text.c_str(), '{')) {
@@ -1790,7 +1791,7 @@ void ui::elabel::text(pcstr v) {
         ui_scope_property holder;
         _text = ui::sformat<1024>(&holder, v).c_str();
     } else {
-        _text = lang_text_from_key(v);
+        _text = localization().text_from_key(v);
     }
 }
 

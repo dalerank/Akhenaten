@@ -41,7 +41,7 @@
 #include "scenario/distant_battle.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_invasion.h"
-#include "graphics/elements/lang_text.h"
+#include "game/localization.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figuretype/figure_enemy_transport.h"
@@ -716,7 +716,7 @@ int event_manager_t::get_auto_reason_phrase_id(int param_1, int param_2) {
 
 xstring event_manager_t::msg_text(int group_id, int index) {
     auto& data = scenario_events_data();
-    return lang_text_from_message(group_id + index);
+    return localization().text_from_message(group_id + index);
 }
 
 void event_manager_t::process_active_request(int id) {

@@ -12,7 +12,7 @@
 #include "city/city_health.h"
 
 #include "building/building_type.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "core/profiler.h"
 #include "city/city.h"
 #include "city/map.h"
@@ -21,7 +21,7 @@
 #include "city/entertainment.h"
 #include "city/city_labor.h"
 #include "city/city_message.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_invasion.h"
@@ -409,7 +409,7 @@ ANK_FUNCTION_1(__city_message_mm_text_id)
 
 int __city_message_lang_category(int message_index) {
     const int mm_id = message_manager().get_text_id(message_index);
-    return (int)lang_get_message(mm_id).message_type;
+    return (int)localization().message(mm_id).message_type;
 }
 ANK_FUNCTION_1(__city_message_lang_category)
 

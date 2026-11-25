@@ -10,7 +10,7 @@
 #include "empire/type.h"
 #include "empire/empire_city.h"
 #include "graphics/image.h"
-#include "graphics/elements/lang_text.h"
+#include "game/localization.h"
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/chunk_serializer.h"
@@ -99,7 +99,7 @@ int empire_t::find_region_name_id(pcstr name) const {
         return -1;
     }
     for (int id = 0; id < EMPIRE_REGION_NAME_SCAN; id++) {
-        pcstr s = lang_get_string(196, id);
+        pcstr s = localization().get_string(196, id);
         if (!s || !s[0]) {
             continue;
         }
@@ -117,11 +117,11 @@ int empire_t::find_city_name_id(pcstr name) const {
 
     // City slot index == lang id (group 195 old names / 21 new names).
     for (int id = 0; id < empire_t::MAX_CITIES; id++) {
-        pcstr old_name = lang_get_string(195, id);
+        pcstr old_name = localization().get_string(195, id);
         if (old_name && old_name[0] && string_compare_case_insensitive(old_name, name) == 0) {
             return id;
         }
-        pcstr new_name = lang_get_string(21, id);
+        pcstr new_name = localization().get_string(21, id);
         if (new_name && new_name[0] && string_compare_case_insensitive(new_name, name) == 0) {
             return id;
         }
@@ -448,7 +448,7 @@ void empire_t::load_empire_texts(archive arch) {
 
         xstring name = entry.r_string("name");
         if (!!name && name[0] == '#') {
-            const xstring resolved = lang_xtext_from_key(name);
+            const xstring resolved = localization().xtext_from_key(name);
             if (!resolved || resolved == name) {
                 logs::info("empire: unknown region text key '%s'", name.c_str());
                 full->in_use = 0;

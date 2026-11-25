@@ -80,7 +80,7 @@ void js_log_warn_native(js_State *J) {
 void js_loc_native(js_State *J) {
     if (J->isstring(1)) {
         const xstring key = js_toxstring(J, 1);
-        const xstring resolved = lang_xtext_from_key(key);
+        const xstring resolved = localization().xtext_from_key(key);
         J->pushstring(resolved.c_str());
         return;
     }
@@ -91,7 +91,7 @@ void js_loc_native(js_State *J) {
         J->getproperty(1, js_intern("key"));
         if (J->isstring(-1)) {
             const xstring key_node = js_toxstring(J, -1); js_pop(J, 1);
-            const xstring resolved = lang_xtext_from_key(key_node);
+            const xstring resolved = localization().xtext_from_key(key_node);
             J->pushstring((js_StringNode)resolved._get());
             return;
         }
@@ -100,14 +100,14 @@ void js_loc_native(js_State *J) {
         J->getproperty(1, js_intern("group")); const int group = js_tointeger(J, -1); js_pop(J, 1);
         J->getproperty(1, js_intern("id")); const int id = js_tointeger(J, -1); js_pop(J, 1);
         verify_no_crash(group >= 0 && id >= 0);
-        J->pushstring(lang_get_string(group, id));
+        J->pushstring(localization().get_string(group, id));
         return;
     }
 
     int p1 = js_tointeger(J, 1);
     int p2 = js_tointeger(J, 2);
     verify_no_crash(p1 >= 0 && p2 >= 0);
-    pcstr result = lang_get_string(p1, p2);
+    pcstr result = localization().get_string(p1, p2);
     J->pushstring(result);
 }
 
@@ -732,7 +732,7 @@ bvariant js_call_function(xstring js_ref, const bvariant_map &params) {
 }
 
 void __lang_text_draw_multiline(int group, int number, int x, int y, int box_width, int font) {
-    pcstr str = lang_get_string(group, number);
+    pcstr str = localization().get_string(group, number);
     if (str) {
         ui::push(ui::cmd_t::text_multiline, ui::opt::Pos{vec2i{x, y}}, ui::opt::BoxWidth{box_width},
           ui::opt::Font{(e_font)font}, ui::opt::TextColor{0}, ui::opt::Caption{str});

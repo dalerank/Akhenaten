@@ -1,6 +1,6 @@
 #include "image_button.h"
 
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/ui.h"
@@ -158,5 +158,8 @@ void image_buttons_release_press(image_button* buttons, int num_buttons) {
     remove_pressed_effect_build(buttons, num_buttons);
 }
 
-image_button &image_button::tooltip(textid t) { _tooltip = (pcstr)lang_get_string(t); return *this; }
+image_button& image_button::tooltip(textid t) {
+    _tooltip = (pcstr)localization().get_string(t);
+    return *this;
+}
 image_button &image_button::tooltip(const xstring &t) { _tooltip = t; return *this; }

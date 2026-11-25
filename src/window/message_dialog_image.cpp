@@ -2,7 +2,7 @@
 
 #include "city/city_message.h"
 #include "graphics/image.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "game/game.h"
 
 void ui::message_dialog_image::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
@@ -18,7 +18,7 @@ void ui::message_dialog_image::init_data(xstring text_id, int message_id, void (
 }
 
 void ui::message_dialog_image::draw_background_content() {
-    const lang_message& msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
     pos = { 32, 28 };
 
     int image_id = 0;

@@ -3,7 +3,7 @@
 #include "figure/formation.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "window/window_city.h"
 #include "window/autoconfig_window.h"
 #include "core/string.h"
@@ -12,7 +12,7 @@
 void ui::message_dialog_invasion::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
     message_dialog_base::init_data(text_id, message_id, background_callback);
 
-    const lang_message& msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
     assert(msg.message_type == MESSAGE_TYPE_INVASION);
     ui["button_go_to_problem"].enabled = true;
     ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });

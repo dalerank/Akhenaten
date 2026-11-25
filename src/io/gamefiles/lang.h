@@ -94,28 +94,6 @@ struct lang_pack {
     }
 };
 
-/**
- * Gets a localized string
- * @param group Text group
- * @param index Index within the group
- * @return String
- */
-pcstr lang_get_string(int group, int index);
-xstring lang_get_xstring(int group, int index);
-pcstr lang_get_string(textid text);
-
-/**
- * Gets the message for the specified ID
- * @param id ID of the message
- * @return Message
- */
-const lang_message& lang_get_message(int id);
-const lang_message& lang_get_message(xstring id);
-xstring lang_get_message_id(int id);
-uint16_t lang_get_message_uid(xstring msg);
-
-void lang_reload_game_messages(const xstring table_name);
-
 enum e_text_info {
     e_text_title = 0,
     e_text_senate_tooltip = 68,

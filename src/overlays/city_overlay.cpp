@@ -108,10 +108,10 @@ bool city_overlay::is_drawable_building_corner(tile2i tile, tile2i main, int siz
 
 xstring city_overlay::title() const {
     if (!title_text.empty()) {
-        return lang_xtext_from_key(title_text);
+        return localization().xtext_from_key(title_text);
     }
 
-    return lang_get_string(14, id);
+    return localization().get_string(14, id);
 }
 
 const tooltips_t empty_tolltips{ "unknown_key", {} };
@@ -126,7 +126,7 @@ const tooltips_t &city_overlay::get_tooltips(const xstring &level) const {
 
 void __city_overlay_set_tooltip(pcstr text) {
     if (const city_overlay* overlay = g_city_overlay.get()) {
-        const_cast<city_overlay *>(overlay)->current_tooltip = lang_xtext_from_key(text);
+        const_cast<city_overlay*>(overlay)->current_tooltip = localization().xtext_from_key(text);
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_tooltip)

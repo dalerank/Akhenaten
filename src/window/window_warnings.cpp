@@ -1,4 +1,5 @@
 #include "window/window_warnings.h"
+#include "game/localization.h"
 #include "window/message_dialog.h"
 
 #include "building/building.h"
@@ -227,6 +228,6 @@ int window_warnings::handle_mouse(const mouse *m) {
 }
 
 void window_warnings::show(pcstr type) {
-    xstring text = lang_text_from_key(type);
+    xstring text = localization().text_from_key(type);
     show_custom(text.c_str());
 }

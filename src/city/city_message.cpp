@@ -19,7 +19,7 @@
 #include "city/city_warnings.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "game/game_events.h"
 #include "game/sound_effect.h"
 #include "game/simulation.h"
@@ -179,7 +179,7 @@ int message_manager_t::alloc_message(xstring template_id) {
         return -1;
     }
 
-    if (lang_get_message_uid(template_id) == 0) {
+    if (localization().message_uid(template_id) == 0) {
         logs::info("messages::alloc: unknown message id '%s' - popup suppressed", template_id.c_str());
         return -1;
     }
@@ -194,7 +194,7 @@ int message_manager_t::alloc_message(xstring template_id) {
     msg.eventmsg_title_id = -1;
     msg.eventmsg_phrase_id = -1;
 
-    msg.MM_text_id = lang_get_message_uid(template_id);
+    msg.MM_text_id = localization().message_uid(template_id);
     msg.is_read = 0;
     msg.year = g_simulation.simtime.year;
     msg.month = g_simulation.simtime.month;
@@ -286,11 +286,11 @@ void message_manager_t::show_message_banner_for_index(int index) {
     if (msg.eventmsg_title_id >= 0) {
         title = g_scenario.events.msg_text(msg.eventmsg_title_id, 0);
     } else {
-        const lang_message &tmpl = lang_get_message(msg.MM_text_id);
+        const lang_message& tmpl = localization().message(msg.MM_text_id);
         title = tmpl.title.text;
     }
     if (title.empty()) {
-        title = lang_get_message_id(msg.MM_text_id);
+        title = localization().message_key(msg.MM_text_id);
     }
     events::emit(event_city_message_banner{title.c_str(), msg.sequence});
 }
@@ -307,7 +307,7 @@ void message_manager_t::apply_popup_delivery(bool use_popup, e_popup_message_cat
     if (use_popup) {
         events::emit(event_city_message_popup{message_index});
     } else if (should_play_sound) {
-        const lang_message &mm_template = lang_get_message(sound_template_key);
+        const lang_message& mm_template = localization().message(sound_template_key);
         play_sound(mm_template);
     }
     should_play_sound = true;
@@ -365,7 +365,7 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
     msg.hide_img = false;
     msg.background_img = bg_img;
 
-    const lang_message &mm_template = lang_get_message(mm_text);
+    const lang_message& mm_template = localization().message(mm_text);
     int lang_msg_type = mm_template.message_type;
     if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
         problem_count = 1;
@@ -586,7 +586,7 @@ int message_manager_t::next_problem_area_grid_offset() {
     for (int i = 0; i < 999; i++) {
         city_message* msg = &messages[i];
         if (msg->MM_text_id && msg->year >= g_simulation.simtime.year - 1) {
-            const lang_message& lang_msg = lang_get_message(get_text_id(msg->MM_text_id));
+            const lang_message& lang_msg = localization().message(get_text_id(msg->MM_text_id));
             int lang_msg_type = lang_msg.message_type;
             if (has_problem_area(msg, lang_msg_type))
                 problem_count++;
@@ -605,7 +605,7 @@ int message_manager_t::next_problem_area_grid_offset() {
         city_message* msg = &messages[i];
         if (msg->MM_text_id && msg->year >= current_year - 1) {
             int text_id = get_text_id(msg->MM_text_id);
-            int lang_msg_type = lang_get_message(text_id).message_type;
+            int lang_msg_type = localization().message(text_id).message_type;
             if (has_problem_area(msg, lang_msg_type)) {
                 index++;
                 if (problem_index < index) {

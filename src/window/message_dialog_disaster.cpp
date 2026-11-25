@@ -4,7 +4,7 @@
 #include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "window/window_city.h"
 #include "core/string.h"
 #include "message_dialog.h"
@@ -12,7 +12,7 @@
 int ui::message_dialog_disaster::handle_mouse(const mouse *m) {
     const hotkeys* h = &g_hotkeys;
     const mouse* m_dialog = m->in_dialog();
-    const lang_message &msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
 
     bool handled = handle_input_normal(m_dialog, msg);
 
@@ -34,7 +34,7 @@ int ui::message_dialog_disaster::handle_mouse(const mouse *m) {
 void ui::message_dialog_disaster::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
     message_dialog_base::init_data(text_id, message_id, background_callback);
 
-    const lang_message &msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
 
     draw_foreground_content();
     assert(msg.message_type == MESSAGE_TYPE_DISASTER);
@@ -50,10 +50,11 @@ void ui::message_dialog_disaster::init_data(xstring text_id, int message_id, voi
     if (player_msg.param1) {
         if (this->text_id == MESSAGE_DIALOG_THEFT) {
             int amount_offset = (player_msg.param1 == 1 || player_msg.param1 == -1) ? 0 : 1;
-            header.printf("%s %d %s %s %d %s", lang_text_month(player_msg.month), player_msg.year, ui::str(63, 5), city_player_name(),
-                          player_msg.param1, ui::str(8, amount_offset));
+            header.printf("%s %d %s %s %d %s", localization().month_name(player_msg.month), player_msg.year,
+              ui::str(63, 5), city_player_name(), player_msg.param1, ui::str(8, amount_offset));
         } else {
-            header.printf("%s %d %s %s %s", lang_text_month(player_msg.month), player_msg.year, ui::str(63, 5), city_player_name(), ui::str(41, player_msg.param1));
+            header.printf("%s %d %s %s %s", localization().month_name(player_msg.month), player_msg.year,
+              ui::str(63, 5), city_player_name(), ui::str(41, player_msg.param1));
         }
     } else {
         format_city_message_header(header);

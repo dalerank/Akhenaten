@@ -2,7 +2,7 @@
 #include "city/buildings.h"
 #include "city/city_figures.h"
 #include "city/city_resource.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "game/sound_effect.h"
 
 #include "building/building.h"
@@ -393,7 +393,7 @@ const auto& get_properties() {
         [](building& b, const xstring& name) {
             int id = atoi(name.c_str());
             const auto& m = building_static_params::get(b.type).meta;
-            return bvariant(lang_get_string(m.text_id, id));
+            return bvariant(localization().get_string(m.text_id, id));
         }},
 
       {tags().building, tags().name, [](building& b, const xstring&) { return bvariant(b.cls_name()); }},

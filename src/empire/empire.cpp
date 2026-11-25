@@ -21,7 +21,7 @@
 #include "io/io_buffer.h"
 #include "io/chunk_serializer.h"
 #include "game/mission.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "game/game_config.h"
 #include "core/log.h"
 #include "core/random.h"
@@ -71,9 +71,9 @@ declare_console_command_p(save_empire_routes) {
         const empire_city& city = *g_empire.city(city_id);
         const empire_city& ourcity = g_empire.ourcity();
 
-        fprintf(fp, "\tstart : \"%s\"\n", lang_get_string(21, city.name_id));
-        fprintf(fp, "\told_name : \"%s\"\n", lang_get_string(195, city.name_id));
-        fprintf(fp, "\tstop : \"%s\"\n", lang_get_string(21, ourcity.name_id));
+        fprintf(fp, "\tstart : \"%s\"\n", localization().get_string(21, city.name_id));
+        fprintf(fp, "\told_name : \"%s\"\n", localization().get_string(195, city.name_id));
+        fprintf(fp, "\tstop : \"%s\"\n", localization().get_string(21, ourcity.name_id));
         fprintf(fp, "\tcity_id : %d\n", city.name_id);
         fprintf(fp, "\troute_id : %d\n", id);
         fprintf(fp, "\tlength : %d\n", obj.length);

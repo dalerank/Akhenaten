@@ -2,7 +2,7 @@
 
 #include "core/string.h"
 #include "grid/grid.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "scenario/scenario.h"
 
 #include <string.h>
@@ -25,8 +25,8 @@ void scenario_editor_create(int map_size) {
     g_scenario.map.border_size = GRID_LENGTH - g_scenario.map.width;
     g_scenario.map.start_offset = (GRID_LENGTH - g_scenario.map.height) / 2 * GRID_LENGTH + (GRID_LENGTH - g_scenario.map.width) / 2;
 
-    g_scenario.subtitle = lang_get_string(44, 37);
-    g_scenario.brief_description = lang_get_string(44, 38);
+    g_scenario.subtitle = localization().get_string(44, 37);
+    g_scenario.brief_description = localization().get_string(44, 38);
 
     g_scenario.finance.initial_funds = 1000;
     g_scenario.finance.rescue_loan = 500;

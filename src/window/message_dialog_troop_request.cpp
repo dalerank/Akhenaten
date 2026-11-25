@@ -3,7 +3,7 @@
 #include "city/city_message.h"
 #include "city/military.h"
 #include "graphics/image.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "core/string.h"
 #include "scenario/distant_battle.h"
 #include "empire/empire.h"
@@ -18,7 +18,7 @@ void ui::message_dialog_troop_request::init_data(xstring text_id, int message_id
     const city_message& city_msg = message_manager().get(message_id);
     image_desc img_desc;
     if (city_msg.background_img && city_msg.background_img == messages::IMAGE_FROM_SCHEME) {
-        const lang_message &msg = lang_get_message(text_id);
+        const lang_message& msg = localization().message(text_id);
         img_desc = { msg.image.pack, msg.image.id, msg.image.offset };
     } else {
         const image_t *img = image_get(city_msg.background_img);
@@ -28,7 +28,7 @@ void ui::message_dialog_troop_request::init_data(xstring text_id, int message_id
 }
 
 void ui::message_dialog_troop_request::draw_background_content() {
-    const lang_message& msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
     draw_content(msg);
 }
 

@@ -2,7 +2,7 @@
 
 #include "input/mouse.h"
 #include "graphics/graphics.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 
 static int get_button(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
@@ -90,8 +90,8 @@ int generic_buttons_min_handle_mouse(const mouse* m, vec2i pos, const generic_bu
     return button_id;
 }
 
-generic_button &generic_button::tooltip(textid t) { 
-    return tooltip((pcstr)lang_get_string(t));
+generic_button &generic_button::tooltip(textid t) {
+    return tooltip((pcstr)localization().get_string(t));
 }
 
 generic_button &generic_button::tooltip(const xstring &t) { 
@@ -100,6 +100,6 @@ generic_button &generic_button::tooltip(const xstring &t) {
 }
 
 generic_button &generic_button::tooltip(const std::initializer_list<int> &t) {
-    pcstr new_value = (pcstr)lang_get_string(*t.begin(), *(t.begin() + 1));
+    pcstr new_value = (pcstr)localization().get_string(*t.begin(), *(t.begin() + 1));
     return tooltip(new_value);
 }

@@ -100,7 +100,7 @@ void ui::message_dialog_base::init() {
 void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
     this->debug_text_id = text_id;
 
-    const lang_message &msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
 
     ui["button_close"].onclick([this] { button_close(); });
     //ui["button_back"].onclick([this] { button_back(); });
@@ -163,7 +163,7 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     if (message_id != -1) {
         const city_message& city_msg = message_manager().get(message_id);
         if (city_msg.help_text_id > 0) {
-            help_target = lang_get_message_id(city_msg.help_text_id);
+            help_target = localization().message_key(city_msg.help_text_id);
         }
     }
     if (help_target.empty() && !msg.help_link.empty()) {
@@ -286,7 +286,7 @@ void ui::message_dialog_base::apply_video_ui(bool enabled) {
         (screen_height() - video_dialog_blocks.y * 16) / 2
     };
 
-    const lang_message& msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
     ui["bottom_title"] = (is_eventmsg && !title_text.empty()) ? title_text : msg.title.text;
 
     // Compose caption via the normal content path (type-specific overrides included).
@@ -330,18 +330,15 @@ void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, T& b
     }
 
     text_tag_substitution tags[] = {
-      {"[greeting]", (pcstr)lang_get_string(32, 11 + g_scenario.campaign_scenario_id)},
-      {"[player_name]", city_player_name()},
-      {"[reason_phrase]", phrase_text.c_str()},
-      {"[city_name]", (pcstr)lang_get_string(195, city_name_id)},
+      {"[greeting]", (pcstr)localization().get_string(32, 11 + g_scenario.campaign_scenario_id)},
+      {"[player_name]", city_player_name()}, {"[reason_phrase]", phrase_text.c_str()},
+      {"[city_name]", (pcstr)localization().get_string(195, city_name_id)},
       {"[a_foreign_army]", g_invasions.get_prop((e_enemy_type)msg.sender_faction).army_title},
-      {"[amount]", amount.c_str()},
-      {"[amount_granted]", ""}, // TODO
-      {"[item]", (pcstr)lang_get_string(23, 54 + (phrase_modifier ? msg.req_resource_past : msg.req_resource))},
-      {"[time_allotted]", time.c_str()},
-      {"[time_until_attack]", time.c_str()},
-      {"[travel_time]", ""},       // TODO
-      {"[god]", ""},               // TODO
+      {"[amount]", amount.c_str()}, {"[amount_granted]", ""}, // TODO
+      {"[item]",
+        (pcstr)localization().get_string(23, 54 + (phrase_modifier ? msg.req_resource_past : msg.req_resource))},
+      {"[time_allotted]", time.c_str()}, {"[time_until_attack]", time.c_str()}, {"[travel_time]", ""}, // TODO
+      {"[god]", ""},                                                                                   // TODO
     };
 
     text_fill_in_tags(template_ptr, buffer, tags);
@@ -388,7 +385,8 @@ xstring ui::message_dialog_base::resolve_message_body(const lang_message& msg) c
 }
 
 void ui::message_dialog_base::format_city_message_header(bstring1024& out) const {
-    out.printf("%s %d %s %s", lang_text_month(player_msg.month), player_msg.year, ui::str(63, 5), city_player_name());
+    out.printf("%s %d %s %s", localization().month_name(player_msg.month), player_msg.year, ui::str(63, 5),
+      city_player_name());
 }
 
 void ui::message_dialog_base::draw_city_message_text(const lang_message& msg) {
@@ -422,7 +420,7 @@ void ui::message_dialog_base::draw_content(const lang_message& msg) {
 }
 
 void ui::message_dialog_base::draw_background_content() {
-    const lang_message& msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
 
     draw_image(msg);
     draw_content(msg);
@@ -475,7 +473,7 @@ bool ui::message_dialog_base::handle_input_video(const mouse* m_dialog, const la
 int ui::message_dialog_base::ui_handle_mouse(const mouse *m) {
     const hotkeys* h = &g_hotkeys;
     const mouse* m_dialog = m->in_dialog();
-    const lang_message& msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
 
     bool handled = false;
     if (show_video) {
@@ -620,8 +618,8 @@ ui::message_dialog_image message_dialog_image_window;
 ui::message_dialog_troop_request message_dialog_troop_request_window;
 
 static ui::message_dialog_base* create_message_dialog(xstring text_id, int message_id = -1) {
-    const lang_message& msg = lang_get_message(text_id);
-    
+    const lang_message& msg = localization().message(text_id);
+
     if (message_id != -1) {
         const city_message& city_msg = message_manager().get(message_id);
         if (city_msg.god != GOD_UNKNOWN) {
@@ -724,12 +722,12 @@ static bool city_message_has_video(const lang_message& tmpl) {
 
 static void city_message_open_dialog(int index) {
     city_message& msg = message_manager().messages[index];
-    const lang_message& tmpl = lang_get_message(msg.MM_text_id);
+    const lang_message& tmpl = localization().message(msg.MM_text_id);
     if (!city_message_has_video(tmpl)) {
         events::emit(event_sound_effect{tmpl.urgent ? SOUND_EFFECT_FANFARE_URGENT : SOUND_EFFECT_FANFARE});
     }
-    window_message_dialog_show_city_message(lang_get_message_id(msg.MM_text_id), index, msg.year, msg.month, msg.param1,
-      msg.param2, tmpl.advisor, true);
+    window_message_dialog_show_city_message(localization().message_key(msg.MM_text_id), index, msg.year, msg.month,
+      msg.param1, msg.param2, tmpl.advisor, true);
 }
 
 void window_city_message_show(int index) {

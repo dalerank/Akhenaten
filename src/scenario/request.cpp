@@ -12,7 +12,7 @@
 #include "city/city.h"
 #include "core/random.h"
 #include "core/svector.h"
-#include "graphics/elements/lang_text.h"
+#include "game/localization.h"
 #include "scenario_event_manager.h"
 #include "game/resource.h"
 #include "scenario/scenario.h"
@@ -135,7 +135,7 @@ static void request_check_compliance(event_ph_t& event) {
     // Popup Messages "Compliance" (remake option): goods/deben go out at once with a banner.
     if (popup_messages_want_banner(POPUP_MSG_COMPLIANCE) && event.item.value != RESOURCE_TROOPS
         && scenario_request_dispatch_event(event.event_id)) {
-        events::emit(event_city_message_banner{lang_text_from_key("#goods_auto_dispatched")});
+        events::emit(event_city_message_banner{localization().text_from_key("#goods_auto_dispatched")});
         return;
     }
     const bool deben = event.item.value == RESOURCE_DEBEN;

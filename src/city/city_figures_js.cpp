@@ -7,7 +7,7 @@
 #include "core/calc.h"
 #include "core/direction.h"
 #include "city/city.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "game/game.h"
 
 #include "js/js_game.h"
@@ -198,7 +198,7 @@ xstring __figure_phrase_text(int fid) {
     if (!sound_reaction.text.empty()) {
         return sound_reaction.text;
     }
-    pcstr localized = lang_get_string(sound_reaction.group, sound_reaction.id);
+    pcstr localized = localization().get_string(sound_reaction.group, sound_reaction.id);
     if (localized && *localized) {
         return xstring(localized);
     }

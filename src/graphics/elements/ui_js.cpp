@@ -756,7 +756,7 @@ ANK_FUNCTION_1(__ui_window_message_dialog)
 void __ui_window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int /*message_advisor*/) {
     // Advisor comes from the message template (JS used to pass mm_text_id by mistake).
     // use_popup=true so embedded SMK can play (live popups + archive, same as Julius).
-    const lang_message& msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
     window_message_dialog_show_city_message(text_id, message_id, year, month, param1, param2, msg.advisor, true);
 }
 ANK_FUNCTION_7(__ui_window_message_dialog_show_city_message)

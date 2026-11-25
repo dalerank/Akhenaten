@@ -258,8 +258,8 @@ void mods_check_save(const std::vector<saved_mod>& saved) {
                             "\nSwitch to the save's mods and load it again? (No keeps the current mods.)")
                            .c_str();
     game.add_frame_end_event([body] {
-        popup_dialog::show(xstring(lang_text_from_key("#popup_dialog_save_mods_differ")), body, e_popup_btns_yesno,
-          [](bool accepted) {
+        popup_dialog::show(xstring(localization().text_from_key("#popup_dialog_save_mods_differ")), body,
+          e_popup_btns_yesno, [](bool accepted) {
               if (accepted) {
                   mods_apply_saved_mods();
               }

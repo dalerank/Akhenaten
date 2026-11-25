@@ -3,7 +3,7 @@
 #include "city/city_message.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "core/string.h"
 #include "game/game.h"
 #include "game/gods.h"
@@ -15,7 +15,7 @@ void ui::message_dialog_god::draw_foreground(UiFlags flags) {
     const size_t dialog_commands = ui::command_mark();
     message_dialog_base::draw_foreground(flags);
 
-    const lang_message &msg = lang_get_message(text_id);
+    const lang_message& msg = localization().message(text_id);
 
     draw_city_message_text(msg);
 

@@ -1,4 +1,5 @@
 #include "boilerplate.h"
+#include "game/localization.h"
 #include "city/city_maintenance.h"
 #include "boilerplate_detail.h"
 #include "io/og_save/og_save.h"
@@ -225,7 +226,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         logs::error("Mission %d: map file missing: %s", scenario_id, map_file.c_str());
         bstring512 body;
         body.printf("Map file not found:\n%s", map_file.c_str());
-        popup_dialog::show_ok(lang_text_from_key("#popup_dialog_map_file_missing"), body.c_str());
+        popup_dialog::show_ok(localization().text_from_key("#popup_dialog_map_file_missing"), body.c_str());
         return false;
     }
 
@@ -312,7 +313,7 @@ static bool load_savegame_reader(vfs::reader savegame, e_file_format file_format
     g_chunk_io.min_file_version = 0;
     if (!loaded) {
         if (g_chunk_io.was_rejected_old_version()) {
-            popup_dialog::show_ok(lang_text_from_key("#popup_dialog_save_too_old"), name ? name : "");
+            popup_dialog::show_ok(localization().text_from_key("#popup_dialog_save_too_old"), name ? name : "");
         }
         return false;
     }

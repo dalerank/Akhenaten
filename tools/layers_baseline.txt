@@ -262,7 +262,6 @@ empire/empire_city.cpp -> graphics/image_groups.h
 empire/empire_city_properties.cpp -> graphics/elements/ui.h
 empire/empire_city_properties.cpp -> widget/debug_console.h
 empire/empire_object.cpp -> dev/debug.h
-empire/empire_object.cpp -> graphics/elements/lang_text.h
 empire/empire_object.cpp -> graphics/image.h
 empire/empire_traders.cpp -> dev/debug.h
 empire/empire_traders.cpp -> graphics/graphics.h
@@ -283,11 +282,9 @@ figure/figure.h -> graphics/image_desc.h
 figure/figure.h -> sound/sound_walker.h
 figure/figure_impl.cpp -> dev/debug.h
 figure/figure_impl.cpp -> graphics/animkeys.h
-figure/figure_impl.cpp -> graphics/elements/lang_text.h
 figure/figure_impl.cpp -> graphics/elements/ui.h
 figure/figure_impl.h -> sound/sound_walker.h
 figure/figure_phrase.cpp -> content/content.h
-figure/figure_phrase.cpp -> graphics/elements/lang_text.h
 figure/figure_properties.cpp -> widget/debug_console.h
 figure/figure_static_params.h -> graphics/animation.h
 figure/figure_static_params.h -> sound/sound_walker.h
@@ -431,7 +428,6 @@ game/undo.cpp -> graphics/window.h
 game/video_capture_module.cpp -> graphics/color.h
 game/video_capture_module.cpp -> graphics/screen.h
 game/video_capture_module.cpp -> platform/renderer.h
-graphics/elements/lang_text.cpp -> platform/android/android.h
 graphics/elements/ui_module.cpp -> platform/arguments.h
 graphics/font.cpp -> platform/arguments.h
 graphics/graphics.cpp -> dev/debug.h
@@ -630,15 +626,12 @@ resource/icons.cpp -> platform/screen.h
 scenario/criteria.cpp -> js/js_global_object.h
 scenario/earthquake.cpp -> graphics/graphics.h
 scenario/earthquake.cpp -> graphics/image.h
-scenario/event_properties.cpp -> graphics/elements/lang_text.h
 scenario/event_properties.cpp -> widget/debug_console.h
 scenario/invasion_auto_resolve.cpp -> graphics/window.h
 scenario/invasion_auto_resolve.cpp -> window/autoconfig_window.h
 scenario/invasion_auto_resolve.cpp -> window/window_city.h
-scenario/request.cpp -> graphics/elements/lang_text.h
 scenario/scenario.cpp -> dev/debug.h
 scenario/scenario_event_manager.cpp -> dev/debug.h
-scenario/scenario_event_manager.cpp -> graphics/elements/lang_text.h
 scenario/scenario_invasion.cpp -> dev/debug.h
 sound/music.cpp -> dev/debug.h
 sound/sound.cpp -> platform/arguments.h

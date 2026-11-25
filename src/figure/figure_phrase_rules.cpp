@@ -40,7 +40,7 @@
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_worker.h"
 #include "game/game_config.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "scenario/scenario.h"
 
 struct figure_speech_sound_t {
@@ -729,11 +729,11 @@ xstring figure_phrase_text(const figure& f) {
             return entry.text;
         }
         if (entry.group > 0) {
-            return xstring(lang_get_string(entry.group, entry.id));
+            return xstring(localization().get_string(entry.group, entry.id));
         }
     }
     const int speech = figure_phrase_speech_id(f);
-    pcstr text = speech > 0 ? lang_get_string(speech, f.phrase_id) : nullptr;
+    pcstr text = speech > 0 ? localization().get_string(speech, f.phrase_id) : nullptr;
     return (text && *text) ? xstring(text) : xstring{};
 }
 

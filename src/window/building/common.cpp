@@ -85,7 +85,7 @@ void draw_employment_details_ui(ui::widget &ui, object_info &c, building* b, int
     }
 
     if (text_key && *text_key) {
-        ui["workers_desc"] = lang_text_from_key(text_key);
+        ui["workers_desc"] = localization().text_from_key(text_key);
     }
 }
 

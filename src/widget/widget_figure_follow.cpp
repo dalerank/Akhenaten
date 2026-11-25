@@ -201,7 +201,7 @@ void figure_follow_t::draw_panel() {
     const rect stop_button = stop_button_rect();
     ui::push(ui::cmd_t::small_panel, ui::opt::Pos{stop_button.mn}, ui::opt::BoxWidth{stop_button_blocks()},
       ui::opt::ImageId{1});
-    ui::label(lang_text_from_key("#stop_following"), stop_button.mn + vec2i{4, 4}, FONT_NORMAL_BLACK_ON_DARK);
+    ui::label(localization().text_from_key("#stop_following"), stop_button.mn + vec2i{4, 4}, FONT_NORMAL_BLACK_ON_DARK);
 }
 
 bool figure_follow_t::handle_mouse(const mouse* m) {

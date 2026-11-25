@@ -73,7 +73,7 @@ static void init(int id) {
         int city_id = g_empire.get_city_for_trade_route(i);
         empire_city* city = g_empire.city(city_id);
         if (city && (city->type == EMPIRE_CITY_PHARAOH || city->type == EMPIRE_CITY_EGYPTIAN_TRADING)) {
-            create_display_name(i, lang_get_string(21, city->name_id));
+            create_display_name(i, localization().get_string(21, city->name_id));
 
             data.route_ids[data.num_routes] = i;
             data.route_names[data.num_routes] = (pcstr)route_display_names[i];

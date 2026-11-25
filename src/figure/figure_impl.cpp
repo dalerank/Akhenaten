@@ -16,7 +16,7 @@
 #include "figure/figure_names.h"
 #include "figure/cart_images.h"
 #include "graphics/animkeys.h"
-#include "graphics/elements/lang_text.h"
+#include "game/localization.h"
 #include "graphics/elements/ui.h"
 #include "grid/grid.h"
 #include "grid/building.h"
@@ -416,12 +416,12 @@ static const fproperty fproperties[] = {
   {tags().figure, tags().class_name,
     [](figure& f, const xstring&) {
         bstring64 clname("#", f.dcast()->info_type_name());
-        return bvariant(lang_text_from_key(clname));
+        return bvariant(localization().text_from_key(clname));
     }},
   {tags().figure, tags().city_name,
     [](figure& f, const xstring&) { return bvariant(f.dcast()->empire_city().name()); }},
   {tags().figure, tags().action_tip,
-    [](figure& f, const xstring&) { return bvariant(lang_text_from_key(f.action_tip().c_str())); }},
+    [](figure& f, const xstring&) { return bvariant(localization().text_from_key(f.action_tip().c_str())); }},
   {tags().figure, tags().home, [](figure& f, const xstring&) { return bvariant(ui::str(41, f.home()->type)); }},
   {tags().figure, tags().cls, [](figure& f, const xstring&) { return bvariant(f.params().name); }},
 };

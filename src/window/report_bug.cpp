@@ -167,7 +167,7 @@ void report_bug_http_post(const char* title, const char* body) {
     g_report_bug.body = body ? body : "";
     g_report_bug.build = get_version().c_str();
     g_report_bug.platform = platform.name() ? platform.name() : "";
-    g_report_bug.lang = lang_get_current_language().lang.c_str();
+    g_report_bug.lang = localization().current_language().lang.c_str();
     logs::flush();
     g_report_bug.log = read_log_tail(logs::output_path(), k_log_max);
     // This frame was already drawn with the dialog. The next frame redraws after it closes.

@@ -2,7 +2,7 @@
 #include "city/city.h"
 
 #include "core/tokenum.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "js/js_game.h"
 #include "js/js_global_object.h"
 
@@ -20,7 +20,7 @@ void __city_message_post_with_popup_delay(int category, bool force_popup, xstrin
       = message_manager().post_with_popup_delay((e_mesage_category)category, force_popup, text, param1, (short)param2);
     msg.hide_img = hide_img;
     if (!help_link.empty()) {
-        msg.help_text_id = lang_get_message_uid(help_link);
+        msg.help_text_id = localization().message_uid(help_link);
     }
 }
 ANK_FUNCTION_7(__city_message_post_with_popup_delay)

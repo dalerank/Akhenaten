@@ -4,7 +4,7 @@
 #include "game/game_config.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "js/js_register.h"
 
 #include <algorithm>
@@ -274,7 +274,7 @@ bstring32 empire_city::get_display_name(int nid) {
                             ? empire_city_options.text_group_old_names 
                             : empire_city_options.text_group_new_names;
 
-    return lang_get_string(text_group, nid);
+    return localization().get_string(text_group, nid);
 }
 
 const trade_route& empire_city_handle::get_route() const {
@@ -305,7 +305,7 @@ void empire_city_handle::set_under_siege(uint8_t months) {
 
 xstring empire_city_handle::name() const {
     const int group = !!game_features::gameui_empire_city_old_names ? 195 : 21;
-    pcstr name = (pcstr)lang_get_string(group, ref().name_id);
+    pcstr name = (pcstr)localization().get_string(group, ref().name_id);
     return xstring(name);
 }
 

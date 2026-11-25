@@ -1,7 +1,7 @@
 #include "popup_dialog.h"
 
 #include "graphics/window.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 #include "input/input.h"
 #include "input/mouse.h"
 
@@ -87,18 +87,18 @@ int popup_dialog::ui_handle_mouse(const mouse *m) {
 }
 
 void popup_dialog::show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
-    pcstr text = lang_text_from_key(loc_id);
+    pcstr text = localization().text_from_key(loc_id);
     show("", text, buttons, close_func);
 }
 
 void popup_dialog::show(textid text, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
-    xstring header = lang_get_xstring(text.group, text.id);
+    xstring header = localization().get_xstring(text.group, text.id);
     show(header, "", buttons, close_func);
 }
 
 void popup_dialog::show(textid text, textid custom, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
-    xstring header = lang_get_xstring(text.group, text.id);
-    xstring str = lang_get_xstring(custom.group, custom.id);
+    xstring header = localization().get_xstring(text.group, text.id);
+    xstring str = localization().get_xstring(custom.group, custom.id);
     show(header, str, buttons, close_func);
 }
 

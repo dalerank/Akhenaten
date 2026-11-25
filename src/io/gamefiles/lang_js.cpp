@@ -8,12 +8,12 @@
 #include "window/plain_message_dialog.h"
 
 int __game_languages_count() {
-    return (int)get_available_languages().size();
+    return (int)localization().languages().size();
 }
 ANK_FUNCTION(__game_languages_count)
 
 xstring __game_language_caption(int index) {
-    const auto &langs = get_available_languages();
+    const auto& langs = localization().languages();
     if (index < 0 || index >= (int)langs.size())
         return {};
     return langs[index].caption;
@@ -21,7 +21,7 @@ xstring __game_language_caption(int index) {
 ANK_FUNCTION_1(__game_language_caption)
 
 xstring __game_language_id(int index) {
-    const auto &langs = get_available_languages();
+    const auto& langs = localization().languages();
     if (index < 0 || index >= (int)langs.size())
         return {};
 
@@ -35,7 +35,7 @@ xstring __game_language_current() {
 ANK_FUNCTION(__game_language_current)
 
 bool __game_language_set_current(xstring lang) {
-    const auto &langs = get_available_languages();
+    const auto& langs = localization().languages();
     const auto it = std::find_if(langs.begin(), langs.end(), [lang] (auto &l) { return l.lang == lang; });
     const int index = std::distance(langs.begin(), it);
     if (index < 0 || index >= (int)langs.size()) {
@@ -43,7 +43,7 @@ bool __game_language_set_current(xstring lang) {
     }
 
     game_features::gameopt_language = it->lang;
-    bool ok = lang_reload_localized_files() && lang_reload_localized_tables();
+    bool ok = localization().reload_files() && localization().reload_tables();
     if (!ok) {
         game_features::gameopt_language = "";
         window_plain_message_dialog_show("#TR_INVALID_LANGUAGE_TITLE", "#TR_INVALID_LANGUAGE_MESSAGE", SOURCE_LOCATION);
@@ -54,32 +54,32 @@ bool __game_language_set_current(xstring lang) {
 ANK_FUNCTION_1(__game_language_set_current)
 
 xstring __lang_message_title_text(int mm_text_id) {
-    const xstring mm_msg = lang_get_message_id((uint16_t)mm_text_id);
-    const lang_message &model_msg = lang_get_message(mm_msg);
+    const xstring mm_msg = localization().message_key((uint16_t)mm_text_id);
+    const lang_message& model_msg = localization().message(mm_msg);
     return model_msg.title.text;
 }
 ANK_FUNCTION_1(__lang_message_title_text)
 
 xstring __lang_message_subtitle_text(int mm_text_id) {
-    const xstring mm_msg = lang_get_message_id((uint16_t)mm_text_id);
-    const lang_message &model_msg = lang_get_message(mm_msg);
+    const xstring mm_msg = localization().message_key((uint16_t)mm_text_id);
+    const lang_message& model_msg = localization().message(mm_msg);
     return model_msg.subtitle.text;
 }
 ANK_FUNCTION_1(__lang_message_subtitle_text)
 
 xstring __lang_message_content_text(int mm_text_id) {
-    const xstring mm_msg = lang_get_message_id((uint16_t)mm_text_id);
-    const lang_message &model_msg = lang_get_message(mm_msg);
+    const xstring mm_msg = localization().message_key((uint16_t)mm_text_id);
+    const lang_message& model_msg = localization().message(mm_msg);
     return model_msg.content.text;
 }
 ANK_FUNCTION_1(__lang_message_content_text)
 
 xstring __lang_get_message_id(int mm_text_id) {
-    return lang_get_message_id(mm_text_id);
+    return localization().message_key(mm_text_id);
 }
 ANK_FUNCTION_1(__lang_get_message_id)
 
 int __lang_get_message_uid(xstring message_key) {
-    return (int)lang_get_message_uid(message_key);
+    return (int)localization().message_uid(message_key);
 }
 ANK_FUNCTION_1(__lang_get_message_uid)

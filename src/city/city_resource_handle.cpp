@@ -4,7 +4,7 @@
 
 #include "empire/empire.h"
 #include "city/city.h"
-#include "io/gamefiles/lang.h"
+#include "game/localization.h"
 
 city_resource_handle city_resource_barley{ RESOURCE_BARLEY };
 city_resource_handle city_resource_gems{ RESOURCE_GEMS };
@@ -138,7 +138,7 @@ int stack_proper_quantity(int full, int resource) {
 }
 
 xstring city_resource_handle::name() {
-    return lang_get_string(23, resource);
+    return localization().get_string(23, resource);
 }
 
 int city_resource_handle::stack_proper_quantity(int value) {

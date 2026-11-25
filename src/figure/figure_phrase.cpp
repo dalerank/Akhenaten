@@ -12,7 +12,7 @@
 #include "platform/platform.h"
 
 #include <filesystem>
-#include "graphics/elements/lang_text.h"
+#include "game/localization.h"
 
 ANK_SCRIPT_EVENT(event_synthesize_figure_phrase, id, path, text)
 
@@ -48,7 +48,7 @@ void ANK_PERMANENT_CALLBACK(event_synthesize_figure_phrase, ev) {
         phrase_text = reaction.text;
     }
     if (!phrase_text) {
-        phrase_text = lang_get_string(reaction.group, reaction.id);
+        phrase_text = localization().get_string(reaction.group, reaction.id);
     }
     if (!phrase_text) {
         phrase_text.printf("#%s", reaction.key.c_str());
@@ -61,8 +61,8 @@ void ANK_PERMANENT_CALLBACK(event_synthesize_figure_phrase, ev) {
     // Windows: bare "akhenaten-tts.exe". Unix: "./akhenaten-tts".
     const pcstr tts_cmd_exe = platform.is_windows() ? "akhenaten-tts.exe" : "./akhenaten-tts";
     xstring cmd;
-    cmd.printf("%s -l en -p \"%s\" -f %s -o \"%s\"",
-        tts_cmd_exe, lang_text_from_key(phrase_text.c_str()), prefix.c_str(), out_rel.c_str());
+    cmd.printf("%s -l en -p \"%s\" -f %s -o \"%s\"", tts_cmd_exe, localization().text_from_key(phrase_text.c_str()),
+      prefix.c_str(), out_rel.c_str());
 
 #if defined(GAME_PLATFORM_IOS)
     const bool generated = false;
