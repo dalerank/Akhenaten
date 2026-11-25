@@ -1091,16 +1091,8 @@ void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
 
     iob->bind(BIND_SIGNATURE_UINT8, &d.fetch_inventory_id);
 
-    if (version >= 185) {
-        iob->bind_u8(d.desired_variety);
-        iob->bind_u8(d.min_variety);
-    } else {
-        d.desired_variety = current_params().food_variety_target;
-        if (d.desired_variety < 1) {
-            d.desired_variety = 2;
-        }
-        d.min_variety = 1;
-    }
+    iob->bind_u8(d.desired_variety);
+    iob->bind_u8(d.min_variety);
 
     iob->bind(BIND_SIGNATURE_INT16, &d.second_trader_id);
 }

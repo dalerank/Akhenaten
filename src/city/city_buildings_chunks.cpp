@@ -76,11 +76,8 @@ static void bind_building_record(io_buffer* iob, building* b, building_id i, siz
     const int currind = (int)iob->get_offset() - sind;
     verify_no_crash(currind >= 0);
     if (currind > 186) {
-        // Saves before v196 hold pyramid/mastaba parts that ran past the record; they still load the old way.
-        if (!iob->is_read_access() || version >= 196) {
-            logs::error("[record-overflow] building %d (%s): header + runtime data take %d bytes, the record holds 186",
-              i, token::find_name(e_building_type_tokens, b->type), currind);
-        }
+        logs::error("[record-overflow] building %d (%s): header + runtime data take %d bytes, the record holds 186", i,
+          token::find_name(e_building_type_tokens, b->type), currind);
         iob->set_offset(sind + 186);
     } else {
         iob->bind____skip(186 - currind);
@@ -124,13 +121,6 @@ static void bind_building_record(io_buffer* iob, building* b, building_id i, siz
     iob->bind____skip(35); // temp for debugging
     //            assert(iob->get_offset() - sind == 264);
     b->id = i;
-
-    if (version <= 164) {
-        b->common_health = 100;
-        b->malaria_risk = 0;
-        b->disease_days = 0;
-        b->health_proof = 0;
-    }
 
     const auto& params = building_static_params::get(b->type);
     b->des_influence = params.desirability.to_influence();
