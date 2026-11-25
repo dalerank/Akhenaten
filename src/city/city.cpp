@@ -104,8 +104,6 @@ void city_t::init() {
     zero_fill(military);
     zero_fill(industry);
     zero_fill(maintenance);
-    zero_fill(advisors);
-    zero_fill(empire_screen);
     zero_fill(resource);
     zero_fill(food_supply);
     zero_fill(avg_coverage);
@@ -119,7 +117,6 @@ void city_t::init() {
     figure_clear_all();
     city_sentiment().init();
     city_finance().init();
-    empire_screen = AVAILABLE;
 }
 
 void city_t::reload_objects() {
@@ -134,14 +131,6 @@ void city_t::update_month(simulation_time_t simtime) {
 void city_t::init_custom_map() {
     city_finance().treasury = g_scenario.startup_funds();
     city_finance().last_year.balance = city_finance().treasury;
-}
-
-void city_t::set_advisor_available(e_advisor advisor, e_availability available) {
-    advisors[advisor] = available;
-}
-
-e_availability city_t::is_advisor_available(e_advisor advisor) const {
-    return advisors[advisor];
 }
 
 void city_t::init_campaign_mission() {

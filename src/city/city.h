@@ -27,8 +27,6 @@ struct city_t {
     city_military_t military;
     city_industry_t industry;
     city_maintenance_t maintenance;
-    e_availability advisors[ADVISOR_MAX];
-    e_availability empire_screen = AVAILABLE;
 
     city_resources_t resource;
     city_food_supply_t food_supply;
@@ -92,12 +90,6 @@ struct city_t {
 
     void update_tick(int simtick);
     void update_month(simulation_time_t t);
-
-    e_availability is_advisor_available(e_advisor advisor) const;
-    void set_advisor_available(e_advisor advisor, e_availability available);
-
-    e_availability is_empire_available() const { return empire_screen; }
-    void set_empire_available(e_availability available) { empire_screen = available; }
 
     bvariant get_property(xstring domain, xstring name) const;
     void on_post_load();
