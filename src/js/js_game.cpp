@@ -1,4 +1,5 @@
 #include "js_game.h"
+#include "sound/sound_speech.h"
 
 #include "content/vfs.h"
 #include "core/log.h"
@@ -553,7 +554,10 @@ void __game_start_loaded_file() { GamestateIO::start_loaded_file(); } ANK_FUNCTI
 bool __game_mission_is_valid(int scenario_id) { const mission_step_t *s = get_scenario_step_data(scenario_id); return s && s->campaign_id >= 0; } ANK_FUNCTION_1(__game_mission_is_valid)
 bool __game_has_campaign_data() { return game_has_campaign_data(); } ANK_FUNCTION(__game_has_campaign_data)
 int __game_campaign_id_for_scenario(int scenario_id) { return get_scenario_campaign_id(scenario_id); } ANK_FUNCTION_1(__game_campaign_id_for_scenario)
-void __game_speech_stop() { g_sound.speech_stop(); } ANK_FUNCTION(__game_speech_stop)
+void __game_speech_stop() {
+    sound_speech().stop();
+}
+ANK_FUNCTION(__game_speech_stop)
 bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
 bool __game_gods_enabled() { return game_features::gameopt_gods_enabled.to_bool(); } ANK_FUNCTION(__game_gods_enabled)
 bool __game_is_integral_tests() { return g_args.is_integral_tests(); } ANK_FUNCTION(__game_is_integral_tests)

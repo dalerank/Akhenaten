@@ -1,4 +1,6 @@
-#include "sound.h"
+#include "sound/sound_speech.h"
+#include "sound/sound.h"
+#include "core/xvalue.h"
 
 #include "core/archive.h"
 #include "core/bstring.h"
@@ -12,17 +14,21 @@
 #include <cctype>
 #include <cstring>
 
-ANK_CONFIG_STRUCT(sound_manager_t::speech_t, dirs, walker_dir)
+ANK_CONFIG_STRUCT(sound_speech_t, dirs, walker_dir)
+
+sound_speech_t& sound_speech() {
+    return xvalue<sound_speech_t>::ref();
+}
 
 ANK_DECLARE_CONFIG_ITERATOR(config_load_speech);
 void config_load_speech() {
-    call_unload_if_exists(g_sound.speech);
-    const bool ok = g_config_arch.r("speech", g_sound.speech);
-    call_init_if_exists(g_sound.speech);
+    call_unload_if_exists(sound_speech());
+    const bool ok = g_config_arch.r("speech", sound_speech());
+    call_init_if_exists(sound_speech());
     verify_no_crash_var(ok, "Variable not exist in config: %s", "speech");
 }
 
-bool sound_manager_t::speech_ieq_prefix(pcstr path, pcstr prefix) {
+bool sound_speech_t::ieq_prefix(pcstr path, pcstr prefix) {
     for (; *prefix; ++path, ++prefix) {
         if (!*path) {
             return false;
@@ -34,12 +40,12 @@ bool sound_manager_t::speech_ieq_prefix(pcstr path, pcstr prefix) {
     return true;
 }
 
-vfs::path sound_manager_t::speech_normalize_rel(pcstr filename) const {
+vfs::path sound_speech_t::normalize_rel(pcstr filename) const {
     vfs::path rel = filename;
     rel.replace('\\', '/');
 
     pcstr p = rel.c_str();
-    if (speech_ieq_prefix(p, vfs::content_audio)) {
+    if (ieq_prefix(p, vfs::content_audio)) {
         p += strlen(vfs::content_audio);
         while (*p == '/') {
             ++p;
@@ -47,18 +53,18 @@ vfs::path sound_manager_t::speech_normalize_rel(pcstr filename) const {
         rel = p;
     }
 
-    for (const xstring &dir : speech.dirs) {
+    for (const xstring& dir : dirs) {
         if (dir.empty()) {
             continue;
         }
-        if (speech_ieq_prefix(rel.c_str(), dir.c_str())) {
+        if (ieq_prefix(rel.c_str(), dir.c_str())) {
             return rel;
         }
     }
     return {};
 }
 
-bool sound_manager_t::speech_try_rel(pcstr rel, vfs::path &fs_path) {
+bool sound_speech_t::try_rel(pcstr rel, vfs::path& fs_path) {
     if (!rel || !*rel) {
         return false;
     }
@@ -78,7 +84,7 @@ bool sound_manager_t::speech_try_rel(pcstr rel, vfs::path &fs_path) {
     return !fs_path.empty() && vfs::file_exists(fs_path);
 }
 
-bool sound_manager_t::speech_file_exist(xstring filename, vfs::path &fs_path) {
+bool sound_speech_t::file_exist(xstring filename, vfs::path& fs_path) {
     if (!game_features::gameopt_sound_speech_enabled) {
         return false;
     }
@@ -88,35 +94,36 @@ bool sound_manager_t::speech_file_exist(xstring filename, vfs::path &fs_path) {
         return false;
     }
 
-    const vfs::path known = speech_normalize_rel(filename_str);
+    const vfs::path known = normalize_rel(filename_str);
     if (!known.empty()) {
-        return speech_try_rel(known.c_str(), fs_path);
+        return try_rel(known.c_str(), fs_path);
     }
 
     const vfs::path base = vfs::path(filename_str).basename();
-    if (base.empty() || speech.walker_dir.empty()) {
+    if (base.empty() || walker_dir.empty()) {
         return false;
     }
 
-    bstring256 rel(speech.walker_dir.c_str(), base.c_str());
-    return speech_try_rel(rel.c_str(), fs_path);
+    bstring256 rel(walker_dir.c_str(), base.c_str());
+    return try_rel(rel.c_str(), fs_path);
 }
 
-bool sound_manager_t::speech_play_file(xstring filename) {
+bool sound_speech_t::play_file(xstring filename) {
     // Without a mixer (--nosound) or data (--no-resource) the file probe is wasted and only spams warnings.
-    if (!initialized || !data_available()) {
+    if (!g_sound.is_initialized() || !g_sound.data_available()) {
         return false;
     }
 
     vfs::path fs_path;
-    if (!speech_file_exist(filename, fs_path)) {
+    if (!file_exist(filename, fs_path)) {
         logs::warn("Sound: speech file not found '%s'", filename.empty() ? "" : filename.c_str());
         return false;
     }
 
-    return play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, game_features::gameopt_sound_speech_volume.to_int());
+    return g_sound.play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH,
+      game_features::gameopt_sound_speech_volume.to_int());
 }
 
-void sound_manager_t::speech_stop() {
-    stop_channel(SOUND_CHANNEL_SPEECH);
+void sound_speech_t::stop() {
+    g_sound.stop_channel(SOUND_CHANNEL_SPEECH);
 }

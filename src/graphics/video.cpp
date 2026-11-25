@@ -1,4 +1,5 @@
 #include "video.h"
+#include "sound/sound_speech.h"
 
 #include "core/log.h"
 #include "core/system_time.h"
@@ -169,7 +170,7 @@ bool video_start(const char* filename) {
 
     if (load_smk(filename) || load_bik(filename)) {
         g_sound.music_stop();
-        g_sound.speech_stop();
+        sound_speech().stop();
         g_render.create_custom_texture(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
         data.buffer.pixels = g_render.get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
         data.is_playing = true;

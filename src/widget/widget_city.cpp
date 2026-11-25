@@ -1,4 +1,5 @@
 #include "widget/widget_city.h"
+#include "sound/sound_speech.h"
 #include "widget/city/placement_preview.h"
 #include "core/draw_phase.h"
 
@@ -1479,7 +1480,7 @@ void screen_city_t::military_map_click(int legion_formation_id, tile2i tile) {
         events::emit(event_city_warning{ "#warning_auto_resolve_orders_blocked" });
     } else {
         formation_batalion_move_to(m, tile);
-        g_sound.speech_play_file("Wavs/WEAPON.WAV");
+        sound_speech().play_file("Wavs/WEAPON.WAV");
     }
 
     window_city_show();

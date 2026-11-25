@@ -1,4 +1,5 @@
 ﻿#include "window_batalion_info.h"
+#include "sound/sound_speech.h"
 #include "city/city_figures.h"
 #include "city/buildings.h"
 
@@ -92,19 +93,19 @@ void batalion_info_window::change_layout(e_formation_layout new_layout) {
     formation_batalion_change_layout(m, new_layout);
     switch (new_layout) {
     case 0:
-        g_sound.speech_play_file("Wavs/f_infantry.wav");
+        sound_speech().play_file("Wavs/f_infantry.wav");
         break;
     case 1:
-        g_sound.speech_play_file("Wavs/F_ARCHER.WAV");
+        sound_speech().play_file("Wavs/F_ARCHER.WAV");
         break;
     case 2:
-        g_sound.speech_play_file("Wavs/f_chariot.wav");
+        sound_speech().play_file("Wavs/f_chariot.wav");
         break;
     case 3:
-        g_sound.speech_play_file("Wavs/BARRACK.WAV");
+        sound_speech().play_file("Wavs/BARRACK.WAV");
         break;
     case 4:
-        g_sound.speech_play_file("Wavs/WEAPON.WAV");
+        sound_speech().play_file("Wavs/WEAPON.WAV");
         break;
     }
     window_city_military_show(b->formation_id);

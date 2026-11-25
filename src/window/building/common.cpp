@@ -1,4 +1,5 @@
 ﻿#include "common.h"
+#include "sound/sound_speech.h"
 
 #include "building/building.h"
 #include "city/city_labor.h"
@@ -90,7 +91,7 @@ void draw_employment_details_ui(ui::widget &ui, object_info &c, building* b, int
 
 void window_building_play_sound(object_info* c, xstring sound_file) {
     if (c->can_play_sound) {
-        g_sound.speech_play_file(sound_file);
+        sound_speech().play_file(sound_file);
         c->can_play_sound = 0;
     }
 }

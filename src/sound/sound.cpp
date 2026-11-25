@@ -3,6 +3,7 @@
 #include <SDL_mixer.h>
 
 #include "sound/sound.h"
+#include "sound/sound_speech.h"
 #include "sound/channel.h"
 #include "sound/sound_city.h"
 #include "content/file_formats.h"
@@ -999,7 +1000,7 @@ void ANK_PERMANENT_CALLBACK(event_sound_speech, ev) {
     if (g_args.is_log_sound_events()) {
         logs::info("[event] speech=%s sent from %s:%d", ev.path.c_str(), ev.source_file, ev.source_line);
     }
-    g_sound.speech_play_file(ev.path);
+    sound_speech().play_file(ev.path);
 }
 
 void ANK_PERMANENT_CALLBACK(event_music_update, ev) {

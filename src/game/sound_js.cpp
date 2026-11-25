@@ -1,4 +1,5 @@
 #include "core/profiler.h"
+#include "sound/sound_speech.h"
 #include "js/js.h"
 #include "js/js_defines.h"
 #include "js/js_game.h"
@@ -98,13 +99,13 @@ static void js_sound_music_update(js_State *J) {
 }
 
 static void js_sound_speech_stop(js_State *J) {
-    g_sound.speech_stop();
+    sound_speech().stop();
     J->pushundefined();
 }
 
 static void js_sound_speech_play(js_State *J) {
     const xstring path = js_toxstring(J, 1);
-    js_pushboolean(J, g_sound.speech_play_file(path.c_str()));
+    js_pushboolean(J, sound_speech().play_file(path.c_str()));
 }
 
 static void js_sound_play_intro(js_State *J) {
