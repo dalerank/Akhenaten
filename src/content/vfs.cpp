@@ -8,6 +8,7 @@
 
 #include <filesystem>
 #include <algorithm>
+#include <climits>
 #include <cstring>
 #include <iostream>
 #include <fstream>
@@ -171,8 +172,11 @@ reader file_open(path path, pcstr mode) {
         auto data = internal_file_open(path.c_str());
         if (data.first) {
             log_io("[intr] loaded from %s", path.c_str());
-            const int addb = is_text_file ? 1 : 0;
-            void *mem = malloc(data.second + is_text_file);
+            void *mem = malloc(data.second + 1);
+            if (!mem) {
+                logs::error("vfs: out of memory reading %s (%u bytes)", path.c_str(), data.second);
+                return reader();
+            }
             memcpy(mem, data.first, data.second);
             if (is_text_file) {
                 ((char *)mem)[data.second] = 0; // null-terminate the string
@@ -215,13 +219,26 @@ reader file_open(path path, pcstr mode) {
 #if defined(GAME_PLATFORM_ANDROID)
         return read_file_stream(path, f, false);
 #else
-        fseek(f, 0, SEEK_END);
-        uint32_t size = ftell(f);
-        fseek(f, 0, SEEK_SET);
-        void *mem = malloc(size);
-        fread(mem, 1, size, f);
+        const long size = (fseek(f, 0, SEEK_END) == 0) ? ftell(f) : -1;
+        if (size < 0 || size > INT_MAX || fseek(f, 0, SEEK_SET) != 0) {
+            fclose(f);
+            logs::error("vfs: cannot get the size of %s", path.c_str());
+            return reader();
+        }
+        void *mem = malloc(size > 0 ? size : 1);
+        if (!mem) {
+            fclose(f);
+            logs::error("vfs: out of memory reading %s (%ld bytes)", path.c_str(), size);
+            return reader();
+        }
+        const size_t read = fread(mem, 1, size, f);
         fclose(f);
-        return std::make_shared<data_reader>(path.c_str(), mem, size);
+        if (read != (size_t)size) {
+            free(mem);
+            logs::error("vfs: read %u of %ld bytes from %s", (unsigned)read, size, path.c_str());
+            return reader();
+        }
+        return std::make_shared<data_reader>(path.c_str(), mem, (int)size);
 #endif
     }
 
