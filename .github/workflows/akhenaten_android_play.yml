@@ -38,8 +38,8 @@ jobs:
           echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
           export ANDROID_KEYSTORE_FILE="$RUNNER_TEMP/upload.keystore"
         fi
-        if [ -z "$ANDROID_KEYSTORE_PASSWORD" ]; then
-          echo "::warning::ANDROID_KEYSTORE_PASSWORD is not set, the bundle is unsigned and Google Play will not accept it"
+        if [ -z "$ANDROID_KEYSTORE_FILE" ] || [ -z "$ANDROID_KEYSTORE_PASSWORD" ]; then
+          echo "::warning::ANDROID_KEYSTORE_BASE64 or ANDROID_KEYSTORE_PASSWORD is not set, the bundle is unsigned and Google Play will not accept it"
         fi
         bash ./gradlew bundleRelease --stacktrace
     - name: Upload release bundle

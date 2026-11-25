@@ -605,11 +605,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    def releaseStoreFile = System.getenv("ANDROID_KEYSTORE_FILE")
     def releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+    def releaseSigned = releaseStoreFile && releaseStorePassword
     signingConfigs {
         release {
-            if (releaseStorePassword) {
-                storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: "../akhenaten.keystore")
+            if (releaseSigned) {
+                storeFile file(releaseStoreFile)
                 storePassword releaseStorePassword
                 keyAlias System.getenv("ANDROID_KEY_ALIAS") ?: "akhenaten"
                 keyPassword System.getenv("ANDROID_KEYSTORE_KEY_PASSWORD")
@@ -624,7 +626,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (releaseStorePassword) {
+            if (releaseSigned) {
                 signingConfig signingConfigs.release
             }
         }
