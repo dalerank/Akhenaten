@@ -416,7 +416,6 @@ game/autosave_module.cpp -> window/file_dialog_common.h
 game/file_editor.cpp -> graphics/image.h
 game/file_editor.cpp -> graphics/image_groups.h
 game/file_editor.cpp -> graphics/view/view.h
-game/file_editor.cpp -> sound/sound_city.h
 game/game.cpp -> dev/debug.h
 game/game.cpp -> editor/editor.h
 game/game.cpp -> graphics/view/view.h
@@ -622,7 +621,6 @@ io/gamestate/boilerplate.cpp -> window/file_dialog_common.h
 io/gamestate/boilerplate.cpp -> window/popup_dialog.h
 io/gamestate/boilerplate.cpp -> window/window_city.h
 io/gamestate/boilerplate.h -> content/dir.h
-io/gamestate/boilerplate_detail.cpp -> sound/sound_city.h
 io/gamestate/boilerplate_detail.cpp -> widget/widget_figure_follow.h
 io/gamestate/file_schemas.h -> content/file_formats.h
 io/io.cpp -> content/zipreader.hpp

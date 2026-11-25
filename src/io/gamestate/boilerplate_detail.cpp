@@ -60,7 +60,6 @@
 #include "scenario/invasion_auto_resolve.h"
 #include "scenario/scenario.h"
 #include "game/mission.h"
-#include "sound/sound_city.h"
 #include "widget/widget_figure_follow.h"
 
 #include <algorithm>
@@ -87,7 +86,6 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     events::start_session();
     game.init_state();
     game.animation_timers_init();
-    sound_city_init();
     io_chunk::reset_all();
     figure_name_init();
     grid_xx::clear_all_grids();
@@ -191,8 +189,6 @@ void GamestateLoadDetail::post_load() {
     // city messages
     message_manager().clear_scroll();
 
-    // city sounds
-    sound_city_init();
     map_tiles_gardens_update_all();
 
     events::emit(event_level_post_load{

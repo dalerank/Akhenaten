@@ -51,7 +51,6 @@
 #include "scenario/scenario_invasion.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
-#include "sound/sound_city.h"
 #include "game/game.h"
 #include "empire/empire_traders.h"
 
@@ -74,7 +73,6 @@ void game_file_editor_clear_data(void) {
     message_manager().init();
     game.init_state();
     game.animation_timers_init();
-    sound_city_init();
     events::emit(event_building_menu_update{ "enable_all" });
     building_clear_all();
     building_storage_clear_all();

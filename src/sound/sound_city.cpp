@@ -14,6 +14,8 @@
 #include "graphics/view/view.h"
 #include "grid/terrain.h"
 #include "game/sound_channel.h"
+#include "game/game_events.h"
+#include "scenario/scenario.h"
 #include "building/building_static_params.h"
 #include "sound/sound.h"
 #include "js/js_register.h"
@@ -43,6 +45,14 @@ static bool is_silent_venue(e_building_type type) {
     return type == BUILDING_BANDSTAND || type == BUILDING_BOOTH || type == BUILDING_SENET_HOUSE
            || type == BUILDING_PAVILLION || type == BUILDING_ZOO;
 }
+
+void sound_city_init();
+
+static void sound_city_subscribe_events() {
+    sound_city_init();
+    events::subscribe([](event_level_post_load) { sound_city_init(); });
+}
+static events::session_subscriber g_sound_city_session(&sound_city_subscribe_events);
 
 void sound_city_init() {
     auto &channels = g_city_sounds.channels;
