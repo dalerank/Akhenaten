@@ -34,6 +34,19 @@ localization_en = [
   {key:"#TR_CONFIG_HEADER_GODS_CHANGES", text:"Gods changes"}
   {key:"#TR_CONFIG_HEADER_BUILDING_CHANGES", text:"Building changes"}
   {key:"#TR_CONFIG_HEADER_RESOURCE_CHANGES", text:"Resource changes"}
+  {key:"#TR_CONFIG_HEADER_INTERFACE", text:"Interface"}
+  {key:"#TR_CONFIG_HEADER_MAP_VIEW", text:"Camera and map"}
+  {key:"#TR_CONFIG_HEADER_GRAPHICS_SOUND", text:"Graphics and sound"}
+  {key:"#TR_CONFIG_HEADER_GAME_OPTIONS", text:"Game options"}
+  {key:"#TR_CONFIG_HEADER_FIXES", text:"Fixes and original rules"}
+  {key:"#TR_CONFIG_HEADER_CITY", text:"City and population"}
+  {key:"#TR_CONFIG_HEADER_SERVICES", text:"Services and religion"}
+  {key:"#TR_CONFIG_HEADER_INDUSTRY", text:"Farms and industry"}
+  {key:"#TR_CONFIG_HEADER_STORAGE_TRADE", text:"Storage and trade"}
+  {key:"#TR_CONFIG_HEADER_WALKERS_BUILDINGS", text:"Walkers and buildings"}
+  {key:"#TR_CONFIG_HEADER_MILITARY_DISASTERS", text:"Military and disasters"}
+  {key:"#TR_CONFIG_HEADER_NEW_FEATURES", text:"New features"}
+  {key:"#TR_CONFIG_HEADER_OTHER_CHANGES", text:"Other"}
   {key:"#TR_CONFIG_SHOW_INTRO_VIDEO", text:"Play intro videos"}
   {key:"#TR_CONFIG_AUTO_UPDATE", text:"Download new builds automatically"}
   {key:"#TR_CONFIG_HIDE_NEW_GAME_TOP_MENU", text:"Hide top menu new game button"}

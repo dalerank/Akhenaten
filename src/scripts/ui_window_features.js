@@ -1,9 +1,11 @@
 log_info("akhenaten: window features started")
 
 var FEATURES_PER_PAGE = 14
+var FEATURES_TAB_SLOTS = 18
 
-function wposbtn(i) { return { x: 32, y: 72 + i * 25} }
-function wpostxt(i) { return { x: 64, y: 78 + i * 25} }
+function wposbtn(i) { return { x: 208, y: 72 + i * 25} }
+function wpostxt(i) { return { x: 240, y: 78 + i * 25} }
+function wpostab(i) { return { x: 16, y: 48 + i * 22} }
 
 // ---- Feature descriptors by type ----
 
@@ -22,37 +24,31 @@ function window_features_make_game_feature(fname, fval, ftext) {
     }
 }
 
-function window_features_append_gameplay_pages(pages) {
-    var pf = []
-    var n = game_features.count
-    for (var i = 0; i < n; i++) {
-        var name = game_features.name(i)
-        var val = game_features.get(name)
-
-        if (typeof val !== "boolean")
-            continue
-
-        // Ironwill: chosen at mission briefing; locked for the playthrough (IW5).
-        if (name === "gameopt_ironwill" && game_mission_options_locked)
-            continue
-
-        if (name === "gameopt_auto_update" && !__updater_available())
-            continue
-
-        var text = game_features.text(name)
-        if (!text)
-            continue
-
-        pf.push(window_features_make_game_feature(name, val, text))
-
-        if (pf.length >= FEATURES_PER_PAGE) {
-            pages.push({title: "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES", features: pf})
-            pf = []
-        }
+function window_features_add_tab(pages, title, features) {
+    var first = pages.length
+    for (var i = 0; i < features.length; i += FEATURES_PER_PAGE) {
+        pages.push({title: title, first: first, features: features.slice(i, i + FEATURES_PER_PAGE)})
     }
+}
 
-    if (pf.length > 0) {
-        pages.push({title: "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES", features: pf})
+function window_features_append_gameplay_pages(pages) {
+    var ng = game_features.group_count()
+    for (var g = 0; g < ng; g++) {
+        var pf = []
+        var n = game_features.group_size(g)
+        for (var i = 0; i < n; i++) {
+            var name = game_features.group_feature(g, i)
+
+            // Ironwill: chosen at mission briefing; locked for the playthrough (IW5).
+            if (name === "gameopt_ironwill" && game_mission_options_locked)
+                continue
+
+            if (name === "gameopt_auto_update" && !__updater_available())
+                continue
+
+            pf.push(window_features_make_game_feature(name, game_features.get(name), game_features.text(name)))
+        }
+        window_features_add_tab(pages, game_features.group_title(g), pf)
     }
 }
 
@@ -89,13 +85,10 @@ function window_features_append_scenario_pages(pages) {
         return
     var sc_orig_animals = scenario.has_animals
     var sc_orig_flotsam = scenario.flotsam_enabled
-    pages.push({
-        title: "#TR_CONFIG_HEADER_SCENARIO_CHANGES",
-        features: [
-            window_features_make_scenario_animals(sc_orig_animals),
-            window_features_make_scenario_flotsam(sc_orig_flotsam)
-        ]
-    })
+    window_features_add_tab(pages, "#TR_CONFIG_HEADER_SCENARIO_CHANGES", [
+        window_features_make_scenario_animals(sc_orig_animals),
+        window_features_make_scenario_flotsam(sc_orig_flotsam)
+    ])
 }
 
 function window_features_make_god(godIdx) {
@@ -121,7 +114,7 @@ function window_features_append_gods_pages(pages) {
     for (var i = 0; i < 5; i++) {
         gf.push(window_features_make_god(i))
     }
-    pages.push({title: "#TR_CONFIG_HEADER_GODS_CHANGES", features: gf})
+    window_features_add_tab(pages, "#TR_CONFIG_HEADER_GODS_CHANGES", gf)
 }
 
 function window_features_make_resource(res) {
@@ -146,14 +139,9 @@ function window_features_append_resource_pages(pages) {
     var rf = []
     var n_res = city.resources.count
     for (var i = 0; i < n_res; i++) {
-        var res = city.resources.get_id(i)
-        rf.push(window_features_make_resource(res))
-        if (rf.length >= FEATURES_PER_PAGE) {
-            pages.push({title: "#TR_CONFIG_HEADER_RESOURCES", features: rf})
-            rf = []
-        }
+        rf.push(window_features_make_resource(city.resources.get_id(i)))
     }
-    pages.push({title: "#TR_CONFIG_HEADER_RESOURCES", features: rf})
+    window_features_add_tab(pages, "#TR_CONFIG_HEADER_RESOURCES", rf)
 }
 
 function window_features_make_language(langId, caption) {
@@ -175,15 +163,9 @@ function window_features_append_language_pages(pages) {
     var lf = []
     var n_langs = game.languages.count
     for (var i = 0; i < n_langs; i++) {
-        var langId = game.languages.get_id(i)
-        var caption = game.languages.get_caption(i)
-        lf.push(window_features_make_language(langId, caption))
-        if (lf.length >= FEATURES_PER_PAGE) {
-            pages.push({title: "#TR_CONFIG_HEADER_LANGUAGES", features: lf})
-            lf = []
-        }
+        lf.push(window_features_make_language(game.languages.get_id(i), game.languages.get_caption(i)))
     }
-    pages.push({title: "#TR_CONFIG_HEADER_LANGUAGES", features: lf})
+    window_features_add_tab(pages, "#TR_CONFIG_HEADER_LANGUAGES", lf)
 }
 
 // ---- State management ----
@@ -200,7 +182,36 @@ function window_features_build_pages() {
     window_features.pages = pages
 }
 
+function window_features_tabs() {
+    var tabs = []
+    for (var p = 0; p < window_features.pages.length; p++) {
+        if (window_features.pages[p].first == p)
+            tabs.push(p)
+    }
+    return tabs
+}
+
+function window_features_rebuild_tabs(window) {
+    var tabs = window_features_tabs()
+    var current = window_features.pages[window_features.page].first
+    for (var i = 0; i < FEATURES_TAB_SLOTS; i++) {
+        var tab = window["btab" + i]
+        tab.enabled = i < tabs.length
+        tab.text = (i < tabs.length) ? window_features.pages[tabs[i]].title : ""
+        tab.selected = (i < tabs.length) && tabs[i] == current
+    }
+}
+
+function window_features_select_tab(index) {
+    var tabs = window_features_tabs()
+    if (index < 0 || index >= tabs.length)
+        return
+    window_features.page = tabs[index]
+    window_features.needs_rebuild = true
+}
+
 function window_features_rebuild_button_features(window) {
+    window_features_rebuild_tabs(window)
     window_features.button_features = []
     var page = window_features.pages[window_features.page]
     for (var i = 0; i < FEATURES_PER_PAGE; i++) {
@@ -273,12 +284,31 @@ window_features {
 
     ui : {
         background_image: background({pack:PACK_UNLOADED, id:8})
-        background    : outer_panel({size: [40, 33] })
+        background    : outer_panel({size: [48, 35] })
 
-        title         : text({pos:[0, 16], size:[px(40), 20], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT})
+        title         : text({pos:[0, 16], size:[px(48), 20], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT})
 
         btn_prev      : button({margin:{left:20, top:16}, size:[50, 25], text:"#features_prev_page"})
         btn_next      : button({margin:{right:-70, top:16}, size:[50, 25], text:"#features_next_page"})
+
+        btab0         : button({pos:wpostab(0), size:[176, 20], param1:0, onclick_event:"select_tab"})
+        btab1         : button({pos:wpostab(1), size:[176, 20], param1:1, onclick_event:"select_tab"})
+        btab2         : button({pos:wpostab(2), size:[176, 20], param1:2, onclick_event:"select_tab"})
+        btab3         : button({pos:wpostab(3), size:[176, 20], param1:3, onclick_event:"select_tab"})
+        btab4         : button({pos:wpostab(4), size:[176, 20], param1:4, onclick_event:"select_tab"})
+        btab5         : button({pos:wpostab(5), size:[176, 20], param1:5, onclick_event:"select_tab"})
+        btab6         : button({pos:wpostab(6), size:[176, 20], param1:6, onclick_event:"select_tab"})
+        btab7         : button({pos:wpostab(7), size:[176, 20], param1:7, onclick_event:"select_tab"})
+        btab8         : button({pos:wpostab(8), size:[176, 20], param1:8, onclick_event:"select_tab"})
+        btab9         : button({pos:wpostab(9), size:[176, 20], param1:9, onclick_event:"select_tab"})
+        btab10        : button({pos:wpostab(10), size:[176, 20], param1:10, onclick_event:"select_tab"})
+        btab11        : button({pos:wpostab(11), size:[176, 20], param1:11, onclick_event:"select_tab"})
+        btab12        : button({pos:wpostab(12), size:[176, 20], param1:12, onclick_event:"select_tab"})
+        btab13        : button({pos:wpostab(13), size:[176, 20], param1:13, onclick_event:"select_tab"})
+        btab14        : button({pos:wpostab(14), size:[176, 20], param1:14, onclick_event:"select_tab"})
+        btab15        : button({pos:wpostab(15), size:[176, 20], param1:15, onclick_event:"select_tab"})
+        btab16        : button({pos:wpostab(16), size:[176, 20], param1:16, onclick_event:"select_tab"})
+        btab17        : button({pos:wpostab(17), size:[176, 20], param1:17, onclick_event:"select_tab"})
 
         bfeature0     : checkbox({pos:wposbtn(0)})
         tfeature0     : text({pos:wpostxt(0)  })
@@ -309,14 +339,14 @@ window_features {
         bfeature13    : checkbox({pos:wposbtn(13)})
         tfeature13    : text({pos:wpostxt(13) })
 
-        btn_defaults  : button({pos:[250, 436], size:[150, 30], text:"#TR_BUTTON_RESET_DEFAULTS"})
-        btn_hotkeys   : button({pos:[90,  436], size:[150, 30], text:"#TR_BUTTON_CONFIGURE_HOTKEYS"})
-        btn_close     : button({pos:[410, 436], size:[100, 30], text:"#TR_BUTTON_CANCEL"})
-        btn_save      : button({pos:[520, 436], size:[100, 30], text:"#TR_BUTTON_OK"})
+        btn_defaults  : button({pos:[314, 468], size:[150, 30], text:"#TR_BUTTON_RESET_DEFAULTS"})
+        btn_hotkeys   : button({pos:[154, 468], size:[150, 30], text:"#TR_BUTTON_CONFIGURE_HOTKEYS"})
+        btn_close     : button({pos:[474, 468], size:[100, 30], text:"#TR_BUTTON_CANCEL"})
+        btn_save      : button({pos:[584, 468], size:[100, 30], text:"#TR_BUTTON_OK"})
 
         // Own row below the page buttons, so they show on every features page.
-        btn_display   : button({pos:[115, 474], size:[200, 30], text:"#display_options_title"})
-        btn_sound     : button({pos:[325, 474], size:[200, 30], text:[46, 0]})
+        btn_display   : button({pos:[179, 506], size:[200, 30], text:"#display_options_title"})
+        btn_sound     : button({pos:[389, 506], size:[200, 30], text:[46, 0]})
     }
 }
 
@@ -348,6 +378,11 @@ function window_features_on_bfeature11(window) { window_features_toggle_slot(11)
 function window_features_on_bfeature12(window) { window_features_toggle_slot(12) }
 [es=(window_features, bfeature13)]
 function window_features_on_bfeature13(window) { window_features_toggle_slot(13) }
+
+[es=(window_features, select_tab)]
+function window_features_on_select_tab(ev) {
+    window_features_select_tab(Math.round(ev.param1))
+}
 
 [es=(window_features, btn_defaults)]
 function window_features_on_btn_defaults(window) {
@@ -394,14 +429,15 @@ function window_features_on_btn_next(window) {
 [es=(window_features, init)]
 function window_features_on_init(window) {
     window_features_build_pages()
-    window_features.page = 0
+    if (window_features.page >= window_features.pages.length)
+        window_features.page = 0
     window_features.needs_rebuild = true
 }
 
 // ---- Draw ----
 
 function window_features_centered_pos() {
-    return [(sw(0) - px(40)) / 2, (sh(0) - px(33)) / 2]
+    return [(sw(0) - px(48)) / 2, (sh(0) - px(35)) / 2]
 }
 
 [es=(window_features, ui_draw_foreground)]

@@ -6,6 +6,7 @@ include(":hotkeys.conf")
 import common
 import camera
 import game
+import game_feature_groups
 import game_speed
 import scroll
 import hotkey_actions

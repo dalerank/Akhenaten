@@ -258,6 +258,13 @@ namespace game_features {
     // Bool features with localization text (shown in Enhanced settings / options window).
     bool is_toggleable(const game_feature &feature);
 
+    struct feature_group {
+        xstring id;
+        xstring title;
+        std::vector<game_feature*> features;
+    };
+    const std::vector<feature_group>& groups();
+
     // Reset toggleable features to ogv (original Pharaoh behavior).
     void apply_og_profile();
     // Enable every toggleable feature (full Akhenaten / Enhanced suite).

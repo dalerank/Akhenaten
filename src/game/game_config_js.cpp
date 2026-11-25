@@ -164,3 +164,36 @@ void __debug_feature_bool(xstring feature_name, xstring display_name) {
     }
 }
 ANK_FUNCTION_2(__debug_feature_bool)
+
+int __game_feature_groups_count() {
+    return (int)game_features::groups().size();
+}
+ANK_FUNCTION(__game_feature_groups_count)
+
+xstring __game_feature_group_id(int group) {
+    const auto& groups = game_features::groups();
+    return (group >= 0 && group < (int)groups.size()) ? groups[group].id : xstring();
+}
+ANK_FUNCTION_1(__game_feature_group_id)
+
+xstring __game_feature_group_title(int group) {
+    const auto& groups = game_features::groups();
+    return (group >= 0 && group < (int)groups.size()) ? groups[group].title : xstring();
+}
+ANK_FUNCTION_1(__game_feature_group_title)
+
+int __game_feature_group_size(int group) {
+    const auto& groups = game_features::groups();
+    return (group >= 0 && group < (int)groups.size()) ? (int)groups[group].features.size() : 0;
+}
+ANK_FUNCTION_1(__game_feature_group_size)
+
+xstring __game_feature_group_feature(int group, int index) {
+    const auto& groups = game_features::groups();
+    if (group < 0 || group >= (int)groups.size()) {
+        return {};
+    }
+    const auto& features = groups[group].features;
+    return (index >= 0 && index < (int)features.size()) ? features[index]->name : xstring();
+}
+ANK_FUNCTION_2(__game_feature_group_feature)

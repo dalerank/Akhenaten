@@ -29,6 +29,19 @@ localization_ru = [
     { key:"#TR_CONFIG_HEADER_GODS_CHANGES", text:"Изменения логики богов"}
     { key:"#TR_CONFIG_HEADER_BUILDING_CHANGES", text:"Изменения логики зданий"}
     { key:"#TR_CONFIG_HEADER_RESOURCE_CHANGES", text:"Изменения логики ресурсов"}
+    { key:"#TR_CONFIG_HEADER_INTERFACE", text:"Интерфейс"}
+    { key:"#TR_CONFIG_HEADER_MAP_VIEW", text:"Камера и карта"}
+    { key:"#TR_CONFIG_HEADER_GRAPHICS_SOUND", text:"Графика и звук"}
+    { key:"#TR_CONFIG_HEADER_GAME_OPTIONS", text:"Параметры игры"}
+    { key:"#TR_CONFIG_HEADER_FIXES", text:"Исправления и оригинал"}
+    { key:"#TR_CONFIG_HEADER_CITY", text:"Город и население"}
+    { key:"#TR_CONFIG_HEADER_SERVICES", text:"Службы и религия"}
+    { key:"#TR_CONFIG_HEADER_INDUSTRY", text:"Фермы и производство"}
+    { key:"#TR_CONFIG_HEADER_STORAGE_TRADE", text:"Склады и торговля"}
+    { key:"#TR_CONFIG_HEADER_WALKERS_BUILDINGS", text:"Горожане и здания"}
+    { key:"#TR_CONFIG_HEADER_MILITARY_DISASTERS", text:"Армия и бедствия"}
+    { key:"#TR_CONFIG_HEADER_NEW_FEATURES", text:"Новые возможности"}
+    { key:"#TR_CONFIG_HEADER_OTHER_CHANGES", text:"Прочее"}
     { key:"#TR_CONFIG_SHOW_INTRO_VIDEO", text:"Проигрывать вступительные видеоролики"}
     { key:"#TR_CONFIG_SIDEBAR_INFO", text:"Дополнительная информация на панели управления"}
     { key:"#TR_CONFIG_SMOOTH_SCROLLING", text:"Включить плавную прокрутку карты"}

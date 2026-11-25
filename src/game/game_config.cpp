@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "core/vec2i.h"
 
+#include <algorithm>
 #include <variant>
 #include <cstring>
 #include "core/svector.h"
@@ -18,10 +19,28 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings) {
     game_features::load();
 }
 
+struct game_feature_group_config_t {
+    xstring id;
+    xstring title;
+    svector<xstring, 64> features;
+};
+ANK_CONFIG_STRUCT(game_feature_group_config_t, id, title, features)
+
 namespace game_features {
     svector<game_feature*, 256> _features;
     globals_settings_t _settings;
+    std::vector<feature_group> _groups;
 
+    void build_groups(const svector<game_feature_group_config_t, 32>& config);
+} // namespace game_features
+
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_feature_groups) {
+    svector<game_feature_group_config_t, 32> config;
+    g_config_arch.r("game_feature_groups", config);
+    game_features::build_groups(config);
+}
+
+namespace game_features {
     game_feature gameplay_fix_immigration{ "gameplay_fix_immigration", "#TR_CONFIG_FIX_IMMIGRATION_BUG", false, false };
     game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts", "#TR_CONFIG_FIX_100_YEAR_GHOSTS", false, false };
     game_feature gameplay_fix_editor_events{ "gameplay_fix_editor_events", "#TR_CONFIG_FIX_EDITOR_EVENTS", false, false };
@@ -274,6 +293,46 @@ namespace game_features {
         return feature.type() == setting_bool && !feature.text.empty();
     }
 
+    const std::vector<feature_group>& groups() {
+        return _groups;
+    }
+
+    void build_groups(const svector<game_feature_group_config_t, 32>& config) {
+        _groups.clear();
+        std::vector<const game_feature*> listed;
+        for (const auto& group_config : config) {
+            feature_group& group = _groups.emplace_back();
+            group.id = group_config.id;
+            group.title = group_config.title;
+            for (const xstring& name : group_config.features) {
+                game_feature* feature = find(name);
+                if (!feature || !is_toggleable(*feature)) {
+                    logs::warn("[features] group %s lists %s, which is not a toggleable feature", group.id.c_str(),
+                      name.c_str());
+                    continue;
+                }
+                if (std::find(listed.begin(), listed.end(), feature) != listed.end()) {
+                    logs::warn("[features] %s is listed in more than one group, kept in the first", name.c_str());
+                    continue;
+                }
+                listed.push_back(feature);
+                group.features.push_back(feature);
+            }
+        }
+
+        feature_group other{"other", "#TR_CONFIG_HEADER_OTHER_CHANGES", {}};
+        for (game_feature* feature : _features) {
+            if (!is_toggleable(*feature) || std::find(listed.begin(), listed.end(), feature) != listed.end()) {
+                continue;
+            }
+            logs::warn("[features] %s is in no group of game_feature_groups, shown under other", feature->name.c_str());
+            other.features.push_back(feature);
+        }
+        if (!other.features.empty()) {
+            _groups.push_back(std::move(other));
+        }
+    }
+
     void apply_og_profile() {
         for (auto *feature : _features) {
             if (!is_toggleable(*feature)) {
@@ -300,7 +359,7 @@ namespace game_features {
         }
         logs::info("Applied Enhanced game-features profile (all toggleable features on)");
     }
-}
+} // namespace game_features
 
 game_features::game_feature::game_feature(const xstring &n, const xstring &t, setting_variant def, setting_variant og)
     : name(n), text(t), defaultv(def), ogv(og) {

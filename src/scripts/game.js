@@ -199,6 +199,11 @@ game_features.count = __game_features_count
 game_features.type = __game_feature_type
 game_features.type_name = __game_feature_type_name
 game_features.default = __game_feature_default
+game_features.group_count = __game_feature_groups_count
+game_features.group_id = __game_feature_group_id
+game_features.group_title = __game_feature_group_title
+game_features.group_size = __game_feature_group_size
+game_features.group_feature = __game_feature_group_feature
 
 // Ironwill (IW*): player saves only via ironwill.svx checkpoint (Exit / Escape / Alt+F4).
 // Choice is made on mission briefing (like difficulty); locked after Start until next briefing.
