@@ -86,7 +86,9 @@ SDL_Surface *load_icon_surface(pcstr name, vec2i &size) {
     }
 
     if (rw) {
-        return IMG_LoadPNG_RW(rw);
+        SDL_Surface* surface = IMG_LoadPNG_RW(rw);
+        SDL_RWclose(rw);
+        return surface;
     }
 
     return nullptr;

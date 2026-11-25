@@ -1180,7 +1180,11 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *b
     flush_sprites();
     auto &data = g_renderer_data;
     SDL_RWops *rw = SDL_RWFromMem(buffer, size);
+    if (!rw) {
+        return nullptr;
+    }
     SDL_Surface* loadedSurface= IMG_LoadPNG_RW(rw);
+    SDL_RWclose(rw);
 
     if (loadedSurface == nullptr) {
         return nullptr;

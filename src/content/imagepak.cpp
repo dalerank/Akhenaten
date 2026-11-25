@@ -543,7 +543,10 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
         SDL_Surface *surface = nullptr;
         if (file) {
             SDL_RWops *rw = SDL_RWFromConstMem((void *)file->data(), file->size());
-            surface = IMG_LoadPNG_RW(rw);
+            if (rw) {
+                surface = IMG_LoadPNG_RW(rw);
+                SDL_RWclose(rw);
+            }
         }
 
         img.width = surface ? surface->w : 0;
