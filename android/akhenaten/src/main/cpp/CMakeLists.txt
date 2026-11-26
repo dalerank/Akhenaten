@@ -32,6 +32,7 @@ file(GLOB CONTENT_FILES ${SRC_ROOT}/content/*.cpp)
 file(GLOB APP_FILES ${SRC_ROOT}/app/*.cpp)
 file(GLOB CORE_FILES ${SRC_ROOT}/core/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${SRC_ROOT}/core/encoding/*.cpp)
+file(GLOB CORE_VFS_FILES ${SRC_ROOT}/core/vfs/*.cpp)
 file(GLOB BUILDING_FILES ${SRC_ROOT}/building/*.cpp)
 file(GLOB BUILDING_CONSTRUCTION_FILES ${SRC_ROOT}/building/construction/*.cpp)
 file(GLOB CITY_FILES ${SRC_ROOT}/city/*.cpp)
@@ -103,6 +104,7 @@ set(SOURCE_FILES
     ${APP_FILES}
     ${CORE_FILES}
     ${CORE_ENCODING_FILES}
+    ${CORE_VFS_FILES}
     ${BUILDING_FILES}
     ${BUILDING_CONSTRUCTION_FILES}
     ${CITY_FILES}
