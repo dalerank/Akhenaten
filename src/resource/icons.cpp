@@ -18,7 +18,6 @@
 #pragma clang diagnostic pop
 #endif
 
-#include "platform/screen.h"
 #include "platform/renderer.h"
 #include "cmrc/cmrc.hpp"
 

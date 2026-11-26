@@ -606,7 +606,6 @@ io/gamestate/boilerplate.cpp -> window/window_city.h
 io/gamestate/file_schemas.h -> content/file_formats.h
 overlays/city_overlay.cpp -> dev/debug.h
 resource/icons.cpp -> platform/renderer.h
-resource/icons.cpp -> platform/screen.h
 scenario/criteria.cpp -> js/js_global_object.h
 scenario/earthquake.cpp -> graphics/graphics.h
 scenario/earthquake.cpp -> graphics/image.h
