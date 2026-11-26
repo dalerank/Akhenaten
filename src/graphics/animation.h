@@ -92,16 +92,6 @@ struct animations_t {
         return (it == data.end()) ? dummy : it->second;
     }
 
-    const animation_t &rand() const {
-        if (data.empty()) {
-            return dummy;
-        }
-        int rand_index = ::rand() % data.size();
-        auto it = data.cbegin();
-        std::advance(it, rand_index);
-        return it->second;
-    }
-
     bool empty() const {
         return data.empty();
     }

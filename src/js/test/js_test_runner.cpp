@@ -896,8 +896,8 @@ static bool __test_drop_memory_save(pcstr name) {
 }
 ANK_FUNCTION_1(__test_drop_memory_save);
 
-// Some simulation code still draws from libc rand() (figure names, houses, festivals); a test that
-// compares two runs must start both from the same libc state.
+// Cosmetic code (random_int: music, clouds) still draws from libc rand(); a test that compares two
+// runs must start both from the same libc state.
 static void __test_libc_srand(int seed) {
     srand((unsigned)seed);
 }
