@@ -1,7 +1,6 @@
 #include "city_health.h"
 #include "city/city_plagues.h"
 #include "city/city_religion.h"
-#include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
 #include "city/city_temple_complexes.h"
@@ -298,9 +297,7 @@ public:
     const char* name() const override { return "health"; }
     void on_reset() override { city_health().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_health_chunk>(city_health_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_health_chunk>(city_health_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_health_coverage, SIM_PHASE_TICK, [](int tick) {

@@ -7,7 +7,6 @@
 #include "game/sim_system.h"
 #include "game/simulation.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 
 city_mission_t& city_mission() {
     return xvalue<city_mission_t>::ref();
@@ -26,9 +25,7 @@ public:
         g_campaign_carry.clear_monuments();
     }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_mission_chunk>(city_mission_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_mission_chunk>(city_mission_chunk::size, false);
     }
 };
 

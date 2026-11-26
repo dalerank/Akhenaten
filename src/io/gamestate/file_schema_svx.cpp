@@ -83,10 +83,6 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<route_paths_chunk>(500000, false);
     g_chunk_io.push_chunk<formations_chunk>(7200, false);
     g_chunk_io.push_chunk<formations_info_chunk>(12, false);
-    if (file_version < save_version_city_sections) {
-        g_chunk_io.push_chunk<city_data_chunk>(37808, false);
-        g_chunk_io.push_chunk<city_data_extra_chunk>(72, false);
-    }
     g_chunk_io.push_chunk<buildings_chunk>(1056000, false);
     g_chunk_io.push_chunk<city_view_orientation_chunk>(4, false);          // ok
     g_chunk_io.push_chunk<game_time_chunk>(20, false);                     // ok

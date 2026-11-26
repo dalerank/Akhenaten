@@ -3,7 +3,6 @@
 #include "city/city_finance.h"
 #include "js/js_register.h"
 #include "core/svector.h"
-#include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
 #include "city/city_temple_complexes.h"
@@ -387,9 +386,7 @@ public:
         city_sentiment().init();
     }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_sentiment_chunk>(city_sentiment_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_sentiment_chunk>(city_sentiment_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_reset_protesters, SIM_PHASE_TICK, [](int tick) {

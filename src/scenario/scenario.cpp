@@ -4,7 +4,6 @@
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
-#include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "scenario/scenario_chunks.h"
 
@@ -512,9 +511,7 @@ public:
     const char* name() const override { return "scenario"; }
     void on_reset() override { g_scenario.campaign_scenario_id = -1; }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_scenario, SIM_PHASE_TICK_END, [](int) { g_scenario.update(); }});

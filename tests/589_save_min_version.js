@@ -83,7 +83,7 @@ function run_test() {
         test589_fail('a save older than the minimum version loaded')
         return
     }
-    if (!__test_find_inlog('is older than 199')) {
+    if (!__test_find_inlog('is older than 203')) {
         test589_fail('no refusal message for the old save')
         return
     }

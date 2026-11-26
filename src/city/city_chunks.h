@@ -4,16 +4,6 @@
 
 class io_buffer;
 
-struct city_data_chunk {
-    static constexpr const char* name = "city_data";
-    static void bind_data(io_buffer* iob, size_t version);
-};
-
-struct city_data_extra_chunk {
-    static constexpr const char* name = "city_data_extra";
-    static void bind_data(io_buffer* iob, size_t version);
-};
-
 struct city_graph_order_chunk {
     static constexpr const char* name = "city_graph_order";
     static void bind_data(io_buffer* iob, size_t version);

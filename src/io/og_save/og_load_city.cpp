@@ -27,8 +27,8 @@
 
 #include <type_traits>
 
-// City state of the human player (OG city_players[1], tutankhamun city_player_types.h). Field order follows our
-// city_data_bind_og_layout so a field missing here is easy to spot; widths are converted, not copied.
+// City state of the human player (OG city_players[1], tutankhamun city_player_types.h). Field order follows the
+// OG record so a field missing here is easy to spot; widths are converted, not copied.
 // OG fields with no home in our model are listed in tmp/og-save-converter.md.
 namespace og {
 

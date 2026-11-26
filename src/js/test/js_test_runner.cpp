@@ -955,48 +955,6 @@ static pcstr __test_state_diff(pcstr tag) {
 }
 ANK_FUNCTION_1(__test_state_diff);
 
-// Puts distinct values into fields whose OG offsets test 343 checks in a freshly written city_data chunk.
-void __test_city_data_set_probe() {
-    city_finance().treasury.value = 0x1234567;
-    city_building_stats().distribution_center_building_id = 0x2345;
-    city_building_stats().trade_center_building_id = 0x3456;
-    city_figures().soldiers = 0x4567;
-    city_sound().march_enemy = 0x55;
-    city_sentiment().include_huts = true;
-    city_population().highest_ever = 0x6789;
-    city_ratings().prosperity_max = 0x42;
-}
-ANK_FUNCTION(__test_city_data_set_probe);
-
-static void city_data_og_schema(e_file_format, const int) {
-    g_chunk_io.push_chunk<city_data_chunk>(37808, false);
-}
-
-// Little-endian value of `size` bytes at `offset` of the city_player record (the second half of city_data)
-// in the city_data chunk the OG layout bind (the reader of 199..202 saves) produces now; -1 when missing.
-int __test_city_data_record_value(int offset, int size) {
-    chunk_snapshots chunks;
-    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, 202, city_data_og_schema, chunks)) {
-        return -1;
-    }
-    for (const chunk_snapshot& chunk : chunks) {
-        if (chunk.name != "city_data") {
-            continue;
-        }
-        const size_t at = 18904 + (size_t)offset;
-        if (offset < 0 || size < 1 || size > 4 || at + size > chunk.raw.size()) {
-            return -1;
-        }
-        uint32_t v = 0;
-        for (int i = size - 1; i >= 0; --i) {
-            v = (v << 8) | chunk.raw[at + i];
-        }
-        return (int)v;
-    }
-    return -1;
-}
-ANK_FUNCTION_2(__test_city_data_record_value);
-
 static bool __test_popup_dialog_is_open() {
     return popup_dialog::is_open();
 }

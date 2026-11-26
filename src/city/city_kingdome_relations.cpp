@@ -7,7 +7,6 @@
 #include "city/city_figures.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 
 #include "city/city.h"
 #include "core/calc.h"
@@ -424,9 +423,7 @@ public:
     const char* name() const override { return "kingdome_relations"; }
     void on_reset() override { city_kingdome().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_kingdome_chunk>(city_kingdome_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_kingdome_chunk>(city_kingdome_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_kingdome, SIM_PHASE_TICK, [](int tick) {

@@ -1,7 +1,6 @@
 #include "city_labor.h"
 #include "city/city_resource.h"
 #include "city/city_labor.h"
-#include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
 #include "city/city_labor_chunks.h"
@@ -541,9 +540,7 @@ public:
     const char* name() const override { return "labor"; }
     void on_reset() override { city_labor().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_labor_chunk>(city_labor_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_labor_chunk>(city_labor_chunk::size, false);
         g_chunk_io.push_chunk<labor_storage_priority_chunk>(4, false);
     }
     void register_steps(sim_schedule_t& schedule) override {

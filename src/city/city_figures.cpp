@@ -6,7 +6,6 @@
 #include "city/city_figures_chunks.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 #include "grid/figure.h"
 
 #include "core/profiler.h"
@@ -229,9 +228,7 @@ public:
         map_figure_draw_states_clear_all();
     }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_figures, SIM_PHASE_TICK_END, [](int) { city_figures().update(); }});

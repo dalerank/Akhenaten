@@ -5,7 +5,6 @@
 #include "city/city_resource_chunks.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 
 #include "building/building.h"
 #include "city/city_industry.h"
@@ -624,9 +623,7 @@ public:
     const char* name() const override { return "resource"; }
     void on_reset() override { city_resource().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_resource_chunk>(city_resource_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_resource_chunk>(city_resource_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_stocks, SIM_PHASE_TICK, [](int tick) {

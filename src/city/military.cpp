@@ -5,7 +5,6 @@
 #include "city/military_chunks.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 
 #include "city/buildings.h"
 #include "city/city.h"
@@ -93,9 +92,7 @@ public:
     const char* name() const override { return "military"; }
     void on_reset() override { city_military().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_military_chunk>(city_military_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_military_chunk>(city_military_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_tower_sentry_decay, SIM_PHASE_TICK, [](int tick) {

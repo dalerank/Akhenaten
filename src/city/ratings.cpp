@@ -4,7 +4,6 @@
 #include "city/city_religion.h"
 #include "city/ratings.h"
 #include "city/entertainment.h"
-#include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
 #include "city/ratings_chunks.h"
@@ -176,9 +175,7 @@ public:
     const char* name() const override { return "ratings"; }
     void on_reset() override { city_ratings().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_ratings_chunk>(city_ratings_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_ratings_chunk>(city_ratings_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_ratings_year, SIM_PHASE_YEAR, [](int) { city_ratings().update(true); }});

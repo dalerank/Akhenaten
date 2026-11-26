@@ -15,7 +15,6 @@
 #include "game/game_config.h"
 #include "game/simulation.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 #include "js/js_register.h"
 #include "scenario/scenario.h"
 
@@ -37,9 +36,7 @@ public:
     }
     void on_reset() override { city_taxes().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
     }
 };
 

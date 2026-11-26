@@ -14,7 +14,6 @@
 #include "city/map_chunks.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 
 #include "city/city.h"
 #include "core/profiler.h"
@@ -82,9 +81,7 @@ public:
         map_routing_stats_clear();
     }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_tree_growth, SIM_PHASE_TICK, [](int tick) {

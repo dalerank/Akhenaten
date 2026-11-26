@@ -1,5 +1,4 @@
 #include "city_finance.h"
-#include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
 #include "city/city_finance_chunks.h"
@@ -384,9 +383,7 @@ public:
         city_finance().init();
     }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_finance_chunk>(city_finance_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_finance_chunk>(city_finance_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_finance_month, SIM_PHASE_MONTH_CITY, [](int) { city_finance().advance_month(); }});

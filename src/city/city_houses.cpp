@@ -6,7 +6,6 @@
 #include "city/city_houses_chunks.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 
@@ -300,9 +299,7 @@ public:
     const char* name() const override { return "houses"; }
     void on_reset() override { city_houses().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_house_service_decay, SIM_PHASE_TICK, [](int tick) {

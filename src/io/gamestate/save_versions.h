@@ -52,5 +52,4 @@
 //  203 akhenaten: city state in one section per area (city_finance, city_population, ...) instead of the OG city_player
 //  layout
 constexpr uint32_t latest_save_version = 203;
-constexpr int save_version_city_sections = 203;
-constexpr uint32_t min_save_version = 199;
+constexpr uint32_t min_save_version = 203;

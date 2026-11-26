@@ -7,7 +7,6 @@
 #include "core/xvalue.h"
 #include "game/simulation.h"
 #include "io/chunk_serializer.h"
-#include "io/gamestate/save_versions.h"
 
 city_entertainment_t& city_entertainment() {
     return xvalue<city_entertainment_t>::ref();
@@ -18,9 +17,7 @@ public:
     const char* name() const override { return "entertainment"; }
     void on_reset() override { city_entertainment().reset(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= save_version_city_sections) {
-            g_chunk_io.push_chunk<city_entertainment_chunk>(city_entertainment_chunk::size, false);
-        }
+        g_chunk_io.push_chunk<city_entertainment_chunk>(city_entertainment_chunk::size, false);
     }
 };
 
