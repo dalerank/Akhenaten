@@ -254,7 +254,7 @@ struct event_ph_t {
     int8_t on_defeat_msgAlt;
     int16_t reserved_1;
     std::array<uint16_t, 4> reasons;
-    uint16_t rand_reason() const;
+    uint16_t first_reason() const;
 
     void set_param(pcstr name, int param);
 

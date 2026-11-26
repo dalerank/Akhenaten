@@ -167,13 +167,11 @@ declare_console_command_p(run_scenario_event) {
     g_scenario.events.process_events();
 }
 
-uint16_t event_ph_t::rand_reason() const {
+uint16_t event_ph_t::first_reason() const {
     // Empty slot = 0xffff. Must compare as uint16_t: `p != -1` after int promotion
     // never filters 0xffff (65535 != -1).
-    svector<uint16_t, 4> active_reasons;
-    std::copy_if(reasons.begin(), reasons.end(), std::back_inserter(active_reasons),
-                 [](uint16_t p) { return p != 0xffff; });
-    return active_reasons.size() > 0 ? active_reasons[rand() % active_reasons.size()] : 0xffff;
+    auto it = std::find_if(reasons.begin(), reasons.end(), [](uint16_t p) { return p != 0xffff; });
+    return it != reasons.end() ? *it : 0xffff;
 }
 
 void event_ph_t::set_param(pcstr name, int param) {
@@ -945,7 +943,7 @@ void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bo
 
     event_ph_t copy_event = event;
     copy_event.location_fields[0] = (cityid + 1);
-    uint16_t reason = copy_event.rand_reason();
+    uint16_t reason = copy_event.first_reason();
     if (reason == 0xffff) {
         reason = PHRASE_trade_city_siege_no_reason_A;
     }
@@ -1484,7 +1482,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_MESSAGE: {
         // Prefer event.reasons[] (pak / JS); else OG subtype no_reason_A (phrase 149 + 4 * subtype).
         auto message_phrase = [&](uint16_t fallback) -> int {
-            const uint16_t r = event.rand_reason();
+            const uint16_t r = event.first_reason();
             return (r != 0xffff) ? (int)r : (int)fallback;
         };
         switch (event.subtype) {
