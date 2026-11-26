@@ -10,8 +10,8 @@ function t521_fail(msg) {
 function run_test() {
     __log_info_native('[test:521] sound events reach the sound manager')
 
-    __test_sound_emit_effect(SOUND_EFFECT_POLICE_ATTACK)
-    var effect_line = '[sound] effect ' + SOUND_EFFECT_POLICE_ATTACK + ' -> Wavs/police_atk.wav'
+    __test_sound_emit_effect(SOUND_EFFECT_FIRE_SPLASH)
+    var effect_line = '[sound] effect ' + SOUND_EFFECT_FIRE_SPLASH + ' -> Wavs/fire.wav'
     if (!__test_find_inlog(effect_line)) {
         return t521_fail('effect event not played, missing: ' + effect_line)
     }

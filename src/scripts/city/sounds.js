@@ -119,30 +119,7 @@ sound_effect_files = [
   { effect: SOUND_EFFECT_EXPLOSION, p: "Wavs/crash.wav" }
   { effect: SOUND_EFFECT_FANFARE, p: "Wavs/fanfare1.wav" }
   { effect: SOUND_EFFECT_FANFARE_URGENT, p: "Wavs/fanfare1.wav" }
-  { effect: SOUND_EFFECT_ARROW, p: "Wavs/arch_atk.wav" }
-  { effect: SOUND_EFFECT_AXE, p: "Wavs/sword_atk.wav" }
-  { effect: SOUND_EFFECT_CLUB, p: "Wavs/sword_atk.wav" }
-  { effect: SOUND_EFFECT_HORSE2, p: "Wavs/chariot_die.wav" }
-  { effect: SOUND_EFFECT_JAVELIN, p: "Wavs/ship_arrow.wav" }
-  { effect: SOUND_EFFECT_LION_ATTACK, p: "Wavs/lion_r.wav" }
-  { effect: SOUND_EFFECT_LION_DIE, p: "Wavs/liondie.wav" }
-  { effect: SOUND_EFFECT_SWORD, p: "Wavs/spear_atk.wav" }
-  { effect: SOUND_EFFECT_SWORD_SWING, p: "Wavs/chariot_atk.wav" }
-  { effect: SOUND_EFFECT_LIGHT_SWORD, p: "Wavs/arch_atk.wav" }
-  { effect: SOUND_EFFECT_SPEAR, p: "Wavs/spear_atk.wav" }
-  { effect: SOUND_EFFECT_OSTRICH_DIE, p: "Wavs/ostrichdie.wav" }
-  { effect: SOUND_EFFECT_SOLDIER_DIE, p: "Wavs/die1.wav" }
-  { effect: SOUND_EFFECT_SOLDIER_DIE_2, p: "Wavs/die2.wav" }
-  { effect: SOUND_EFFECT_SOLDIER_DIE_3, p: "Wavs/die3.wav" }
-  { effect: SOUND_EFFECT_SOLDIER_DIE_4, p: "Wavs/die4.wav" }
-  { effect: SOUND_EFFECT_CITIZEN_DIE, p: "Wavs/die5.wav" }
-  { effect: SOUND_EFFECT_CITIZEN_DIE_2, p: "Wavs/die6.wav" }
-  { effect: SOUND_EFFECT_CITIZEN_DIE_3, p: "Wavs/die7.wav" }
-  { effect: SOUND_EFFECT_CITIZEN_DIE_4, p: "Wavs/die8.wav" }
-  { effect: SOUND_EFFECT_SHEEP_DIE, p: "Wavs/birddie.wav" }
-  { effect: SOUND_EFFECT_ZEBRA_DIE, p: "Wavs/antelopdie.wav" }
   { effect: SOUND_EFFECT_FIRE_SPLASH, p: "Wavs/fire.wav" }
-  { effect: SOUND_EFFECT_POLICE_ATTACK, p: "Wavs/police_atk.wav" }
   { effect: SOUND_EFFECT_SHIP_COLLISION_BEAM, p: "Wavs/ship_collision_beam.wav" }
   { effect: SOUND_EFFECT_SHIP_COLLISION_FORE_QUARTER, p: "Wavs/ship_collision_fore_quarter.wav" }
   { effect: SOUND_EFFECT_SHIP_COLLISION_AFT_QUARTER, p: "Wavs/ship_collision_aft_quarter.wav" }

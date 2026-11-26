@@ -11,13 +11,10 @@ var T340_EFFECTS = [
     [SOUND_EFFECT_ICON, 'Wavs/button.wav'],
     [SOUND_EFFECT_SIDEBAR, 'Wavs/menu.wav'],
     [SOUND_EFFECT_FIRE_SPLASH, 'Wavs/fire.wav'],
-    [SOUND_EFFECT_ARROW, 'Wavs/arch_atk.wav'],
-    [SOUND_EFFECT_SOLDIER_DIE, 'Wavs/die1.wav'],
-    [SOUND_EFFECT_CITIZEN_DIE_4, 'Wavs/die8.wav'],
-    [SOUND_EFFECT_POLICE_ATTACK, 'Wavs/police_atk.wav'],
+    [SOUND_EFFECT_SHIP_COLLISION_BEAM, 'Wavs/ship_collision_beam.wav'],
 ]
 
-var T340_SILENT = [SOUND_EFFECT_DANCER_DIE, SOUND_EFFECT_FLOODED, SOUND_EFFECT_MARCHING]
+var T340_SILENT = [SOUND_EFFECT_FLOODED, SOUND_EFFECT_MARCHING]
 
 function t315_fail(msg) {
     __log_info_native('[test:315] FAIL: ' + msg)
