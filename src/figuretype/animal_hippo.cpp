@@ -354,7 +354,7 @@ void figure_hippo::figure_action() {
 
     if (base.in_attack() || (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead())) {
         base.set_flag(e_figure_flag_inattack);
-        events::emit(event_sound_speech{"Wavs/hippoatk.wav"});
+        base.play_attack_sound();
         base.figure_combat_handle_attack();
         return;
     }

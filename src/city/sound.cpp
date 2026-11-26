@@ -48,7 +48,3 @@ int city_sound_t::update_march_enemy() {
 int city_sound_t::update_march_horse() {
     return update_field(&march_horse, 200);
 }
-
-int city_sound_t::update_shoot_arrow() {
-    return update_field(&shoot_arrow, 10);
-}

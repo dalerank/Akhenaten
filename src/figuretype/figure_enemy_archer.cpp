@@ -58,16 +58,6 @@ void figure_enemy_archer::enemy_initial(formation *m) {
     if (base.wait_ticks <= 0) {
         // OG resets wait every decision tick while holding INITIAL.
         base.wait_ticks = ENEMY_ORDER_WAIT_TICKS;
-        if (base.index_in_formation == 0) {
-            if (m->layout == FORMATION_ENEMY_MOB) {
-                events::emit(event_sound_speech{"Wavs/WEAPON.WAV"});
-            } else if (m->layout == FORMATION_ENEMY12) {
-                events::emit(event_sound_speech{"Wavs/CHARIOT.WAV"});
-            } else {
-                events::emit(event_sound_speech{"Wavs/BARRACK.WAV"});
-            }
-        }
-
         if (m->recent_fight) {
             // OG ATTACKING: melee chase — not a shoot state.
             advance_action(ACTION_3_ENEMY_ARCHER_ATTACKING);
@@ -112,10 +102,6 @@ void figure_enemy_archer::enemy_initial(formation *m) {
                 missile->runtime_data().missile_attack_value = missile_attack_value();
             }
             formation_record_missile_fired(m);
-        }
-
-        if (missilet == FIGURE_ARROW && city_sound().update_shoot_arrow()) {
-            events::emit(event_sound_effect{SOUND_EFFECT_ARROW});
         }
 
         base.attack_image_offset++;

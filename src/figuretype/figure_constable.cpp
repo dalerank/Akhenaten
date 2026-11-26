@@ -34,13 +34,7 @@ void figure_constable::on_walk_cycle(bool wrapped) {
 }
 
 void figure_constable::on_attack_tick() {
-    if (base.attack_image_offset == 12) {
-        play_attack_sound();
-    }
-}
-
-void figure_constable::play_attack_sound() {
-    events::emit(event_sound_effect{SOUND_EFFECT_POLICE_ATTACK});
+    base.play_attack_sound();
 }
 
 // Remake police weapons (gameplay_change_police_weapons): the constable walks to a storage yard and leaves a

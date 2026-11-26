@@ -35,6 +35,9 @@ figure_missile* figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_
     auto f = figure_create(type, src, DIR_0_TOP_RIGHT);
     auto missile = f->dcast<figure_missile>();
     if (missile) {
+        if (figure* sound_shooter = figure_get(fid)) {
+            sound_shooter->play_hit_sound();
+        }
         missile->set_home(0);
         missile->base.missile_damage = (type == FIGURE_BOLT ? 60 : 10);
         missile->base.destination_tile = dst;
@@ -115,7 +118,6 @@ void figure_missile::figure_action() {
     figure_id target_id = get_non_citizen_on_tile();
     if (target_id && target_id != runtime_data().shooter_id) {
         missile_hit_figure(target_id, FIGURE_INFANTRY);
-        events::emit(event_sound_effect{ hit_sound_effect() });
         return;
     }
 
@@ -129,7 +131,6 @@ void figure_missile::figure_action() {
         building* b = building_at(base.destination_tile);
         if (b->is_valid()) {
             missile_hit_building(b->id);
-            events::emit(event_sound_effect{ hit_sound_effect() });
             return;
         }
     }
@@ -262,7 +263,6 @@ void figure_arrow::figure_action() {
         m->missile_attack_formation_id = sh ? sh->formation_id : 0;
     }
 
-    events::emit(event_sound_effect{ hit_sound_effect() });
     poof();
 }
 
@@ -412,7 +412,6 @@ static void spear_hit(figure_spear *spear, figure_id target_id, figure_id shoote
         }
     }
 
-    events::emit(event_sound_effect{ spear->hit_sound_effect() });
     spear->poof();
 }
 
@@ -515,7 +514,6 @@ void hunter_spear_figure_action(figure_missile *missile) {
         if (auto *h = hunter ? hunter->dcast_hunter() : nullptr) {
             h->on_spear_hit_prey(prey);
         }
-        events::emit(event_sound_effect{ missile->hit_sound_effect() });
         missile->poof();
         missile->main_image_update();
         return;

@@ -44,7 +44,6 @@ struct predator_static_params : public figure_static_params {
     svector<uint8_t, 4> move_cycle;
     svector<uint8_t, 4> prowl_cycle;
     svector<e_figure_type, 16> forbidden_prey;
-    xstring attack_sound;
 
     uint8_t herd_spawn_delay;
     uint8_t herd_move_delay;
@@ -68,8 +67,8 @@ struct predator_static_params : public figure_static_params {
 };
 ANK_CONFIG_STRUCT(predator_static_params, reset_frame_on_walk, death_has_directions, rest_base_ticks, rest_random_ticks,
   arrival_rest_base_ticks, no_tile_wait_ticks, no_tile_wait_random_ticks, dying_ticks, chase_ticks_per_ring, hunt_delay,
-  hunt_radius, move_cycle, prowl_cycle, forbidden_prey, attack_sound, herd_spawn_delay, herd_move_delay,
-  herd_roam_radius, herd_spawn_only_when_present, herd_spawn_wait_range, herd_spawn_wait_factor, herd_new_animal_wait,
+  hunt_radius, move_cycle, prowl_cycle, forbidden_prey, herd_spawn_delay, herd_move_delay, herd_roam_radius,
+  herd_spawn_only_when_present, herd_spawn_wait_range, herd_spawn_wait_factor, herd_new_animal_wait,
   herd_allowed_terrain, herd_blocked_terrain, herd_special_terrain, raid_hunt_distance, raid_chase_speed_mult,
   raid_non_targets)
 

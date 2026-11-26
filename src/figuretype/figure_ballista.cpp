@@ -92,7 +92,6 @@ void figure_ballista::figure_action() {
             if (base.wait_ticks == rules.aim_ticks) {
                 // OG fires FIGURE_JAVELIN (figure_javelin_action), not bolt.
                 figure_missile::create(id(), base.tile, tile, FIGURE_JAVELIN);
-                events::emit(event_sound_effect{SOUND_EFFECT_BALLISTA_SHOOT});
             } else if (base.wait_ticks > rules.reload_ticks) {
                 base.wait_ticks = 0;
                 base.wait_ticks_missile = 0;

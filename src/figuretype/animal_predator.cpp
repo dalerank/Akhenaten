@@ -419,7 +419,7 @@ void figure_predator::figure_action() {
         apply_action_frames();
     } else if (base.in_attack()) {
         apply_action_frames();
-        base.play_sound_file(p.attack_sound);
+        base.play_attack_sound();
         base.figure_combat_handle_attack();
     } else if (d.curse_raid) {
         raid_action();

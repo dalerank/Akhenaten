@@ -48,6 +48,9 @@ void figure_info_window::init(object_info &c) {
 
     ui.check_errors = false;
     const int figure_id = c.figure_ids[c.figure_selected_index];
+    if (c.can_play_sound) {
+        ::figure_get(figure_id)->play_click_sound();
+    }
     bvariant_map::scoped js_j;
     js_helper::writer(*js_j, figure_info_window_init{ figure_id });
     ui::dispatch_autoconfig_es_event(this, __func__, *js_j);

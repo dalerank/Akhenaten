@@ -20,6 +20,5 @@ public:
     virtual void figure_action() override;
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
     virtual int enemy_walk_ticks() override;
-    virtual void play_attack_sound() override;
 };
 ANK_CONFIG_STRUCT(figure_bedouin::static_params, interval_attack_delay, move_cycle)

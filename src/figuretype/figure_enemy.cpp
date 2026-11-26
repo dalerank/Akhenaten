@@ -57,16 +57,6 @@ void figure_enemy::enemy_initial(formation *m) {
     route_remove();
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {
-        if (base.index_in_formation == 0) {
-            if (m->layout == FORMATION_ENEMY_MOB) {
-                events::emit(event_sound_speech{"Wavs/WEAPON.WAV"});
-            } else if (m->layout == FORMATION_ENEMY12) {
-                events::emit(event_sound_speech{"Wavs/CHARIOT.WAV"});
-            } else {
-                events::emit(event_sound_speech{"Wavs/BARRACK.WAV"});
-            }
-        }
-
         if (m->recent_fight) {
             advance_action(ACTION_154_ENEMY_FIGHTING);
         } else {

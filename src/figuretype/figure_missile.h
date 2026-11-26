@@ -60,7 +60,6 @@ public:
     virtual void figure_action() override;
     virtual void main_image_update() override;
     virtual void cart_image_update() override;
-    virtual e_sound_effect hit_sound_effect() const { return SOUND_EFFECT_ARROW_HIT; }
 
     figure_id get_non_citizen_on_tile();
     figure_id get_citizen_on_tile();
@@ -80,7 +79,6 @@ public:
 
     virtual void figure_action() override;
     virtual void main_image_update() override;
-    virtual e_sound_effect hit_sound_effect() const override { return SOUND_EFFECT_JAVELIN; }
 };
 
 class figure_arrow : public figure_missile {
@@ -99,7 +97,6 @@ public:
 
     virtual void figure_action() override;
     virtual void main_image_update() override;
-    virtual e_sound_effect hit_sound_effect() const override { return SOUND_EFFECT_JAVELIN; }
 };
 
 class figure_antelope_hunter_javelin : public figure_missile {
@@ -109,7 +106,6 @@ public:
 
     virtual void figure_action() override;
     virtual void main_image_update() override;
-    virtual e_sound_effect hit_sound_effect() const override { return SOUND_EFFECT_JAVELIN; }
 };
 
 // Shared OG hunter-spear flight/hit (ostrich/birds/antelope → HUNTED).

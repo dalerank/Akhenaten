@@ -36,16 +36,6 @@ void figure_enemy_spearman::enemy_initial(formation *m) {
     route_remove();
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {
-        if (base.index_in_formation == 0) {
-            if (m->layout == FORMATION_ENEMY_MOB) {
-                events::emit(event_sound_speech{"Wavs/WEAPON.WAV"});
-            } else if (m->layout == FORMATION_ENEMY12) {
-                events::emit(event_sound_speech{"Wavs/CHARIOT.WAV"});
-            } else {
-                events::emit(event_sound_speech{"Wavs/BARRACK.WAV"});
-            }
-        }
-
         if (m->recent_fight) {
             advance_action(ACTION_154_ENEMY_SPEARMAN_SHOOT_MISSILE);
         } else {
@@ -92,10 +82,6 @@ void figure_enemy_spearman::enemy_initial(formation *m) {
                 missile->runtime_data().missile_attack_value = missile_attack_value();
             }
             formation_record_missile_fired(m);
-        }
-
-        if (missilet == FIGURE_ARROW && city_sound().update_shoot_arrow()) {
-            events::emit(event_sound_effect{SOUND_EFFECT_ARROW});
         }
 
         base.attack_image_offset++;

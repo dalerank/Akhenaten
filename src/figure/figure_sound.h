@@ -11,12 +11,22 @@ struct figure_sound_kind_t {
     svector<e_figure_type, 16> types;
     e_figure_sound hit;
     e_figure_sound die;
+    e_figure_sound attack;
+    e_figure_sound click;
 };
-ANK_CONFIG_STRUCT(figure_sound_kind_t, types, hit, die)
+ANK_CONFIG_STRUCT(figure_sound_kind_t, types, hit, die, attack, click)
+
+struct figure_hunter_shot_sounds_t {
+    e_figure_sound central;
+    e_figure_sound northern;
+    e_figure_sound desert;
+};
+ANK_CONFIG_STRUCT(figure_hunter_shot_sounds_t, central, northern, desert)
 
 class figure_sound_kinds_t {
 public:
     e_figure_sound default_die;
+    figure_hunter_shot_sounds_t hunter_shot;
     svector<figure_sound_kind_t, 32> figures;
 
     void archive_unload();

@@ -260,6 +260,7 @@ void figure_hunter::figure_action() {
         }
 
         if (base.wait_ticks == params.shoot_tick) {
+            base.play_hunter_shot_sound();
             figure_missile::create(id(), tile(), prey->tile, missile_type());
         }
         if (++base.wait_ticks > params.shoot_timeout) {

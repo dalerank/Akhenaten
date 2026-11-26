@@ -4,11 +4,12 @@
 #include "figure/figure.h"
 #include "game/game_events.h"
 #include "js/js_register.h"
+#include "scenario/scenario.h"
 
 const e_figure_sound_tokens_t ANK_CONFIG_ENUM(e_figure_sound_tokens);
 const e_figure_sound_variant_tokens_t ANK_CONFIG_ENUM(e_figure_sound_variant_tokens);
 
-ANK_CONFIG_STRUCT(figure_sound_kinds_t, default_die, figures)
+ANK_CONFIG_STRUCT(figure_sound_kinds_t, default_die, hunter_shot, figures)
 
 figure_sound_kinds_t& figure_sound_kinds() {
     return xvalue<figure_sound_kinds_t>::ref();
@@ -55,6 +56,29 @@ void figure::play_hit_sound() {
     events::emit_if(hit != FIGURE_SOUND_NONE, event_sound_figure{id, hit, FIGURE_SOUND_VARIANT_ATTACK});
 }
 
-void figure::play_sound_file(const xstring& file) {
-    events::emit(event_sound_speech{file});
+void figure::play_attack_sound() {
+    const e_figure_sound attack = figure_sound_kinds().of(type).attack;
+    events::emit_if(attack != FIGURE_SOUND_NONE, event_sound_figure{id, attack, FIGURE_SOUND_VARIANT_ATTACK});
+}
+
+void figure::play_click_sound() {
+    const e_figure_sound click = figure_sound_kinds().of(type).click;
+    events::emit_if(click != FIGURE_SOUND_NONE, event_sound_figure{id, click, FIGURE_SOUND_VARIANT_IDLE});
+}
+
+void figure::play_hunter_shot_sound() {
+    const auto& sounds = figure_sound_kinds().hunter_shot;
+    e_figure_sound shot = FIGURE_SOUND_NONE;
+    switch (g_scenario.climate) {
+    case CLIMATE_CENTRAL:
+        shot = sounds.central;
+        break;
+    case CLIMATE_NORTHERN:
+        shot = sounds.northern;
+        break;
+    case CLIMATE_DESERT:
+        shot = sounds.desert;
+        break;
+    }
+    events::emit_if(shot != FIGURE_SOUND_NONE, event_sound_figure{id, shot, FIGURE_SOUND_VARIANT_ATTACK});
 }

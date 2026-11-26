@@ -222,7 +222,6 @@ figure_asp {
 		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WARSHIP
 	]
 	// OG effect.c figure_binds group 3: variant 2 (attack), variant 3 (death)
-	attack_sound: "Wavs/asp_r.wav"
 
 	// OG herds.c update_predators with the climate record: spawn_delay 16, move_delay 30, roam_radius 2
 	herd_spawn_delay: 16
@@ -298,7 +297,6 @@ figure_lion {
 		FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP,
 		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WARSHIP
 	]
-	attack_sound: "Wavs/lion_r.wav"
 
 	herd_spawn_delay: 12
 	herd_move_delay: 18
@@ -372,7 +370,6 @@ figure_scorpion {
 		FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP,
 		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WARSHIP
 	]
-	attack_sound: "Wavs/scorpion_r.wav"
 
 	herd_spawn_delay: 20
 	herd_move_delay: 20

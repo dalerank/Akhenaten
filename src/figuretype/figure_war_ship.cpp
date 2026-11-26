@@ -207,7 +207,6 @@ void figure_warship::fire_missile(figure_id target_id) {
     }
     if (base.attack_image_offset == 1) {
         figure_missile::create(id(), base.tile, target->tile, FIGURE_JAVELIN);
-        events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
     }
     if (++base.attack_image_offset > current_params().shoot_ticks) {
         base.attack_image_offset = 0;

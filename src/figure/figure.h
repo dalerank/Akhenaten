@@ -407,8 +407,10 @@ public:
 
     // sound.c
     void play_die_sound();
-    void play_sound_file(const xstring& file);
     void play_hit_sound();
+    void play_attack_sound();
+    void play_click_sound();
+    void play_hunter_shot_sound();
 
     // service.c
     int figure_service_provide_coverage();

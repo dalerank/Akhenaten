@@ -146,6 +146,7 @@ void figure_tower_sentry::figure_action() {
     tower_sentry_pick_target();
     switch (action_state()) {
     case ACTION_150_TOWER_SENTRY_ATTACK:
+        base.play_attack_sound();
         base.figure_combat_handle_attack();
         break;
 
@@ -183,6 +184,7 @@ void figure_tower_sentry::figure_action() {
         if (base.wait_ticks_missile > current_params().missile_delay) {
             tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(&base, SENTRY_MISSILE_RANGE, &tile)) {
+                base.play_attack_sound();
                 base.direction = calc_missile_shooter_direction(base.tile, tile);
                 base.wait_ticks_missile = 0;
                 figure_missile::create(id(), base.tile, tile, FIGURE_JAVELIN);

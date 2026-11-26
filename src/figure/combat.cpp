@@ -363,7 +363,6 @@ void figure::hit_opponent() {
         && (m->figure_type == FIGURE_INFANTRY || m->figure_type == FIGURE_FCHARIOTEER)
         && attack_is_same_direction(attack_direction, opponent->attack_direction)) {
         figure_attack += 4;
-        events::emit(event_sound_effect{SOUND_EFFECT_SWORD_SWING});
     }
 
     // OG halted facing bonuses: infantry double-line +4 / column +2; missile/chariot column +2.

@@ -277,7 +277,7 @@ void figure_hyena::figure_action() {
     // OG ATTACK (5): hyenaatk each tick + figure_combat_handle_attack.
     if (base.in_attack() || (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead())) {
         base.set_flag(e_figure_flag_inattack);
-        events::emit(event_sound_speech{"Wavs/hyenaatk.wav"});
+        base.play_attack_sound();
         base.figure_combat_handle_attack();
         return;
     }

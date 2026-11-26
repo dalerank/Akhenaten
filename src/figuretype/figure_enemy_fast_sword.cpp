@@ -86,6 +86,9 @@ void figure_enemy_fast_sword::figure_action() {
     if (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead()) {
         base.set_flag(e_figure_flag_inattack);
         base.figure_combat_handle_attack();
+        if (base.opponent_id > 0) {
+            base.play_attack_sound();
+        }
         return;
     }
 
@@ -247,16 +250,6 @@ void figure_enemy_fast_sword::enemy_initial(formation *m) {
     // OG enemy_action INITIAL: ENEMY_ORDER_WAIT_TICKS + clear ghost (invisible).
     base.wait_ticks = 50;
     base.set_flag(e_figure_flag_invisible, false);
-
-    if (base.index_in_formation == 0) {
-        if (m->layout == FORMATION_ENEMY_MOB) {
-            events::emit(event_sound_speech{"Wavs/WEAPON.WAV"});
-        } else if (m->layout == FORMATION_ENEMY12) {
-            events::emit(event_sound_speech{"Wavs/CHARIOT.WAV"});
-        } else {
-            events::emit(event_sound_speech{"Wavs/BARRACK.WAV"});
-        }
-    }
 
     if (m->recent_fight) {
         advance_action(ACTION_154_ENEMY_FAST_SWORD_ATTACK);
