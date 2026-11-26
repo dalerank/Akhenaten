@@ -40,6 +40,7 @@ struct application_t {
     hvector<event_handler_cb, 8> user_event_handlers;
     hvector<event_handler_cb, 8> touch_event_handlers;
     hvector<event_handler_cb, 8> hud_end_handlers;
+    xfunction<void()> run_frame;
 
     void setup();
 
@@ -58,6 +59,7 @@ struct application_t {
     void handle_user_event(void* event);
     void handle_touch_event(void* event);
     void handle_window_event(void* event);
+    void handle_sdl_event(void* event);
     void handle_hud_end(hud_end_context_t* context);
 };
 

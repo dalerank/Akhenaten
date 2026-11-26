@@ -11,6 +11,9 @@
 #include "game/game_events_history.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
+#include "platform/arguments.h"
+#include "platform/renderer.h"
+#include "widget/debug_console.h"
 #include "graphics/screenshot.h"
 #include "graphics/elements/ui.h"
 #include "core/log.h"
@@ -193,4 +196,80 @@ void application_t::subscribe_events() {
     events::subscribe_permanent([](event_build_tool_selected ev) { editor_tool_deactivate(); });
 
     events::subscribe_permanent([](event_display_options_apply_resolution ev) { app_window_resize({ev.w, ev.h}); });
+}
+
+void application_t::handle_sdl_event(void* ev) {
+    SDL_Event* sdl_event = static_cast<SDL_Event*>(ev);
+    switch (sdl_event->type) {
+    case SDL_WINDOWEVENT:
+        handle_window_event(&sdl_event->window);
+        break;
+
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+    case SDL_TEXTINPUT:
+        handle_keyboard_event(sdl_event);
+        break;
+
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEWHEEL:
+        handle_mouse_event(sdl_event);
+        break;
+
+    case SDL_FINGERDOWN:
+    case SDL_FINGERMOTION:
+    case SDL_FINGERUP:
+        handle_touch_event(sdl_event);
+        break;
+
+    case SDL_RENDER_TARGETS_RESET:
+    case SDL_RENDER_DEVICE_RESET:
+        platform_renderer_invalidate_all_textures();
+        break;
+
+    case SDL_QUIT:
+        app_handle_close_request();
+        break;
+
+    case SDL_USEREVENT:
+        if (sdl_event->user.code == USER_EVENT_QUIT) {
+            quit = true;
+        } else {
+            handle_user_event(sdl_event);
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+void application_t::pump_one_frame() {
+    platform.per_frame_callback();
+
+    CoreEvent event;
+    while (platform.poll_event(&event)) {
+        if (!game_imgui_overlay_handle_event(&event)) {
+            handle_sdl_event(&event);
+        }
+    }
+
+    if (quit) {
+        return;
+    }
+
+    // Under --integraltests the test driver pumps frames manually and must
+    // always advance the game loop. The dummy SDL video driver used in CI
+    // fires spurious SDL_WINDOWEVENT_HIDDEN events that flip `active` to false;
+    // skipping run_and_draw() there would stop processing simulated input (so
+    // clicks never reach the UI) and SDL_WaitEvent() could block the run.
+    if (active || g_args.is_integral_tests()) {
+        if (run_frame) {
+            run_frame();
+        }
+    } else {
+        SDL_WaitEvent(NULL);
+    }
 }
