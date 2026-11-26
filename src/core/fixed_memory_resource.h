@@ -36,8 +36,8 @@ public:
         // Check for free memory in the fixed buffer - else just call new
         void* currBuffer = &_fixed_buffer[FixedSize - _available_fixed_size];
         if (std::align(align, bytes, currBuffer, _available_fixed_size) == nullptr) {
-#if !defined(GAME_PLATFORM_BROWSER) && !defined(NDEBUG)
-            if constexpr (WarnOnFull) {
+#if !defined(NDEBUG)
+            if constexpr (WarnOnFull && !platform.is_emscripten()) {
                 printf(
                     "Local stack buffer exceeded - Max:%zu Free:%zu Alloc:%zu\n",
                     FixedSize,

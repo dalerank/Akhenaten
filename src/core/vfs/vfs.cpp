@@ -48,7 +48,6 @@ FILE * file_open_os(path filename, pcstr mode) {
     return platform_file_manager_open_file(filename.c_str(), mode);
 }
 
-#if defined(GAME_PLATFORM_ANDROID)
 namespace {
     reader read_file_stream(path path, FILE *f, bool null_terminate) {
         std::string buffer;
@@ -87,7 +86,6 @@ namespace {
         return std::make_shared<data_reader>(path.c_str(), mem, static_cast<int>(buffer.size()));
     }
 }
-#endif
 
 template<typename ... Args>
 void log_io(pcstr fmt, Args ... args) {
@@ -104,21 +102,21 @@ bool file_exists(const path &filename) {
         return false;
     }
 
-#if defined(GAME_PLATFORM_ANDROID)
-    if (std::filesystem::exists(fspath.c_str())) {
+    if constexpr (platform.is_android()) {
+        if (std::filesystem::exists(fspath.c_str())) {
+            return true;
+        }
+
+        FILE *fp = file_open_os(fspath, "rb");
+        if (!fp) {
+            return false;
+        }
+
+        fclose(fp);
         return true;
+    } else {
+        return std::filesystem::exists(fspath.c_str());
     }
-
-    FILE *fp = file_open_os(fspath, "rb");
-    if (!fp) {
-        return false;
-    }
-
-    fclose(fp);
-    return true;
-#else
-    return std::filesystem::exists(fspath.c_str());
-#endif
 }
 
 vfs::path extract_pack_path(const vfs::path &path) {
@@ -197,58 +195,58 @@ reader file_open(path path, pcstr mode) {
     }
 
     if (is_text_file) { // text mode
-#if defined(GAME_PLATFORM_ANDROID)
-        FILE *f = file_open_os(path, mode);
-        if (f) {
-            log_io("[text] loaded from %s", path.c_str());
-            return read_file_stream(path, f, true);
-        }
+        if constexpr (platform.is_android()) {
+            FILE *f = file_open_os(path, mode);
+            if (f) {
+                log_io("[text] loaded from %s", path.c_str());
+                return read_file_stream(path, f, true);
+            }
 
-        return reader();
-#else
-        std::ifstream file(path.c_str());
-        if (file.is_open()) {
-            log_io("[text] loaded from %s", path.c_str());
-            std::ostringstream buffer;
-            buffer << file.rdbuf();      // read entire file into stream
-            std::string str = buffer.str(); // str holds the content of the file
-            void *mem = malloc(str.size() + 1);
-            memcpy(mem, str.c_str(), str.size());
-            ((char *)mem)[str.size()] = 0; // null-terminate the string
-            return std::make_shared<data_reader>(path.c_str(), mem, static_cast<int>(str.size()) );
-        }
+            return reader();
+        } else {
+            std::ifstream file(path.c_str());
+            if (file.is_open()) {
+                log_io("[text] loaded from %s", path.c_str());
+                std::ostringstream buffer;
+                buffer << file.rdbuf();      // read entire file into stream
+                std::string str = buffer.str(); // str holds the content of the file
+                void *mem = malloc(str.size() + 1);
+                memcpy(mem, str.c_str(), str.size());
+                ((char *)mem)[str.size()] = 0; // null-terminate the string
+                return std::make_shared<data_reader>(path.c_str(), mem, static_cast<int>(str.size()) );
+            }
 
-        return reader();
-#endif
+            return reader();
+        }
     }
 
     FILE *f = file_open_os(path, mode);
     if (f) {
         log_io("[binr] file_open %s", path.c_str());
-#if defined(GAME_PLATFORM_ANDROID)
-        return read_file_stream(path, f, false);
-#else
-        const long size = (fseek(f, 0, SEEK_END) == 0) ? ftell(f) : -1;
-        if (size < 0 || size > INT_MAX || fseek(f, 0, SEEK_SET) != 0) {
+        if constexpr (platform.is_android()) {
+            return read_file_stream(path, f, false);
+        } else {
+            const long size = (fseek(f, 0, SEEK_END) == 0) ? ftell(f) : -1;
+            if (size < 0 || size > INT_MAX || fseek(f, 0, SEEK_SET) != 0) {
+                fclose(f);
+                logs::error("vfs: cannot get the size of %s", path.c_str());
+                return reader();
+            }
+            void *mem = malloc(size > 0 ? size : 1);
+            if (!mem) {
+                fclose(f);
+                logs::error("vfs: out of memory reading %s (%ld bytes)", path.c_str(), size);
+                return reader();
+            }
+            const size_t read = fread(mem, 1, size, f);
             fclose(f);
-            logs::error("vfs: cannot get the size of %s", path.c_str());
-            return reader();
+            if (read != (size_t)size) {
+                free(mem);
+                logs::error("vfs: read %u of %ld bytes from %s", (unsigned)read, size, path.c_str());
+                return reader();
+            }
+            return std::make_shared<data_reader>(path.c_str(), mem, (int)size);
         }
-        void *mem = malloc(size > 0 ? size : 1);
-        if (!mem) {
-            fclose(f);
-            logs::error("vfs: out of memory reading %s (%ld bytes)", path.c_str(), size);
-            return reader();
-        }
-        const size_t read = fread(mem, 1, size, f);
-        fclose(f);
-        if (read != (size_t)size) {
-            free(mem);
-            logs::error("vfs: read %u of %ld bytes from %s", (unsigned)read, size, path.c_str());
-            return reader();
-        }
-        return std::make_shared<data_reader>(path.c_str(), mem, (int)size);
-#endif
     }
 
     return reader();
@@ -272,24 +270,25 @@ bool file_rename_os(path from, path to) {
         return false;
     }
 
-#if defined(GAME_PLATFORM_ANDROID)
-    if (platform_file_manager_rename_file(from.c_str(), to.c_str())) {
-        sync_em_fs();
-        return true;
+    bool res = false;
+    if constexpr (platform.is_android()) {
+        if (platform_file_manager_rename_file(from.c_str(), to.c_str())) {
+            sync_em_fs();
+            return true;
+        }
+        // Fallback to POSIX rename() if native path
+        res = (::rename(from.c_str(), to.c_str()) == 0);
+        if (!res) {
+            logs::error("unable to rename %s -> %s", from.c_str(), to.c_str());
+        }
+    } else {
+        std::error_code err;
+        std::filesystem::rename(from.c_str(), to.c_str(), err);
+        res = !err;
+        if (!res) {
+            logs::error("unable to rename %s -> %s: %s", from.c_str(), to.c_str(), err.message().c_str());
+        }
     }
-    // Fallback to POSIX rename() if native path
-    const bool res = (::rename(from.c_str(), to.c_str()) == 0);
-    if (!res) {
-        logs::error("unable to rename %s -> %s", from.c_str(), to.c_str());
-    }
-#else
-    std::error_code err;
-    std::filesystem::rename(from.c_str(), to.c_str(), err);
-    const bool res = !err;
-    if (!res) {
-        logs::error("unable to rename %s -> %s: %s", from.c_str(), to.c_str(), err.message().c_str());
-    }
-#endif
 
     sync_em_fs();
     return res;
@@ -366,17 +365,17 @@ bool mount_pack(path filename) {
 }
 
 void create_folders(path folder_path) {
-#if defined(GAME_PLATFORM_ANDROID)
-    if (!folder_path.empty()) {
-        platform_file_manager_create_directories(folder_path.c_str());
+    if constexpr (platform.is_android()) {
+        if (!folder_path.empty()) {
+            platform_file_manager_create_directories(folder_path.c_str());
+        }
+        return;
+    } else {
+        std::error_code err;
+        if (!std::filesystem::create_directories(folder_path.c_str(), err) && !std::filesystem::exists(folder_path.c_str())) {
+            logs::info(err.message().c_str());
+        }
     }
-    return;
-#else
-    std::error_code err;
-    if (!std::filesystem::create_directories(folder_path.c_str(), err) && !std::filesystem::exists(folder_path.c_str())) {
-        logs::info(err.message().c_str());
-    }
-#endif
 }
 
 void sync_em_fs() {
@@ -387,12 +386,12 @@ void sync_em_fs() {
 }
 
 void remove_folder(path folder_path) {
-#if defined(GAME_PLATFORM_ANDROID)
-    platform_file_manager_remove_directory(folder_path.c_str());
-#else
-    folder_path = content_path(folder_path);
-    std::filesystem::remove_all(folder_path.c_str());
-#endif
+    if constexpr (platform.is_android()) {
+        platform_file_manager_remove_directory(folder_path.c_str());
+    } else {
+        folder_path = content_path(folder_path);
+        std::filesystem::remove_all(folder_path.c_str());
+    }
     sync_em_fs();
 }
 

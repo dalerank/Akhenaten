@@ -172,7 +172,6 @@ namespace vfs {
         vfs().path_missing.clear();
     }
 
-#if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
     // Case-sensitive file systems: Pharaoh installs mix "Data"/"data", "SprMain.sg3"/"SPRMAIN.SG3", and the
     // game asks for one fixed spelling. Correct every component under the base dir, not just the files of
     // the folders content_cache_paths() pre-lists.
@@ -227,7 +226,6 @@ namespace vfs {
         out = found.string().c_str();
         return true;
     }
-#endif
 
     vfs::path content_path(pcstr path) {
         vfs::path uri_path = content_internal_path(path);
@@ -241,23 +239,23 @@ namespace vfs {
             }
         }
 
-#if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
-        std::error_code ec;
-        if (fs::exists(orig_path.c_str(), ec) || vfs().path_missing.count(lhash)) {
-            return orig_path;
-        }
+        if constexpr (!platform.is_windows() && !platform.is_android()) {
+            std::error_code ec;
+            if (fs::exists(orig_path.c_str(), ec) || vfs().path_missing.count(lhash)) {
+                return orig_path;
+            }
 
-        vfs::path corrected;
-        if (correct_case_on_disk(path, corrected)) {
-            vfs_t::path_uri uri;
-            uri.original = corrected;
-            uri.lowered = lower;
-            vfs().path_cache.insert({lhash, uri});
-            return corrected;
+            vfs::path corrected;
+            if (correct_case_on_disk(path, corrected)) {
+                vfs_t::path_uri uri;
+                uri.original = corrected;
+                uri.lowered = lower;
+                vfs().path_cache.insert({lhash, uri});
+                return corrected;
+            }
+            // A file created later gets this spelling, which the exists() check above finds first.
+            vfs().path_missing.insert(lhash);
         }
-        // A file created later gets this spelling, which the exists() check above finds first.
-        vfs().path_missing.insert(lhash);
-#endif
 
         return orig_path;
     }
@@ -306,58 +304,58 @@ namespace vfs {
     }
 
     vfs::path vfs::path::resolve() {
-#ifndef GAME_PLATFORM_ANDROID
-        pcstr filepath = data();
-
-        if (is_absolute_path(filepath)) {
+        if constexpr (platform.is_android()) {
+            pcstr filepath = data();
+            vfs::path corrected_filename = content_path(filepath);
+            // Native absolute paths still pass through directly on Android.
+            if (!corrected_filename.empty() && corrected_filename.data()[0] == '/') {
+                return corrected_filename;
+            }
+            // SAF-backed paths stay relative and are resolved by the Java bridge.
             return filepath;
-        }
+        } else {
+            pcstr filepath = data();
 
-        const vfs::path from_saves = user_saves_path(filepath);
-        if (!from_saves.empty()) {
-            return from_saves;
-        }
+            if (is_absolute_path(filepath)) {
+                return filepath;
+            }
 
-        const vfs::path from_user = user_maps_path(filepath);
-        if (!from_user.empty() && std::filesystem::exists(from_user.c_str())) {
-            return from_user;
-        }
+            const vfs::path from_saves = user_saves_path(filepath);
+            if (!from_saves.empty()) {
+                return from_saves;
+            }
 
-        vfs::path from_content = content_path(filepath);
-        if (std::filesystem::exists(from_content.c_str())) {
-            return from_content;
-        }
+            const vfs::path from_user = user_maps_path(filepath);
+            if (!from_user.empty() && std::filesystem::exists(from_user.c_str())) {
+                return from_user;
+            }
 
-        vfs::path from_pwd = vfs::path("./", filepath);
-        if (std::filesystem::exists(from_pwd.c_str())) {
-            return std::filesystem::absolute(from_pwd.c_str()).string().c_str();
-        }
+            vfs::path from_content = content_path(filepath);
+            if (std::filesystem::exists(from_content.c_str())) {
+                return from_content;
+            }
 
-        vfs::path from_exe = current_path(filepath);
-        if (!from_exe.empty() && std::filesystem::exists(from_exe.c_str())) {
-            return from_exe;
-        }
+            vfs::path from_pwd = vfs::path("./", filepath);
+            if (std::filesystem::exists(from_pwd.c_str())) {
+                return std::filesystem::absolute(from_pwd.c_str()).string().c_str();
+            }
 
-#if defined(GAME_PLATFORM_BROWSER)
-        // Engine data embedded at link time (--embed-file), outside the IDBFS game dir.
-        vfs::path from_engine("/engine/", filepath);
-        if (std::filesystem::exists(from_engine.c_str())) {
-            return from_engine;
-        }
-#endif
+            vfs::path from_exe = current_path(filepath);
+            if (!from_exe.empty() && std::filesystem::exists(from_exe.c_str())) {
+                return from_exe;
+            }
 
-        // Not found anywhere (new file) — return game-dir path so writes go to the right place.
-        return from_user.empty() ? from_content : from_user;
-#else
-        pcstr filepath = data();
-        vfs::path corrected_filename = content_path(filepath);
-        // Native absolute paths still pass through directly on Android.
-        if (!corrected_filename.empty() && corrected_filename.data()[0] == '/') {
-            return corrected_filename;
+            if constexpr (platform.is_emscripten()) {
+                // Engine data embedded at link time (--embed-file), outside the IDBFS game dir.
+                vfs::path from_engine("/engine/", filepath);
+                if (std::filesystem::exists(from_engine.c_str())) {
+                    return from_engine;
+                }
+            }
+
+            // Not found anywhere (new file) — return game-dir path so writes go to the right place.
+            return from_user.empty() ? from_content : from_user;
         }
-        // SAF-backed paths stay relative and are resolved by the Java bridge.
-        return filepath;
-#endif
     }
 
     const dir_listing* dir_append_files_with_extension(xstring dir, xstring extension) {
