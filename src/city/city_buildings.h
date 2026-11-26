@@ -14,7 +14,6 @@ inline building *building_end() { return city_buildings().data() + MAX_BUILDINGS
 building *building_next(building_id id, e_building_type type);
 
 building_id building_id_first(e_building_type type);
-building_id building_id_random(e_building_type type);
 building_id building_id_closest(e_building_type type, tile2i center, int8_t radius);
 
 hvector<building_id, 16> buildings_find_farms_in_radius(tile2i center, int radius);

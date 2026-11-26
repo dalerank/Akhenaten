@@ -232,9 +232,6 @@ bvariant __map_grid_get_area(tile2i tile, int size, int radius) {
 }
 ANK_FUNCTION_3(__map_grid_get_area)
 
-int __city_get_random_building_id_by_type(int type) { return building_id_random((e_building_type)type); }
-ANK_FUNCTION_1(__city_get_random_building_id_by_type)
-
 bool __city_resource_is_mothballed(int resource) {
     return city_resource().is_mothballed((e_resource)resource);
 }

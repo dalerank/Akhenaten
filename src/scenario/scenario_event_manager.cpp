@@ -747,7 +747,7 @@ enum class e_disaster_destroy_mode {
     flood,
 };
 
-// Fidelity default: one random building. Enhanced: up to event.amount.
+// Fidelity default: the first building of the type. Enhanced: the first event.amount of them.
 static building *destroy_disaster_buildings(e_building_type type, int amount, e_disaster_destroy_mode mode) {
     int want = 1;
     if (!!game_features::gameplay_change_disaster_events_use_amount && amount > 1) {
@@ -770,12 +770,6 @@ static building *destroy_disaster_buildings(e_building_type type, int amount, e_
     }
 
     const int destroy_n = std::min<int>(want, (int)candidates.size());
-    // Fisher–Yates partial shuffle for first destroy_n picks.
-    for (int i = 0; i < destroy_n; ++i) {
-        const int j = i + (std::rand() % ((int)candidates.size() - i));
-        std::swap(candidates[i], candidates[j]);
-    }
-
     building *first = nullptr;
     for (int i = 0; i < destroy_n; ++i) {
         building *b = building_get(candidates[i]);
