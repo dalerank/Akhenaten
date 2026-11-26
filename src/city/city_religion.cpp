@@ -1007,9 +1007,7 @@ class gods_sim_system : public sim_system {
 public:
     const char* name() const override { return "religion"; }
     void on_reset() override { city_gods().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_gods_chunk>(city_gods_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_gods_chunk>(city_gods_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_religion, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 1) {

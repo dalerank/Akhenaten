@@ -176,7 +176,7 @@ class food_supply_system : public sim_system {
 public:
     const char* name() const override { return "food_supply"; }
     void on_reset() override { city_food_supply().reset(); }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_food_supply_chunk>(city_food_supply_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {

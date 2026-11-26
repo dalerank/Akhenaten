@@ -54,7 +54,7 @@ public:
     virtual void remove_worker(figure_id fid) override;
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     int placement_amount(e_resource r) const;
     bool place_scaffold();

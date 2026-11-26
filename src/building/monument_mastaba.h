@@ -39,7 +39,7 @@ public:
     virtual void update_month() override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
 

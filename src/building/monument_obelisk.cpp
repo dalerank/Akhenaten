@@ -441,7 +441,7 @@ tile2i building_obelisk::access_point() const {
     return tile2i::invalid;
 }
 
-void building_obelisk::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_obelisk::bind_dynamic(io_buffer* iob) {
     auto &monumentd = runtime_data();
 
     iob->bind____skip(38);

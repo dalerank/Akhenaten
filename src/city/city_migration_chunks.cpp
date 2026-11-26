@@ -3,7 +3,7 @@
 #include "city/city_migration.h"
 #include "io/io_buffer.h"
 
-void city_migration_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_migration_chunk::bind_data(io_buffer* iob) {
     auto& migration = city_migration();
     iob->bind(BIND_SIGNATURE_UINT8, &migration.immigration_amount_per_batch);
     iob->bind(BIND_SIGNATURE_UINT8, &migration.emigration_amount_per_batch);

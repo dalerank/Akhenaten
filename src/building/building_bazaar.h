@@ -48,7 +48,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_sprite_anims() override;
     const animation_t& work_anim() const;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     void maintain_fancy_second_trader();
     void update_good_demands_from_houses(int radius = 10);

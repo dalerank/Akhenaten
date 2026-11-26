@@ -45,7 +45,7 @@ namespace save_layouts {
     }
 } // namespace save_layouts
 
-void save_layouts_chunk::bind_data(io_buffer* iob, size_t version) {
+void save_layouts_chunk::bind_data(io_buffer* iob) {
     if (iob->is_read_access()) {
         save_layouts::clear();
         int32_t count = 0;
@@ -81,6 +81,6 @@ void save_layouts_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void save_layouts_chunk::load_defaults(size_t version) {
+void save_layouts_chunk::load_defaults() {
     save_layouts::clear();
 }

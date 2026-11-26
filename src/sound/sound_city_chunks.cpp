@@ -47,7 +47,7 @@ static void og_city_sounds_image(std::array<og_city_sound_slot, SAVED_CHANNELS>&
     }
 }
 
-void city_sounds_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_sounds_chunk::bind_data(io_buffer* iob) {
     static std::array<og_city_sound_slot, SAVED_CHANNELS> slots;
     og_city_sounds_image(slots);
     iob->bind(BIND_SIGNATURE_RAW, slots.data(), sizeof(og_city_sound_slot) * slots.size());

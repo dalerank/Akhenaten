@@ -4,7 +4,7 @@
 #include "city/city_finance.h"
 #include "io/io_buffer.h"
 
-void city_finance_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_finance_chunk::bind_data(io_buffer* iob) {
     auto& finance = city_finance();
     iob->bind(BIND_SIGNATURE_INT8, &city_taxes().tax_percentage);
     iob->bind(BIND_SIGNATURE_INT32, &finance.treasury.value);

@@ -159,7 +159,7 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     return false;
 }
 
-void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
+void building_dock::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_INT16, &d.queued_docker_id);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);

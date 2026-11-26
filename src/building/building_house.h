@@ -109,7 +109,7 @@ public:
     virtual void on_undo() override;
     virtual void update_day() override;
     virtual void update_count() const override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     // Shared by every tier: applies the rung its config describes. The hooks below cover the
     // parts of a step that the config cannot express.
     virtual bool evolve(house_demands* demands);

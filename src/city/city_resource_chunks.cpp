@@ -3,7 +3,7 @@
 #include "city/city_resource.h"
 #include "io/io_buffer.h"
 
-void city_resource_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_resource_chunk::bind_data(io_buffer* iob) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &city_resource().space_in_storages[i + 1]);
     }

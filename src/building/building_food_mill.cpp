@@ -70,7 +70,7 @@ void building_food_mill::update_day() {
         = (short)std::max(0, (int)current_params().max_capacity_stored - total_stored());
 }
 
-void building_food_mill::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_food_mill::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &d.resource_stored[i]);

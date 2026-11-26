@@ -1508,7 +1508,7 @@ grid_area building_sun_temple::get_area() const {
     return {start, end};
 }
 
-void building_sun_temple::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_sun_temple::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     if (is_main()) {

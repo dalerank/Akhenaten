@@ -89,7 +89,7 @@ public:
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
     virtual grid_area get_area() const override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     building_pharos_lighthouse* main_lighthouse();
     const building_pharos_lighthouse* main_lighthouse() const;

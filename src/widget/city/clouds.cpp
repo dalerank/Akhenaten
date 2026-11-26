@@ -382,7 +382,7 @@ class clouds_system : public sim_system {
 public:
     const char* name() const override { return "clouds"; }
     void on_reset() override {}
-    void push_save_sections(int file_version) override { g_chunk_io.push_chunk<clouds_chunk>(132, false); }
+    void push_save_sections() override { g_chunk_io.push_chunk<clouds_chunk>(132, false); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_city_clouds_module) {

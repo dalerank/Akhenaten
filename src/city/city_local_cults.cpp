@@ -46,7 +46,7 @@ public:
         schedule.add({sim_step_local_cults, SIM_PHASE_MONTH_CITY, [](int) { city_local_cults().advance_month(); }});
     }
     void on_reset() override { city_local_cults().reset(); }
-    void push_save_sections(int file_version) override { g_chunk_io.push_chunk<local_cults_chunk>(64, false); }
+    void push_save_sections() override { g_chunk_io.push_chunk<local_cults_chunk>(64, false); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_local_cults_system) {

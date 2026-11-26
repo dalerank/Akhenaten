@@ -393,7 +393,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
     }
 }
 
-void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
+void scenario_data_t::bind_data(io_buffer* iob, size_t size) {
     assert(size == 2000);
     char data[2000] = { 0 };
     if (iob->is_read_access()) {
@@ -510,9 +510,7 @@ class scenario_system : public sim_system {
 public:
     const char* name() const override { return "scenario"; }
     void on_reset() override { g_scenario.campaign_scenario_id = -1; }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_scenario, SIM_PHASE_TICK_END, [](int) { g_scenario.update(); }});
     }

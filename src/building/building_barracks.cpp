@@ -294,7 +294,7 @@ void building_recruiter::spawn_figure() {
     }
 }
 
-void building_recruiter::bind_dynamic(io_buffer *iob, size_t version) {
+void building_recruiter::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &d.priority);
 }

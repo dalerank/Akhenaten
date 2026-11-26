@@ -22,7 +22,7 @@ public:
     virtual void on_before_collapse() override;
     virtual void update_count() const override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     virtual bool is_protected_by_police() const override;
     static void check_theft_from_mansions();

@@ -56,7 +56,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void update_sprite_anims() override;
     virtual void update_day() override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     virtual int amount(e_resource resource) const override;
     virtual bool is_getting(e_resource resource) override;

@@ -74,7 +74,7 @@ static void bind_event_ph(io_buffer* iob, event_ph_t& event) {
     iob->bind(BIND_SIGNATURE_RAW, event.reasons.data(), sizeof(event.reasons));
 }
 
-void scenario_events_chunk::bind_data(io_buffer* iob, size_t version) {
+void scenario_events_chunk::bind_data(io_buffer* iob) {
     auto& data = xvalue<events_data_t>::ref();
 
     if (iob->is_read_access()) {
@@ -105,6 +105,6 @@ void scenario_events_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void scenario_events_extra_chunk::bind_data(io_buffer* iob, size_t version) {
+void scenario_events_extra_chunk::bind_data(io_buffer* iob) {
     // TODO ????????
 }

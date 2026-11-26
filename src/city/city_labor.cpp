@@ -539,7 +539,7 @@ class labor_sim_system : public sim_system {
 public:
     const char* name() const override { return "labor"; }
     void on_reset() override { city_labor().reset(); }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_labor_chunk>(city_labor_chunk::size, false);
         g_chunk_io.push_chunk<labor_storage_priority_chunk>(4, false);
     }

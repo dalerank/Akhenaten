@@ -3,7 +3,7 @@
 #include "city/city_health.h"
 #include "io/io_buffer.h"
 
-void city_health_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_health_chunk::bind_data(io_buffer* iob) {
     auto& health = city_health();
     iob->bind(BIND_SIGNATURE_INT32, &health.target_value);
     iob->bind(BIND_SIGNATURE_INT32, &health.value);

@@ -3,7 +3,7 @@
 #include "city/coverage.h"
 #include "io/io_buffer.h"
 
-void city_avg_coverage_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_avg_coverage_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_religion);
     iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_education);

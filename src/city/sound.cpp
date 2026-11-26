@@ -14,9 +14,7 @@ class city_sound_system : public sim_system {
 public:
     const char* name() const override { return "city_sound"; }
     void on_reset() override { city_sound().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_sound_chunk>(city_sound_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_sound_chunk>(city_sound_chunk::size, false); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_city_sound_system) {

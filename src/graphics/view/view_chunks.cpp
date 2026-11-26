@@ -4,7 +4,7 @@
 #include "graphics/view/view.h"
 #include "io/io_buffer.h"
 
-void city_view_orientation_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_view_orientation_chunk::bind_data(io_buffer* iob) {
     auto& data = g_camera;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.orientation);
@@ -17,7 +17,7 @@ void city_view_orientation_chunk::bind_data(io_buffer* iob, size_t version) {
     map_view_orientation_set(data.orientation);
 }
 
-void city_view_camera_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_view_camera_chunk::bind_data(io_buffer* iob) {
     auto& data = g_camera;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.tile_internal.x);

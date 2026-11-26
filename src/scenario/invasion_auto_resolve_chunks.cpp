@@ -3,7 +3,7 @@
 #include "scenario/invasion_auto_resolve.h"
 #include "io/io_buffer.h"
 
-void invasion_auto_resolve_chunk::bind_data(io_buffer* iob, size_t version) {
+void invasion_auto_resolve_chunk::bind_data(io_buffer* iob) {
     auto& ar = g_invasion_auto_resolve;
     iob->bind_u8(ar.count);
     uint8_t head_unused = 0;
@@ -22,7 +22,7 @@ void invasion_auto_resolve_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(6);
 }
 
-void invasion_auto_resolve_chunk::load_defaults(size_t version) {
+void invasion_auto_resolve_chunk::load_defaults() {
     // saves older than v177 have no pending auto-resolve queue
     g_invasion_auto_resolve = {};
 }

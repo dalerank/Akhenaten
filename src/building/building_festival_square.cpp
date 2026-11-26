@@ -63,7 +63,7 @@ void building_festival_square::update_map_orientation(int map_orientation) {
 }
 
 
-void building_festival_square::bind_dynamic(io_buffer *iob, size_t version) {
+void building_festival_square::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     iob->bind(BIND_SIGNATURE_UINT8, &d.num_shows);

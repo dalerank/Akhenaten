@@ -16,7 +16,7 @@ class entertainment_system : public sim_system {
 public:
     const char* name() const override { return "entertainment"; }
     void on_reset() override { city_entertainment().reset(); }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_entertainment_chunk>(city_entertainment_chunk::size, false);
     }
 };

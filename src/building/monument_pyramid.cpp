@@ -2506,7 +2506,7 @@ bool building_stepped_pyramid::force_draw_flat_tile(painter &ctx, tile2i tile, v
     return (phase() < 7);
 }
 
-void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_stepped_pyramid::bind_dynamic(io_buffer* iob) {
     bind_block_engine_state(iob, current_params().animations["basement"].first_img());
 }
 

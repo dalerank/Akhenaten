@@ -3,7 +3,7 @@
 #include "city/city_festival.h"
 #include "io/io_buffer.h"
 
-void city_festival_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_festival_chunk::bind_data(io_buffer* iob) {
     auto& festival = city_festival();
     iob->bind(BIND_SIGNATURE_INT8, &festival.months_since_festival);
     iob->bind(BIND_SIGNATURE_UINT8, &festival.planned_size);

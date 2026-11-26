@@ -26,7 +26,7 @@ public:
     virtual int animation_speed(int speed) const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_WATER; }
     virtual void update_map_orientation(int orientation) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual void update_graphic() override;
     virtual water_access_tiles get_water_access_tiles() const override;
     virtual water_access_tiles get_water_output_tiles() const override;

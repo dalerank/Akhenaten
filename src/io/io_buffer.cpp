@@ -1,8 +1,6 @@
 #include "io_buffer.h"
 #include "core/string.h"
 
-#include "gamestate/boilerplate.h"
-
 #include <cassert>
 #include <vector>
 
@@ -21,19 +19,19 @@ bool io_buffer::validate() {
     return true;
 }
 
-bool io_buffer::io_sync(chunk_buffer_access_e flag, size_t version) {
+bool io_buffer::io_sync(chunk_buffer_access_e flag) {
     if (!validate())
         return false;
     access_type = flag;
-    bind_data(version);
+    bind_data();
     access_type = CHUNK_ACCESS_REVOKED;
     return true;
 }
-bool io_buffer::read(size_t version) {
-    return io_sync(CHUNK_ACCESS_READ, version);
+bool io_buffer::read() {
+    return io_sync(CHUNK_ACCESS_READ);
 }
 bool io_buffer::write() {
-    return io_sync(CHUNK_ACCESS_WRITE, save_data_version());
+    return io_sync(CHUNK_ACCESS_WRITE);
 }
 
 static std::vector<std::pair<const char*, io_chunk*>>& chunk_registry() {

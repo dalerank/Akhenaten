@@ -7,8 +7,7 @@
 
 static constexpr int MODS_CHUNK_MAX = 32;
 
-void mods_chunk::bind_data(io_buffer* iob, size_t version) {
-    (void)version;
+void mods_chunk::bind_data(io_buffer* iob) {
     std::vector<saved_mod> list;
     if (!iob->is_read_access()) {
         list = mods_active_list();
@@ -28,6 +27,6 @@ void mods_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void mods_chunk::load_defaults(size_t version) {
+void mods_chunk::load_defaults() {
     mods_forget_saved();
 }

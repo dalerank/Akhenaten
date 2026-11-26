@@ -598,7 +598,7 @@ tile2i building_caesareum::access_point() const {
     }
 }
 
-void building_caesareum::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_caesareum::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     for (int i = 0; i < SPOTS_PER_PART; i++) {

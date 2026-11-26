@@ -99,7 +99,7 @@ void building_statue::update_map_orientation(int /*map_orientation*/) {
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 }
 
-void building_statue::bind_dynamic(io_buffer *iob, size_t version) {
+void building_statue::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     iob->bind____skip(38);

@@ -4,7 +4,7 @@
 #include "io/io_buffer.h"
 #include "scenario/distant_battle.h"
 
-void city_distant_battle_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_distant_battle_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_to_travel_forth);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.city_foreign_months_left);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.won_count);

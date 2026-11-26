@@ -3,7 +3,7 @@
 #include "city/city_trade.h"
 #include "io/io_buffer.h"
 
-void city_trade_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_trade_chunk::bind_data(io_buffer* iob) {
     auto& trade = city_trade();
     iob->bind(BIND_SIGNATURE_INT32, &trade.caravan_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &trade.caravan_backup_import_resource);

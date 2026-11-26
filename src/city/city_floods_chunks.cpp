@@ -4,7 +4,7 @@
 #include "city/city_floods.h"
 #include "io/io_buffer.h"
 
-void floodplain_settings_chunk::bind_data(io_buffer* iob, size_t version) {
+void floodplain_settings_chunk::bind_data(io_buffer* iob) {
     auto& data = floods();
 
     iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);

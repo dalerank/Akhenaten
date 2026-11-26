@@ -1167,7 +1167,7 @@ grid_area building_mausoleum::get_area() const {
     return {start, start.shifted(ext.x - 1, ext.y - 1)};
 }
 
-void building_mausoleum::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_mausoleum::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     for (int i = 0; i < RESOURCES_MAX; i++) {

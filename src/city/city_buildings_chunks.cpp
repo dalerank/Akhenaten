@@ -6,7 +6,7 @@
 
 #include <vector>
 
-static void bind_building_record(io_buffer* iob, building* b, building_id i, size_t version) {
+static void bind_building_record(io_buffer* iob, building* b, building_id i) {
     // 186 is header+runtime from record start (Pharaoh: ~82 header + ~102 runtime).
     const int sind = (int)iob->get_offset();
 
@@ -71,7 +71,7 @@ static void bind_building_record(io_buffer* iob, building* b, building_id i, siz
     iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
 
     static_assert(sizeof(building::runtime_data) == 186, "runtime_data more then 186 bytes");
-    b->dcast()->bind_dynamic(iob, version); // 102 for PH
+    b->dcast()->bind_dynamic(iob); // 102 for PH
 
     const int currind = (int)iob->get_offset() - sind;
     verify_no_crash(currind >= 0);
@@ -130,12 +130,12 @@ static void bind_building_record(io_buffer* iob, building* b, building_id i, siz
     b->max_workers = params.laborers;
 }
 
-void buildings_chunk::bind_data(io_buffer* iob, size_t version) {
+void buildings_chunk::bind_data(io_buffer* iob) {
     if (iob->is_read_access()) {
         stub_records_guard_reset();
     }
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        bind_building_record(iob, building_get(i), i, version);
+        bind_building_record(iob, building_get(i), i);
     }
     // building_extra_data.created_sequence = 0;
 }
@@ -148,23 +148,23 @@ namespace {
     };
     stub_records_guard_t g_stub_guard;
 
-    void bind_building0(io_buffer* iob, size_t version) {
-        bind_building_record(iob, building_get(0), 0, version);
+    void bind_building0(io_buffer* iob) {
+        bind_building_record(iob, building_get(0), 0);
     }
 
-    void bind_figure0(io_buffer* iob, size_t) {
+    void bind_figure0(io_buffer* iob) {
         figure_get(0)->bind(iob);
     }
 
     struct record_buffer : io_buffer {
-        void (*bind_record)(io_buffer* iob, size_t version);
+        void (*bind_record)(io_buffer* iob);
 
-        explicit record_buffer(void (*fn)(io_buffer*, size_t)) : bind_record(fn) {}
+        explicit record_buffer(void (*fn)(io_buffer*)) : bind_record(fn) {}
 
-        void bind_data(size_t version) override { bind_record(this, version); }
+        void bind_data() override { bind_record(this); }
     };
 
-    std::vector<uint8_t> serialize_record(void (*bind)(io_buffer*, size_t)) {
+    std::vector<uint8_t> serialize_record(void (*bind)(io_buffer*)) {
         buffer buf(1024);
         record_buffer iob(bind);
         iob.hook(&buf, (int)buf.size(), false, "stub_record");

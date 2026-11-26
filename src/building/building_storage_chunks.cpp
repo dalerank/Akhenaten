@@ -6,7 +6,7 @@
 
 #include <cstring>
 
-void building_storages_chunk::bind_data(io_buffer* iob, size_t version) {
+void building_storages_chunk::bind_data(io_buffer* iob) {
     auto& slots = xvalue<building_storages_t>::ref().slots;
     for (int i = 0; i < MAX_STORAGES; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &slots[i].storage.permissions); // Originally unused
@@ -30,12 +30,12 @@ void building_storages_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 // Empty All order snapshot — appended chunk (save v175+), raw blob.
-void storages_empty_all_backup_chunk::bind_data(io_buffer* iob, size_t version) {
+void storages_empty_all_backup_chunk::bind_data(io_buffer* iob) {
     auto& backups = xvalue<building_storages_t>::ref().empty_all_backups;
     iob->bind(BIND_SIGNATURE_RAW, backups, sizeof(backups));
 }
 
-void storages_empty_all_backup_chunk::load_defaults(size_t version) {
+void storages_empty_all_backup_chunk::load_defaults() {
     // no snapshot in the file means no storage had Empty All pending
     auto& backups = xvalue<building_storages_t>::ref().empty_all_backups;
     memset(backups, 0, sizeof(backups));

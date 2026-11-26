@@ -3,7 +3,7 @@
 #include "io/io_buffer.h"
 #include "empire/empire_traders.h"
 
-void empire_traders_chunk::bind_data(io_buffer* iob, size_t version) {
+void empire_traders_chunk::bind_data(io_buffer* iob) {
     auto& data = g_empire_traders;
     verify_no_crash(data.traders.size() == 100);
     for (int i = 0; i < data.traders.size(); i++) {

@@ -16,7 +16,7 @@ struct simulation_t {
     void reset_systems() const;
     void run_load(e_load_phase phase) const;
     void reload_config() const;
-    void push_save_sections(int file_version) const;
+    void push_save_sections() const;
 
 private:
     std::vector<sim_system*> systems;

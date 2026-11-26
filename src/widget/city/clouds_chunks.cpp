@@ -3,7 +3,7 @@
 #include "widget/city/clouds.h"
 #include "io/io_buffer.h"
 
-void clouds_chunk::bind_data(io_buffer* iob, size_t version) {
+void clouds_chunk::bind_data(io_buffer* iob) {
     int32_t count = (int32_t)std::min<size_t>(clouds().clouds.size(), 16);
     iob->bind(BIND_SIGNATURE_INT32, &count);
     for (int i = 0; i < 16; ++i) {
@@ -14,7 +14,7 @@ void clouds_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void clouds_chunk::load_defaults(size_t version) {
+void clouds_chunk::load_defaults() {
     for (auto& cloud : clouds().clouds) {
         cloud.pos = {0, 0};
     }

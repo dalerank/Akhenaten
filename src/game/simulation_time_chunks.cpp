@@ -3,7 +3,7 @@
 #include "io/io_buffer.h"
 #include "game/simulation.h"
 
-void game_time_chunk::bind_data(io_buffer* iob, size_t version) {
+void game_time_chunk::bind_data(io_buffer* iob) {
     auto& data = g_simulation.simtime;
     // OG stores all of these as int32; BC years are negative and need the
     // sign-extension bytes.

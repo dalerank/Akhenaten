@@ -58,10 +58,10 @@ private:
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
-    bool io_sync(chunk_buffer_access_e flag, size_t version);
+    bool io_sync(chunk_buffer_access_e flag);
 
 protected:
-    virtual void bind_data(size_t version) {}
+    virtual void bind_data() {}
 
 public:
     inline int get_size() { return size; }
@@ -232,7 +232,7 @@ public:
     // these will VALIDATE the buffer, set the ACCESS FLAG, then fire the external CALLBACK
     // which will BIND (access) every data field following a manually defined external SCHEMA,
     // then set the ACCESS FLAG back to "REVOKED".
-    bool read(size_t version);
+    bool read();
     bool write();
 
     virtual ~io_buffer() = default;
@@ -248,7 +248,7 @@ public:
     io_chunk(const char* name, e_presence presence);
 
     bool is_optional() const { return presence == optional; }
-    virtual void load_defaults(size_t version) {}
+    virtual void load_defaults() {}
 
 private:
     e_presence presence;
@@ -257,30 +257,30 @@ private:
 template <typename T, typename = void>
 struct io_chunk_has_bind : std::false_type {};
 template <typename T>
-struct io_chunk_has_bind<T, std::void_t<decltype(T::bind_data(nullptr, size_t(0)))>> : std::true_type {};
+struct io_chunk_has_bind<T, std::void_t<decltype(T::bind_data(nullptr))>> : std::true_type {};
 
 template <typename T, typename = void>
 struct io_chunk_has_defaults : std::false_type {};
 template <typename T>
-struct io_chunk_has_defaults<T, std::void_t<decltype(T::load_defaults(size_t(0)))>> : std::true_type {};
+struct io_chunk_has_defaults<T, std::void_t<decltype(T::load_defaults())>> : std::true_type {};
 
 template <typename T>
 class io_chunk_of : public io_chunk {
 public:
     io_chunk_of() : io_chunk(T::name, io_chunk_has_defaults<T>::value ? optional : required) {}
 
-    void load_defaults(size_t version) override {
+    void load_defaults() override {
         if constexpr (io_chunk_has_defaults<T>::value) {
-            T::load_defaults(version);
+            T::load_defaults();
         }
     }
 
     static io_chunk_of registered;
 
 protected:
-    void bind_data(size_t version) override {
+    void bind_data() override {
         if constexpr (io_chunk_has_bind<T>::value) {
-            T::bind_data(this, version);
+            T::bind_data(this);
         }
     }
 };
@@ -292,10 +292,10 @@ template <typename T, e_grid_data_type Type>
 struct grid_chunk {
     inline static grid_xx grid{Type};
 
-    static void bind_data(io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &grid); }
+    static void bind_data(io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &grid); }
 };
 
 template <typename T, e_grid_data_type Type>
 struct optional_grid_chunk : grid_chunk<T, Type> {
-    static void load_defaults(size_t version) { map_grid_clear(grid_chunk<T, Type>::grid); }
+    static void load_defaults() { map_grid_clear(grid_chunk<T, Type>::grid); }
 };

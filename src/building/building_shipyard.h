@@ -37,7 +37,7 @@ public:
     virtual void spawn_figure() override;
     virtual void update_map_orientation(int orientation) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual bool add_resource(e_resource resource, int amount, figure_id fid = 0) override;
 
     int repair_queue_size() const;

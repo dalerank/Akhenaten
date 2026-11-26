@@ -117,7 +117,7 @@ class avg_coverage_sim_system : public sim_system {
 public:
     const char* name() const override { return "avg_coverage"; }
     void on_reset() override { city_avg_coverage().reset(); }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_avg_coverage_chunk>(city_avg_coverage_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {

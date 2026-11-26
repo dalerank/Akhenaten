@@ -47,7 +47,7 @@ public:
         }
     }
 
-    void push_save_sections(int file_version) override { g_chunk_io.push_chunk<floodplain_settings_chunk>(36, false); }
+    void push_save_sections() override { g_chunk_io.push_chunk<floodplain_settings_chunk>(36, false); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_floods_system) {

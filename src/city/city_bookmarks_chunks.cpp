@@ -3,7 +3,7 @@
 #include "city/city_bookmarks.h"
 #include "io/io_buffer.h"
 
-void bookmarks_chunk::bind_data(io_buffer* iob, size_t version) {
+void bookmarks_chunk::bind_data(io_buffer* iob) {
     static_assert(map_bookmarks_t::MAX_BOOKMARKS == 4);
     // OG layout: {int32 grid_offset, int32 unused} per bookmark; OG keeps the second at -1.
     for (int i = 0; i < map_bookmarks_t::MAX_BOOKMARKS; i++) {

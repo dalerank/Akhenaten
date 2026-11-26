@@ -569,7 +569,7 @@ grid_area building_pharos_lighthouse::get_area() const {
     return {start, start.shifted(TOWER_SIZE - 1, TOWER_SIZE - 1)};
 }
 
-void building_pharos_lighthouse::bind_dynamic(io_buffer* iob, size_t /*version*/) {
+void building_pharos_lighthouse::bind_dynamic(io_buffer* iob) {
     auto& d = runtime_data();
 
     iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[SPOT_MASON]);

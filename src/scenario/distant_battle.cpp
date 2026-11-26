@@ -588,7 +588,7 @@ class distant_battle_system : public sim_system {
 public:
     const char* name() const override { return "distant_battle"; }
     void on_reset() override { g_distant_battle.clear(); }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {

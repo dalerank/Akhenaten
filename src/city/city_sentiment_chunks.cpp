@@ -3,7 +3,7 @@
 #include "city/city_sentiment.h"
 #include "io/io_buffer.h"
 
-void city_sentiment_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_sentiment_chunk::bind_data(io_buffer* iob) {
     auto& sentiment = city_sentiment();
     iob->bind(BIND_SIGNATURE_INT32, &sentiment.value);
     iob->bind(BIND_SIGNATURE_INT32, &sentiment.message_delay);

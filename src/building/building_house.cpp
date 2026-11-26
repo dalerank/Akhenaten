@@ -145,7 +145,7 @@ void building_house::update_count() const {
     city_building_stats().increase_count(type(), house_population() > 0);
 }
 
-void building_house::bind_dynamic(io_buffer *iob, size_t version) {
+void building_house::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     for (int i = 0; i < 4; ++i) {

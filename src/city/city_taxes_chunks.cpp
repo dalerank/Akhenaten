@@ -3,7 +3,7 @@
 #include "city/city_taxes.h"
 #include "io/io_buffer.h"
 
-void city_taxes_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_taxes_chunk::bind_data(io_buffer* iob) {
     auto& taxes = city_taxes();
     iob->bind(BIND_SIGNATURE_INT32, &taxes.taxed_citizens);
     iob->bind(BIND_SIGNATURE_INT32, &taxes.taxed_nobles);

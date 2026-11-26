@@ -67,7 +67,7 @@ public:
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) const;;
-    virtual void bind_dynamic(io_buffer *iob, size_t version);
+    virtual void bind_dynamic(io_buffer* iob);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool set_property(const xstring &domain, const xstring &name, const bvariant &value);
     virtual bool add_resource(e_resource resource, int amount, figure_id fid = 0);

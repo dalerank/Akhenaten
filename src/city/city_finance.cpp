@@ -382,9 +382,7 @@ public:
         city_finance().reset();
         city_finance().init();
     }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_finance_chunk>(city_finance_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_finance_chunk>(city_finance_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_finance_month, SIM_PHASE_MONTH_CITY, [](int) { city_finance().advance_month(); }});
         schedule.add({sim_step_finance_year, SIM_PHASE_YEAR, [](int) { city_finance().advance_year(); }});

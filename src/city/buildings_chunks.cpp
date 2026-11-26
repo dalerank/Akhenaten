@@ -3,7 +3,7 @@
 #include "city/buildings.h"
 #include "io/io_buffer.h"
 
-void building_count_industry_chunk::bind_data(io_buffer* iob, size_t version) {
+void building_count_industry_chunk::bind_data(io_buffer* iob) {
     iob->bind____skip(sizeof(int32_t) * RESOURCES_MAX);
     iob->bind____skip(sizeof(int32_t) * RESOURCES_MAX);
 
@@ -107,7 +107,7 @@ void building_count_industry_chunk::bind_data(io_buffer* iob, size_t version) {
     //    support->read_i32();
 }
 
-void city_buildings_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_buildings_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().unknown_value);
     iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().triumphal_obelisk_available);
     iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().triumphal_obelisk_placed);

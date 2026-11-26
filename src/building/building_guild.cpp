@@ -7,7 +7,7 @@ constexpr uint16_t MAX_PROGRESS_GUILD = 400;
 
 BUILDING_RUNTIME_DATA_IMPL(building_guild)
 
-void building_guild::bind_dynamic(io_buffer *iob, size_t version) {
+void building_guild::bind_dynamic(io_buffer* iob) {
     iob->bind____skip(26);
     iob->bind____skip(56);
 

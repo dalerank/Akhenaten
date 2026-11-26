@@ -3,8 +3,7 @@
 #include "city/city_recorded_paths.h"
 #include "io/io_buffer.h"
 
-void recorded_paths_chunk::bind_data(io_buffer* iob, size_t version) {
-    (void)version;
+void recorded_paths_chunk::bind_data(io_buffer* iob) {
     auto& p = recorded_paths();
     for (int i = 0; i < RECORDED_PATH_POOL_SIZE; i++) {
         uint8_t used = p.slots[i].used ? 1 : 0;
@@ -63,7 +62,7 @@ void recorded_paths_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void recorded_paths_chunk::load_defaults(size_t version) {
+void recorded_paths_chunk::load_defaults() {
     // saves older than v188 have no trails; without this they would inherit the
     // previous session's pool
     recorded_paths().clear();

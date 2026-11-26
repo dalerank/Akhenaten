@@ -385,7 +385,7 @@ public:
         city_sentiment().reset();
         city_sentiment().init();
     }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_sentiment_chunk>(city_sentiment_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {

@@ -11,7 +11,7 @@
 #include <iterator>
 
 static int file_version;
-void file_version_chunk::bind_data(io_buffer* iob, size_t version) {
+void file_version_chunk::bind_data(io_buffer* iob) {
     file_version = save_data_version();
     iob->bind(BIND_SIGNATURE_INT32, &file_version);
 }
@@ -35,7 +35,7 @@ struct chunks_data_t {
 
 chunks_data_t g_chunks_data;
 
-void chunks_schema_chunk::bind_data(io_buffer* iob, size_t version) {
+void chunks_schema_chunk::bind_data(io_buffer* iob) {
     FILE* debug_file = NULL;
     char temp_string[200] = "";
     iob->bind(BIND_SIGNATURE_UINT32, &g_chunks_data.chunks_in_used);
@@ -77,7 +77,7 @@ void chunks_schema_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 // OG: saved_reserved_1, empire locked, 4 figure name counters, city_frogs_countdown, pyramid_speedup_countdown.
-void junk7a_chunk::bind_data(io_buffer* iob, size_t version) {
+void junk7a_chunk::bind_data(io_buffer* iob) {
     iob->bind____skip(24);
     iob->bind(BIND_SIGNATURE_INT32, &city_plagues().frogs_countdown);
     iob->bind____skip(4);
@@ -93,7 +93,7 @@ struct junk10_t {
 };
 
 junk10_t g_junk10;
-void junk10a_chunk::bind_data(io_buffer* iob, size_t version) {
+void junk10a_chunk::bind_data(io_buffer* iob) {
     const int r_version = g_chunk_io.get_file_version();
     FILE* debug_file = nullptr;
     char temp_string[200] = "";
@@ -137,7 +137,7 @@ void junk10a_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void junk10b_chunk::bind_data(io_buffer* iob, size_t version) {
+void junk10b_chunk::bind_data(io_buffer* iob) {
     for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
         auto field = &g_junk10.fields[i];
         // fill ints
@@ -154,7 +154,7 @@ struct junk11_t {
 };
 junk11_t g_junk11;
 
-void junk11_chunk::bind_data(io_buffer* iob, size_t version) {
+void junk11_chunk::bind_data(io_buffer* iob) {
     // the first two fields are the Map Editor's cached empire map coordinates....
     // I have absolutely no idea about the need for this, or any of the rest.
     // the third field is set to "1" when "Edit objects" is active in the editor.
@@ -188,7 +188,7 @@ void junk11_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 // OG: mummies_max, difficulty.
-void junk18_chunk::bind_data(io_buffer* iob, size_t version) {
+void junk18_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_plagues().mummies_max);
     iob->bind____skip(4);
 }
@@ -246,7 +246,7 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
         }
     }
 }
-static void bizarre_ordered_fields_bind(io_buffer* iob, size_t version) {
+static void bizarre_ordered_fields_bind(io_buffer* iob) {
     if (iob == &io_chunk_of<bizarre_ordered_fields_1_chunk>::registered) {
         bizarre.current_chunk = 0;
     } else {
@@ -259,31 +259,31 @@ static void bizarre_ordered_fields_bind(io_buffer* iob, size_t version) {
     }
 }
 
-void bizarre_ordered_fields_1_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_1_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
-void bizarre_ordered_fields_2_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_2_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
-void bizarre_ordered_fields_3_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_3_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
-void bizarre_ordered_fields_4_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_4_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
 
-void bizarre_ordered_fields_5_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_5_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
-void bizarre_ordered_fields_6_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_6_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
-void bizarre_ordered_fields_7_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_7_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
-void bizarre_ordered_fields_8_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_8_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }
-void bizarre_ordered_fields_9_chunk::bind_data(io_buffer* iob, size_t version) {
-    bizarre_ordered_fields_bind(iob, version);
+void bizarre_ordered_fields_9_chunk::bind_data(io_buffer* iob) {
+    bizarre_ordered_fields_bind(iob);
 }

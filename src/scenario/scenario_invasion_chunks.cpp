@@ -3,7 +3,7 @@
 #include "scenario/scenario_invasion.h"
 #include "io/io_buffer.h"
 
-void invasion_warnings_chunk::bind_data(io_buffer* iob, size_t version) {
+void invasion_warnings_chunk::bind_data(io_buffer* iob) {
     for (auto& w : g_invasions.warnings) {
         iob->bind_bool(w.in_use);
         iob->bind_bool(w.handled);
@@ -20,16 +20,16 @@ void invasion_warnings_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void invasion_event_pending_chunk::bind_data(io_buffer* iob, size_t version) {
+void invasion_event_pending_chunk::bind_data(io_buffer* iob) {
     iob->bind____skip(272);
 }
 
-void invasion_event_pending_chunk::load_defaults(size_t version) {
+void invasion_event_pending_chunk::load_defaults() {
     // v172 stub: the chunk holds no state, it only keeps a slot in the old positional
     // layout. The defaulter exists to mark it optional for saves older than v172.
 }
 
-void invasion_runtime_chunk::bind_data(io_buffer* iob, size_t version) {
+void invasion_runtime_chunk::bind_data(io_buffer* iob) {
     auto& data = g_invasions;
     iob->bind(BIND_SIGNATURE_INT32, &data.history_count);
     iob->bind(BIND_SIGNATURE_INT32, &data.history_next);
@@ -61,7 +61,7 @@ void invasion_runtime_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void invasion_runtime_chunk::load_defaults(size_t version) {
+void invasion_runtime_chunk::load_defaults() {
     // saves older than v173 have no resolve binds or history
     // ring
     g_invasions.history_count = 0;

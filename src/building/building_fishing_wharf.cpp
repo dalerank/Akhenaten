@@ -158,8 +158,8 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
     return true;
 }
 
-void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {
-    building_wharf::bind_dynamic(iob, version);
+void building_fishing_wharf::bind_dynamic(io_buffer* iob) {
+    building_wharf::bind_dynamic(iob);
 
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &d.fish_caught);

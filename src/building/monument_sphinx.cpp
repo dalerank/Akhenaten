@@ -762,7 +762,7 @@ tile2i building_sphinx::access_point() const {
     return t.shifted(PART_SIZE + 3, PART_SIZE);
 }
 
-void building_sphinx::bind_dynamic(io_buffer* iob, size_t /*version*/) {
+void building_sphinx::bind_dynamic(io_buffer* iob) {
     auto& d = runtime_data();
 
     for (int i = 0; i < SPOTS_PER_PART; i++) {

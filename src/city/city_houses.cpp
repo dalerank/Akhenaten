@@ -298,9 +298,7 @@ class houses_system : public sim_system {
 public:
     const char* name() const override { return "houses"; }
     void on_reset() override { city_houses().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_house_service_decay, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 9) {

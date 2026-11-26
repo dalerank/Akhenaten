@@ -6,15 +6,15 @@ class io_buffer;
 
 struct city_graph_order_chunk {
     static constexpr const char* name = "city_graph_order";
-    static void bind_data(io_buffer* iob, size_t version);
+    static void bind_data(io_buffer* iob);
 };
 
 struct building_list_small_chunk {
     static constexpr const char* name = "building_list_small";
-    static void bind_data(io_buffer* iob, size_t version);
+    static void bind_data(io_buffer* iob);
 };
 
 struct building_list_large_chunk {
     static constexpr const char* name = "building_list_large";
-    static void bind_data(io_buffer* iob, size_t version);
+    static void bind_data(io_buffer* iob);
 };

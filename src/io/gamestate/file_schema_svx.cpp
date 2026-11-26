@@ -177,5 +177,5 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<campaign_carry_monuments_chunk>(96, false);
     // count + reserved + 32 * (id[48] + version[16]) = 2052
     g_chunk_io.push_chunk<mods_chunk>(2052, false);
-    g_simulation.push_save_sections(file_version);
+    g_simulation.push_save_sections();
 }

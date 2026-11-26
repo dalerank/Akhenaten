@@ -377,7 +377,7 @@ void building_impl::draw_tooltip(tooltip_context *c) const {
     es_t(building_tooltip_ev{ base.id, c->mpos.x, c->mpos.y }, __func__);
 }
 
-void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
+void building_impl::bind_dynamic(io_buffer* iob) {
     verify_no_crash(base.output.resource == current_params().output.resource);
 }
 

@@ -25,7 +25,7 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_map_orientation(int map_orientation) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual void add_workers(figure_id fid) override;
     virtual void update_day() override;
 

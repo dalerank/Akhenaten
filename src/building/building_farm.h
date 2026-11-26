@@ -54,7 +54,7 @@ public:
     virtual void on_tick(bool refresh) override;
     virtual bool allow_demolish() const override;
     virtual xstring demolish_blocked_message() const override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual void start_production() override;
     virtual figure_id expected_worker_id() const { return runtime_data().worker_id; }
     virtual bool requested_workers() const;

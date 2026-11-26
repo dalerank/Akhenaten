@@ -3,7 +3,7 @@
 #include "city/military.h"
 #include "io/io_buffer.h"
 
-void city_military_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_military_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_military().native_attack_duration);
     iob->bind(BIND_SIGNATURE_UINT8, &city_military().infantry_batalions);
     iob->bind(BIND_SIGNATURE_UINT8, &city_military().total_batalions);

@@ -1248,7 +1248,7 @@ grid_area building_alexandria_library::get_area() const {
     return {start, end};
 }
 
-void building_alexandria_library::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_alexandria_library::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
     // Building record budget: header (~82) + bind_dynamic <= 186 → max ~104 for dynamic.
     // Sun temple fits 13 spots (1+52+51=104). Library's 24 spots (1+96+51=148) overflow and

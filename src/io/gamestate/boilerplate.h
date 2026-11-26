@@ -6,7 +6,7 @@
 #include "io/gamestate/save_versions.h"
 
 // Two numbers that are easy to confuse, so they get one accessor each:
-//   save_data_version   - WHAT sits inside the chunks. Drives if (version > N) in binds.
+//   save_data_version   - WHAT sits inside the chunks. Picks the chunks of the schema.
 //   svx_container_version - HOW chunks are laid out in the .svx file. Only the
 //                           container reader/writer cares, and it never affects binds.
 uint32_t save_data_version();

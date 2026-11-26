@@ -98,7 +98,7 @@ public:
     virtual void on_phase_changed(int old, int current) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
 
     struct preview_renderer : building_planer_renderer {

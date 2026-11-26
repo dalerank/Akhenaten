@@ -34,7 +34,7 @@ public:
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void draw_postrender_effects(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual void highlight_waypoints() override;
 
     building_fort_ground* ground() const { return building_get(runtime_data().ground)->dcast_fort_ground(); }

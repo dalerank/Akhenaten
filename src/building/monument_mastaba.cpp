@@ -827,7 +827,7 @@ bool building_mastaba::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pix
     return (monumentd.phase < MASTABA_PHASE_BRICKS);
 }
 
-void building_mastaba::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_mastaba::bind_dynamic(io_buffer* iob) {
     bind_block_engine_state(iob, 0);
 }
 

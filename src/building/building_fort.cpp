@@ -218,7 +218,7 @@ bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     return true;
 }
 
-void building_fort::bind_dynamic(io_buffer *iob, size_t verrsion) {
+void building_fort::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT16, &d.figure_type);
 }

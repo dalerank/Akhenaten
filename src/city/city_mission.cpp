@@ -24,9 +24,7 @@ public:
         g_campaign_carry.clear_troops();
         g_campaign_carry.clear_monuments();
     }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_mission_chunk>(city_mission_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_mission_chunk>(city_mission_chunk::size, false); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_mission_system) {

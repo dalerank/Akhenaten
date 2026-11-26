@@ -14,7 +14,7 @@ public:
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     bool has_resources() const;
 };

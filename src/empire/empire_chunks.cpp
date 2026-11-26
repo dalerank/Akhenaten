@@ -3,7 +3,7 @@
 #include "empire/empire.h"
 #include "io/io_buffer.h"
 
-void empire_cities_chunk::bind_data(io_buffer* iob, size_t version) {
+void empire_cities_chunk::bind_data(io_buffer* iob) {
     for (int i = 0; i < empire_t::MAX_CITIES; i++) {
         empire_city& city = g_empire.get_cities()[i];
         city.lookup_id = i;

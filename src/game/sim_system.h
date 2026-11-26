@@ -15,5 +15,5 @@ public:
     virtual void on_reset() = 0;
     virtual void on_load(e_load_phase phase) {}
     virtual void on_reload_config() {}
-    virtual void push_save_sections(int file_version) {}
+    virtual void push_save_sections() {}
 };

@@ -362,7 +362,7 @@ struct scenario_data_t {
 
     void load_metadata(const mission_id_t &missionid, bool is_new_mission);
     void apply_editor_allowed_buildings();
-    void bind_data(io_buffer *iob, size_t version, size_t size);
+    void bind_data(io_buffer* iob, size_t size);
     void init();
 
     bool is_desert() const {

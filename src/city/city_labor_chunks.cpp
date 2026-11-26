@@ -3,7 +3,7 @@
 #include "city/city_labor.h"
 #include "io/io_buffer.h"
 
-void city_labor_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_labor_chunk::bind_data(io_buffer* iob) {
     auto& labor = city_labor();
     iob->bind(BIND_SIGNATURE_INT32, &labor.workers_available);
     for (int i = 0; i < LABOR_CATEGORY_SAVE_SLOTS; i++) {
@@ -21,11 +21,11 @@ void city_labor_chunk::bind_data(io_buffer* iob, size_t version) {
     verify_no_crash(iob->get_offset() == city_labor_chunk::size);
 }
 
-void labor_storage_priority_chunk::bind_data(io_buffer* iob, size_t version) {
+void labor_storage_priority_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_labor().categories[LABOR_CATEGORY_STORAGE].priority);
 }
 
-void labor_storage_priority_chunk::load_defaults(size_t version) {
+void labor_storage_priority_chunk::load_defaults() {
     // before the labor split, STORAGE had no priority of its own
     city_labor().categories[LABOR_CATEGORY_STORAGE].priority = 0;
 }

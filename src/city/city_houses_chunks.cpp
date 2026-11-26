@@ -3,7 +3,7 @@
 #include "city/city_houses.h"
 #include "io/io_buffer.h"
 
-void city_houses_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_houses_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.fountain);
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.well);
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.more_entertainment);

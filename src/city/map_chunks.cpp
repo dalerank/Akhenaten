@@ -3,7 +3,7 @@
 #include "city/map.h"
 #include "io/io_buffer.h"
 
-void city_map_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_map_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, city_map().entry_point);
     iob->bind(BIND_SIGNATURE_INT32, city_map().exit_point);
     for (int i = 0; i < 10; i++) {

@@ -386,7 +386,7 @@ bool building_ferry::draw_ornaments_and_animations_height(painter& ctx, vec2i po
     return true;
 }
 
-void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
+void building_ferry::bind_dynamic(io_buffer* iob) {
     auto& d = runtime_data();
     uint8_t link_stored = d.linked_building_id != FERRY_LINK_UNKNOWN;
     iob->bind____skip(85);

@@ -3,7 +3,7 @@
 #include "city/campaign_carry.h"
 #include "io/io_buffer.h"
 
-void campaign_carry_troops_chunk::bind_data(io_buffer* iob, size_t version) {
+void campaign_carry_troops_chunk::bind_data(io_buffer* iob) {
     for (int i = 0; i < TROOP_CARRY_MAX; i++) {
         auto& s = g_campaign_carry.troops[i];
         iob->bind_u8(s.has_data);
@@ -17,7 +17,7 @@ void campaign_carry_troops_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(7);
 }
 
-void campaign_carry_troops_chunk::load_defaults(size_t version) {
+void campaign_carry_troops_chunk::load_defaults() {
     // troop carry lives outside city_data, so a
     // save without this chunk would keep the
     // previous session's snapshot - the exact bug
@@ -25,7 +25,7 @@ void campaign_carry_troops_chunk::load_defaults(size_t version) {
     g_campaign_carry.clear_troops();
 }
 
-void campaign_carry_monuments_chunk::bind_data(io_buffer* iob, size_t version) {
+void campaign_carry_monuments_chunk::bind_data(io_buffer* iob) {
     for (int i = 0; i < CAMPAIGN_CARRY_MONUMENT_MAX; i++) {
         auto& s = g_campaign_carry.monuments[i];
         iob->bind_u8(s.has_data);
@@ -38,6 +38,6 @@ void campaign_carry_monuments_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void campaign_carry_monuments_chunk::load_defaults(size_t version) {
+void campaign_carry_monuments_chunk::load_defaults() {
     g_campaign_carry.clear_monuments();
 }

@@ -164,7 +164,7 @@ void building_entertainment::place_venue_items(const venue_place_offset& place, 
 // Offsets inside the dynamic part, which starts at record 0x52; OG data.entertainment starts at 0x54.
 // OG keeps juggler/musician/dancer figure ids at 76..81 and num_shows + show_days_left at 84..87 (0xA6..0xA9);
 // 2..75 and 88..101 are unused there, so the remake-only fields live in them.
-void building_entertainment::bind_dynamic(io_buffer *iob, size_t version) {
+void building_entertainment::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     iob->bind____skip(2);

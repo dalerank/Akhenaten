@@ -24,7 +24,7 @@ void building_industry::produce_uptick_per_day() {
     es(__func__);
 }
 
-void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
+void building_industry::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     short tmp_short = 0;

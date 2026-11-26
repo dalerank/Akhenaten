@@ -82,7 +82,7 @@ void building_water_lift::update_map_orientation(int orientation) {
     map_water_add_building(id(), tile(), 2, image_id);
 }
 
-void building_water_lift::bind_dynamic(io_buffer *iob, size_t version) {
+void building_water_lift::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     iob->bind____skip(72);

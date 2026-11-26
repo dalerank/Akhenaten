@@ -3,7 +3,7 @@
 #include "io/io_buffer.h"
 #include "empire/empire.h"
 
-void trade_routes_limits_chunk::bind_data(io_buffer* iob, size_t version) {
+void trade_routes_limits_chunk::bind_data(io_buffer* iob) {
     auto data = g_empire.get_routes();
     for (int route_id = 0; route_id < empire_t::MAX_ROUTES; route_id++) {
         auto& resources = data[route_id].resources;
@@ -21,7 +21,7 @@ void trade_routes_limits_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void trade_routes_traded_chunk::bind_data(io_buffer* iob, size_t version) {
+void trade_routes_traded_chunk::bind_data(io_buffer* iob) {
     auto data = g_empire.get_routes();
     for (int route_id = 0; route_id < empire_t::MAX_ROUTES; route_id++) {
         auto& resources = data[route_id].resources;

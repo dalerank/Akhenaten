@@ -3,7 +3,7 @@
 #include "city/city_message.h"
 #include "io/io_buffer.h"
 
-void messages_chunk::bind_data(io_buffer* iob, size_t version) {
+void messages_chunk::bind_data(io_buffer* iob) {
     auto& data = message_manager();
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message& msg = data.messages[i];
@@ -41,7 +41,7 @@ void messages_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void message_extra_chunk::bind_data(io_buffer* iob, size_t version) {
+void message_extra_chunk::bind_data(io_buffer* iob) {
     auto& data = message_manager();
     iob->bind(BIND_SIGNATURE_INT32, &data.next_message_sequence);
     iob->bind(BIND_SIGNATURE_UINT16, &data.total_messages);

@@ -45,8 +45,8 @@ void config_reload_systems() {
     g_simulation.reload_config();
 }
 
-void simulation_t::push_save_sections(int file_version) const {
+void simulation_t::push_save_sections() const {
     for (sim_system* system : systems) {
-        system->push_save_sections(file_version);
+        system->push_save_sections();
     }
 }

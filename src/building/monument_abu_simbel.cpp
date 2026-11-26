@@ -610,7 +610,7 @@ tile2i building_abu_simbel::access_point() const {
     return main_abu_simbel()->tile().shifted(w.x, w.y);
 }
 
-void building_abu_simbel::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+void building_abu_simbel::bind_dynamic(io_buffer* iob) {
     auto& d = runtime_data();
 
     // The current stage's spot (work, figure) takes 4 of the 38 bytes older saves wrote as zero.

@@ -5,13 +5,13 @@
 #include "io/io_buffer.h"
 #include "city/city.h"
 
-void scenario_mission_index_chunk::bind_data(io_buffer* iob, size_t version) {
+void scenario_mission_index_chunk::bind_data(io_buffer* iob) {
     // Chunk is 4 bytes; INT8 truncated custom mission ids > 127 (e.g. mission
     // 129).
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.campaign_scenario_id);
 }
 
-void scenario_info_chunk::bind_data(io_buffer* iob, size_t version) {
+void scenario_info_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.start_year);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.empire.id);
@@ -147,23 +147,23 @@ void scenario_info_chunk::bind_data(io_buffer* iob, size_t version) {
     g_scenario.is_saved = true;
 }
 
-void scenario_carry_settings_chunk::bind_data(io_buffer* iob, size_t version) {
+void scenario_carry_settings_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.settings.starting_kingdom);
     iob->bind____skip(4); // legacy starting_personal_savings (mission
                           // scripts set kingdome savings)
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.campaign_mission_rank);
 }
 
-void scenario_is_custom_chunk::bind_data(io_buffer* iob, size_t version) {
+void scenario_is_custom_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.scmode);
     iob->bind____skip(3);
 }
 
-void scenario_map_name_chunk::bind_data(io_buffer* iob, size_t version) {
+void scenario_map_name_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_XSTR, g_scenario.scenario_name, MAX_SCENARIO_NAME);
 }
 
-void city_scenario_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_scenario_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.has_won);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.continue_months_left);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.continue_months_chosen);

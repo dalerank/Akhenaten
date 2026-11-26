@@ -34,7 +34,7 @@ ChunkSerializer (g_chunk_io)  — push_chunk schema, fill buffers, apply state
 
 ### Versions (do not conflate)
 
-- `save_data_version()` / `latest_save_version` — **what** is inside chunks; drives `if (version > N)` in binds and schema gates.
+- `save_data_version()` / `latest_save_version` — **what** is inside chunks; picks the chunks of the schema; binds do not get it.
 - `svx::CONTAINER_REV` / `svx_container_version()` — **how** `.svx` is laid out on disk; only the container cares.
 
 Current and oldest accepted save data versions: `latest_save_version` and `min_save_version` in `gamestate/save_versions.h`.
@@ -75,7 +75,7 @@ Typed bind/read/write over a chunk buffer. `io_chunk_of<T>` adapts a chunk type 
 
 ## Adding a New Save Chunk
 
-1. In `<module>_chunks.h` next to the module that owns the state, declare `struct short_name_chunk { static constexpr const char* name = "short_name"; static void bind_data(io_buffer* iob, size_t version); };`, adding `static void load_defaults(size_t version)` for a chunk older files may lack. Define them in the module's .cpp. A chunk that only holds a grid derives `grid_chunk<short_name_chunk, FS_UINT8>` (or `optional_grid_chunk` to clear it when older files lack it) and the module uses `short_name_chunk::grid`.
+1. In `<module>_chunks.h` next to the module that owns the state, declare `struct short_name_chunk { static constexpr const char* name = "short_name"; static void bind_data(io_buffer* iob); };`, adding `static void load_defaults()` for a chunk older files may lack. Define them in the module's .cpp. A chunk that only holds a grid derives `grid_chunk<short_name_chunk, FS_UINT8>` (or `optional_grid_chunk` to clear it when older files lack it) and the module uses `short_name_chunk::grid`.
 2. Include that `_chunks.h` in the schema and call `push_chunk<short_name_chunk>(size, compressed)` in `file_schema_svx.cpp` for `FILE_FORMAT_SAVE_FILE_EXT` (name ≤ 32 chars).
 3. Bump `latest_save_version` only if existing field layout/meaning changes — or when gating the new chunk with `if (file_version > N)` until the version cascade is cleaned up.
 4. Do not rename existing chunk names without an alias plan — names are part of the `.svx` format.

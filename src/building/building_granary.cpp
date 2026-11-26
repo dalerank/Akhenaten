@@ -608,7 +608,7 @@ void building_granary::update_day() {
     runtime_data().resource_stored[RESOURCE_NONE] = current_params().max_capacty_stored - total_stored();
 }
 
-void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
+void building_granary::bind_dynamic(io_buffer* iob) {
     iob->bind____skip(2);
     iob->bind____skip(2);
 

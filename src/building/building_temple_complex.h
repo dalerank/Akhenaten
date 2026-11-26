@@ -46,7 +46,7 @@ public:
     virtual void on_post_load() override;
     virtual void on_place(int orientation, int variant) override;
     virtual void on_destroy() override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual void spawn_figure() override;
 
     bool has_upgrade(e_temple_compex_upgrade a) const { return !!(runtime_data().temple_complex_upgrades & a); }

@@ -4,7 +4,7 @@
 #include "core/core.h"
 #include "io/io_buffer.h"
 
-void city_sound_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_sound_chunk::bind_data(io_buffer* iob) {
     auto& sound = city_sound();
     iob->bind(BIND_SIGNATURE_INT8, &sound.march_enemy);
     iob->bind(BIND_SIGNATURE_INT8, &sound.march_horse);

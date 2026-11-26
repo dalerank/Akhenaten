@@ -375,7 +375,7 @@ public:
         building_storage_clear_all();
         building_clear_all();
     }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {

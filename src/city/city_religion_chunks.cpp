@@ -4,7 +4,7 @@
 #include "io/io_buffer.h"
 #include "city/city_religion_osiris.h"
 
-void city_gods_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_gods_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_gods().bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &city_gods().seth_crush_enemy_troops);
     iob->bind(BIND_SIGNATURE_INT8, &god_osiris.sank_ships);

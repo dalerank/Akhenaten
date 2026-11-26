@@ -28,7 +28,7 @@ public:
     virtual void on_post_load() override;
     virtual void spawn_figure() override;
     virtual void update_count() const override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     int get_priority();
     void set_priority(int v);

@@ -80,9 +80,7 @@ public:
         city_map().reset();
         map_routing_stats_clear();
     }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_tree_growth, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 2) {

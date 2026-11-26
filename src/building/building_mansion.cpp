@@ -135,7 +135,7 @@ bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     return true;
 }
 
-void building_mansion::bind_dynamic(io_buffer *iob, size_t version) {
+void building_mansion::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_INT32, &d.personal_savings_storage);
 }

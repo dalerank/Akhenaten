@@ -35,9 +35,7 @@ public:
         schedule.add({sim_step_taxes_year, SIM_PHASE_YEAR, [](int) { city_taxes().advance_year(); }});
     }
     void on_reset() override { city_taxes().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_taxes_system) {

@@ -39,7 +39,7 @@ public:
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_post_load() override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     void place_latch_on_venue(e_building_type type, int dx, int dy, int orientation, bool main_venue = false);
     void map_add_bandstand_tiles(int stand_orientation);
     int bandstand_main_img_offset(int orientation);

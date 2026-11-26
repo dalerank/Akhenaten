@@ -227,9 +227,7 @@ public:
         figure_route_clear_all();
         map_figure_draw_states_clear_all();
     }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_figures, SIM_PHASE_TICK_END, [](int) { city_figures().update(); }});
         schedule.add({sim_step_figures_day, SIM_PHASE_DAY, [](int) { city_figures().update_day(); }});

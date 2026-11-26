@@ -40,9 +40,7 @@ public:
         schedule.add({sim_step_festival, SIM_PHASE_MONTH_CITY, [](int) { city_festival().advance_month(); }});
     }
     void on_reset() override { city_festival().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_festival_system) {

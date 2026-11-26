@@ -280,7 +280,7 @@ void building_farm::on_tick(bool refresh) {
     restore_tiles_if_emerged();
 }
 
-void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
+void building_farm::bind_dynamic(io_buffer* iob) {
     iob->bind____skip(22);
     iob->bind____skip(48);
 

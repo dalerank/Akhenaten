@@ -111,7 +111,7 @@ public:
     virtual tile2i access_point() const override;
     virtual tile2i access_tile() const override { return access_point(); }
     virtual grid_area get_area() const override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 
     // 0..56; 56 = complete.
     int stage() const;

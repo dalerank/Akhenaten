@@ -3,7 +3,7 @@
 #include "figure/enemy_army.h"
 #include "io/io_buffer.h"
 
-void iob_enemy_armies_stats_chunk::bind_data(io_buffer* iob, size_t version) {
+void iob_enemy_armies_stats_chunk::bind_data(io_buffer* iob) {
     iob->bind_i32(g_enemy_army_in_city.enemy_formations);
     iob->bind_i32(g_enemy_army_in_city.enemy_strength);
     iob->bind_i32(g_enemy_army_in_city.batlion_formations);
@@ -27,7 +27,7 @@ void iob_enemy_armies_stats_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void iob_enemy_armies_stats_chunk::load_defaults(size_t version) {
+void iob_enemy_armies_stats_chunk::load_defaults() {
     // saves older than v170 carry no army stats at all
     g_enemy_army_in_city = {};
     g_enemy_armies.clear();

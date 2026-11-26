@@ -323,7 +323,7 @@ class migration_sim_system : public sim_system {
 public:
     const char* name() const override { return "migration"; }
     void on_reset() override { city_migration().reset(); }
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<city_migration_chunk>(city_migration_chunk::size, false);
     }
     void register_steps(sim_schedule_t& schedule) override {

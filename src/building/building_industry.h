@@ -37,7 +37,7 @@ public:
     void og_start_new_production();
     virtual short og_input_consumed(e_resource r) const;
 
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
     virtual void on_create(int orientation) override;
     virtual int stored_amount(e_resource) const override;
     virtual void start_production() override;

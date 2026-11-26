@@ -439,7 +439,7 @@ bool ChunkSerializer::apply_svx_chunk_state(file_chunk_t* chunk) {
     }
 
     if (chunk->present) {
-        chunk->iob->read(file_version);
+        chunk->iob->read();
         return true;
     }
 
@@ -450,7 +450,7 @@ bool ChunkSerializer::apply_svx_chunk_state(file_chunk_t* chunk) {
     }
 
     logs::info("chunk [%s] missing from [%s], defaults applied", chunk->name, file_path.c_str());
-    chunk->iob->load_defaults(file_version);
+    chunk->iob->load_defaults();
     return true;
 }
 
@@ -615,7 +615,7 @@ bool ChunkSerializer::unserialize_legacy(vfs::reader reader,
     // load GAME STATE from buffers
     for (int i = 0; i < num_chunks(); ++i) {
         if (file_chunks.at(i).VALID) {
-            file_chunks.at(i).iob->read(file_version);
+            file_chunks.at(i).iob->read();
         }
     }
 

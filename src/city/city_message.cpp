@@ -148,7 +148,7 @@ public:
         schedule.add({sim_step_messages, SIM_PHASE_MONTH, [](int) { message_manager().decrease_delays(); }});
     }
 
-    void push_save_sections(int file_version) override {
+    void push_save_sections() override {
         g_chunk_io.push_chunk<messages_chunk>(48000, false);
         g_chunk_io.push_chunk<message_extra_chunk>(182, false);
     }

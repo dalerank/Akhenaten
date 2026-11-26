@@ -3,7 +3,7 @@
 #include "city/entertainment.h"
 #include "io/io_buffer.h"
 
-void city_entertainment_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_entertainment_chunk::bind_data(io_buffer* iob) {
     auto& entertainment = city_entertainment();
     iob->bind(BIND_SIGNATURE_INT32, &entertainment.booth_shows);
     iob->bind(BIND_SIGNATURE_INT32, &entertainment.booth_no_shows_weighted);

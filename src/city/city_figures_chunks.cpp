@@ -6,7 +6,7 @@
 #include "figure/figure_save.h"
 #include "io/io_buffer.h"
 
-void figures_chunk::bind_data(io_buffer* iob, size_t version) {
+void figures_chunk::bind_data(io_buffer* iob) {
     city_figures().init_figures();
     for (int i = 0; i < MAX_FIGURES; i++) {
         bind_versioned<figure_save>(*figure_get(i), iob);
@@ -14,12 +14,12 @@ void figures_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void figure_sequence_chunk::bind_data(io_buffer* iob, size_t version) {
+void figure_sequence_chunk::bind_data(io_buffer* iob) {
     iob->bind____skip(4);
     // iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence);
 }
 
-void city_figures_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_figures_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &city_figures().fish_number);
     iob->bind(BIND_SIGNATURE_INT32, &city_figures().rioters);
     iob->bind(BIND_SIGNATURE_UINT8, &city_figures().animals_number);

@@ -3,7 +3,7 @@
 #include "figure/formation.h"
 #include "io/io_buffer.h"
 
-void formations_chunk::bind_data(io_buffer* iob, size_t version) {
+void formations_chunk::bind_data(io_buffer* iob) {
     for (int i = 0; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations.formations[i];
         f->id = i;                 // 10
@@ -91,7 +91,7 @@ void formations_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void formations_info_chunk::bind_data(io_buffer* iob, size_t version) {
+void formations_info_chunk::bind_data(io_buffer* iob) {
     auto& data = g_formations.formations;
     int tmp = 0;
     iob->bind(BIND_SIGNATURE_INT32, &tmp);

@@ -3,7 +3,7 @@
 #include "city/ratings.h"
 #include "io/io_buffer.h"
 
-void city_ratings_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_ratings_chunk::bind_data(io_buffer* iob) {
     auto& ratings = city_ratings();
     iob->bind(BIND_SIGNATURE_INT32, &ratings.monument_riot_cause);
     iob->bind(BIND_SIGNATURE_UINT16, &ratings.monument_years_of_monument);

@@ -174,9 +174,7 @@ class ratings_sim_system : public sim_system {
 public:
     const char* name() const override { return "ratings"; }
     void on_reset() override { city_ratings().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_ratings_chunk>(city_ratings_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_ratings_chunk>(city_ratings_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_ratings_year, SIM_PHASE_YEAR, [](int) { city_ratings().update(true); }});
     }

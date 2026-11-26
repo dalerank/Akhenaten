@@ -4,7 +4,7 @@
 #include "core/xvalue.h"
 #include "io/io_buffer.h"
 
-void junk8_chunk::bind_data(io_buffer* iob, size_t version) {
+void junk8_chunk::bind_data(io_buffer* iob) {
     auto& stats = xvalue<routing_stats_t>::ref();
     iob->bind____skip(4);
     iob->bind____skip(4); // resets to zero at the start of a new scenario

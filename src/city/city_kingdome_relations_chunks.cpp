@@ -4,7 +4,7 @@
 #include "io/io_buffer.h"
 #include "game/game_environment.h"
 
-void city_kingdome_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_kingdome_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &city_kingdome().salary_amount);
     iob->bind(BIND_SIGNATURE_UINT8, &city_kingdome().salary_rank);
     iob->bind_u16(city_kingdome().campaign_carry_personal_savings);

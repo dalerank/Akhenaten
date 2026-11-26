@@ -3,7 +3,7 @@
 #include "city/city_population.h"
 #include "io/io_buffer.h"
 
-void city_population_chunk::bind_data(io_buffer* iob, size_t version) {
+void city_population_chunk::bind_data(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_population().current);
     iob->bind(BIND_SIGNATURE_INT32, &city_population().last_year);
     iob->bind(BIND_SIGNATURE_INT32, &city_population().school_age);

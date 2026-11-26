@@ -980,7 +980,7 @@ void building_royal_tomb::on_post_load() {
     refresh_part_images();
 }
 
-void building_royal_tomb::bind_dynamic(io_buffer* iob, size_t /*version*/) {
+void building_royal_tomb::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     iob->bind(BIND_SIGNATURE_UINT16, &d.part);

@@ -296,9 +296,7 @@ class health_sim_system : public sim_system {
 public:
     const char* name() const override { return "health"; }
     void on_reset() override { city_health().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_health_chunk>(city_health_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_health_chunk>(city_health_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_health_coverage, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 33) {

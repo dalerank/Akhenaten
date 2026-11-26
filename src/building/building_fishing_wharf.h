@@ -27,7 +27,7 @@ public:
     virtual void on_undo() override;
     virtual void update_map_orientation(int orientation) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob) override;
 };
 
 ANK_CONFIG_PROPERTY(building_fishing_wharf::runtime_data_t, fish_caught, no_fishing_points_warning_shown)

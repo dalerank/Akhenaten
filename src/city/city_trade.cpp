@@ -258,9 +258,7 @@ class trade_sim_system : public sim_system {
 public:
     const char* name() const override { return "trade"; }
     void on_reset() override { city_trade().reset(); }
-    void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_trade_chunk>(city_trade_chunk::size, false);
-    }
+    void push_save_sections() override { g_chunk_io.push_chunk<city_trade_chunk>(city_trade_chunk::size, false); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_trade_export_keep, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 11) {

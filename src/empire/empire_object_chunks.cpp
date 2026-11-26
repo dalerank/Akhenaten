@@ -6,7 +6,7 @@
 #include "io/chunk_serializer.h"
 #include "io/io_buffer.h"
 
-void empire_map_objects_chunk::bind_data(io_buffer* iob, size_t version) {
+void empire_map_objects_chunk::bind_data(io_buffer* iob) {
     logs::info("iob_empire_map_objects");
     for (int i = 0; i < empire_t::MAX_MAP_OBJECTS; i++) {
         full_empire_object* full = g_empire.ref_full_object(i);
@@ -60,7 +60,7 @@ void empire_map_objects_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void empire_map_routes_chunk::bind_data(io_buffer* iob, size_t version) {
+void empire_map_routes_chunk::bind_data(io_buffer* iob) {
     logs::info("iob_empire_map_routes");
     for (int id = 0; id < empire_t::MAX_ROUTE_OBJECTS; id++) {
         map_route_object& obj = g_empire.ref_route_object(id);
