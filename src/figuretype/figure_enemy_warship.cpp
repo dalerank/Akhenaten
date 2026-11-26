@@ -141,7 +141,7 @@ void figure_enemy_warship::launch(int wait_ticks, int invasion_sequence) {
     base.faction_id = 0;
     base.wait_ticks = (int16_t)wait_ticks;
     base.set_flag(e_figure_flag_invisible);
-    base.name = figure_name_get(base.type);
+    base.name = figure_name_get(base.type, base.id);
     base.damage = 0;
     d.invasion_sequence = (int16_t)invasion_sequence;
     d.leave_month = (uint8_t)g_simulation.simtime.month;

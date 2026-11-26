@@ -120,7 +120,7 @@ figure* figure_festival_priest::spawn_celebrant(building& b) {
 
     const e_figure_type look = current_params().look_of(b.type).figure;
     f->dcast_festival_priest()->runtime_data().look = look;
-    f->name = figure_name_get(look);
+    f->name = figure_name_get(look, f->id);
     return f;
 }
 

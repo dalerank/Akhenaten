@@ -637,7 +637,7 @@ invasion_army_spawn_t scenario_invasion_spawn_army(const invasion_opts_t& opts, 
                 }
                 f->wait_ticks = 200 * army.formations + 10 * fig + 10;
                 f->formation_id = formation_id;
-                f->name = figure_name_get(figure_type);
+                f->name = figure_name_get(figure_type, f->id);
             }
             army.formations++;
             army.last_wait_ticks = 200 * army.formations + 10 * soldiers + 10;

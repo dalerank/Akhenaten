@@ -123,7 +123,7 @@ void figure_enemy_transport::launch(const invasion_opts_t& opts, int soldiers, t
     base.faction_id = 0;
     base.wait_ticks = (int16_t)wait_ticks;
     base.set_flag(e_figure_flag_invisible);
-    base.name = figure_name_get(base.type);
+    base.name = figure_name_get(base.type, base.id);
     d.landing_x = (int16_t)landing.x();
     d.landing_y = (int16_t)landing.y();
     d.has_troops = 1;

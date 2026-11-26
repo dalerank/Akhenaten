@@ -91,7 +91,7 @@ void figure_impl::on_post_load() {
     on_change_terrain(0, base.terrain_type);
 
     if (base.name.len() < 4) {
-        base.name = figure_name_get(base.type);
+        base.name = figure_name_get(base.type, base.id);
     }
 }
 

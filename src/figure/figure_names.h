@@ -19,7 +19,7 @@ void figure_name_init();
  * @param type Type of figure
  * @return Name ID
  */
-bstring32 figure_name_get(int type);
+bstring32 figure_name_get(int type, figure_id id);
 
 // OG name counter table (41 slots); -1 for an out-of-range slot or a type without an OG name group.
 int figure_name_counter(int slot);

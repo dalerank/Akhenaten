@@ -3,6 +3,7 @@
 #include "js/js_register.h"
 #include "core/random.h"
 #include "core/stable_array.h"
+#include "game/simulation.h"
 
 using bstring32_vec = std::vector<bstring32>;
 template<> inline void archive::r<bstring32_vec>(pcstr name, bstring32_vec &v) { r_array_str(name, v); }
@@ -24,25 +25,21 @@ struct figure_name_generator_t {
     bstring32_vec male_postfixes;
     bstring32_vec female_postfixes;
 
-    template<typename T>
-    bstring32 get_name(const T& p, const T& m, const T& f) {
-        int prefix_idx = rand() % p.size();
-        int middle_idx = rand() % m.size();
-        int postfix_idx = rand() % f.size();
+    template <typename T>
+    bstring32 get_name(const T& p, const T& m, const T& f, uint32_t hash) {
+        const uint32_t prefix_idx = hash % p.size();
+        hash /= (uint32_t)p.size();
+        const uint32_t middle_idx = hash % m.size();
+        hash /= (uint32_t)m.size();
+        const uint32_t postfix_idx = hash % f.size();
 
         bstring32 generated_name;
         generated_name.printf("%s%s%s", p[prefix_idx].c_str(), m[middle_idx].c_str(), f[postfix_idx].c_str());
 
         return generated_name;
-    } 
-
-    bstring32 get_male_name() {
-        return get_name(prefixes, middles, male_postfixes);
     }
 
-    bstring32 get_female_name() {
-        return get_name(prefixes, middles, female_postfixes);
-    }
+    bstring32 get_male_name(uint32_t hash) { return get_name(prefixes, middles, male_postfixes, hash); }
 };
 ANK_CONFIG_STRUCT(figure_name_generator_t, prefixes, middles, male_postfixes, female_postfixes)
 
@@ -91,7 +88,7 @@ int figure_get_next_name(int32_t& field, int offset, int max) {
     return name;
 }
 
-bstring32 figure_name_get(int type) {
+bstring32 figure_name_get(int type, figure_id id) {
     auto &figure_name = figure_names[type];
     
     if (figure_name.empty_name) {
@@ -103,16 +100,18 @@ bstring32 figure_name_get(int type) {
         return figure_name.names[figure_name.id].c_str();
     }
 
+    const uint32_t name_hash = random_hash(id, g_simulation.simtime.absolute_tick(), RANDOM_SALT_FIGURE_NAME);
+
     // If we have parts for generation, create name from three parts
     if (figure_name.names.empty() && 
         !figure_name.prefixes.empty() && 
         !figure_name.middles.empty() && 
         !figure_name.postfixes.empty()) {
-        
-        bstring32 generated_name = figure_name_generator.get_name(figure_name.prefixes, figure_name.middles, figure_name.postfixes);
-        
+        bstring32 generated_name
+          = figure_name_generator.get_name(figure_name.prefixes, figure_name.middles, figure_name.postfixes, name_hash);
+
         return generated_name;
     }
 
-    return figure_name_generator.get_male_name();
+    return figure_name_generator.get_male_name(name_hash);
 }
