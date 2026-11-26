@@ -18,7 +18,6 @@
 #include "io/chunk_serializer.h"
 #include "city/city_warnings.h"
 #include "figure/formation.h"
-#include "graphics/image.h"
 #include "game/localization.h"
 #include "game/game_events.h"
 #include "game/sound_effect.h"

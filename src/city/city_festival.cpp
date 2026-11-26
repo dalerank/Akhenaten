@@ -18,7 +18,6 @@
 #include "figure/figure.h"
 #include "game/game_config.h"
 #include "figuretype/figure_festival_priest.h"
-#include "graphics/image_groups.h"
 #include "core/tokenum.h"
 #include "game/local_cults.h"
 #include "city/city_festival_chunks.h"

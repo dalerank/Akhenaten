@@ -59,8 +59,6 @@
 #include "figure/figure.h"
 #include "figuretype/figure_native.h"
 #include "figuretype/figure_fishing_point.h"
-#include "graphics/image.h"
-#include "graphics/image_groups.h"
 #include "grid/image.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
@@ -124,8 +122,7 @@ void city_buildings_t::generate_figures() {
         case BUILDING_UNUSED_NATIVE_HUT_88: {
             // OG spawn_native_hut: hut image from random bit; native every 5 days when a meeting
             // is linked and there is road/clear land next to the hut.
-            int native_image = image_id_from_group(GROUP_BUILDING_NATIVE);
-            map_image_set(b.tile, native_image + (map_random_get(b.tile.grid_offset()) & 1));
+            map_natives_set_hut_image(b.tile.grid_offset());
             if (b.has_figure_of_type(-1, FIGURE_INDIGENOUS_NATIVE)) {
                 break;
             }

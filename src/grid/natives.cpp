@@ -74,6 +74,10 @@ static void determine_meeting_center(void) {
     }
 }
 
+void map_natives_set_hut_image(int grid_offset) {
+    map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_NATIVE) + (map_random_get(grid_offset) & 1));
+}
+
 void map_natives_init() {
     int meeting_center_set = 0;
     int image_hut = scenario_building_image_native_hut();
