@@ -106,7 +106,7 @@ public:
     void on_reset() override { city_coverage().reset(); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_coverage, SIM_PHASE_TICK, [](int tick) {
-                          if (tick != 1) {
+                          if (tick != 33) {
                               return;
                           }
                           city_coverage().update();
