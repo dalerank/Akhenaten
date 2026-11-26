@@ -13,6 +13,7 @@
 #include "core/custom_span.hpp"
 #include "city/city_labor.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "figuretype/figure_noble.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -808,7 +809,8 @@ void building_house::update_monthly_nobles_toothache() {
     auto &housed = runtime_data();
     housed.toothache_probability = std::min<uint8_t>(housed.toothache_probability + 10, 100);
 
-    int random_value = rand() % 100;
+    const int random_value
+      = random_hash(g_simulation.simtime.absolute_day(true), id(), RANDOM_SALT_HOUSE_TOOTHACHE) % 100;
     if (random_value < housed.toothache_probability) {
         housed.toothache_probability = 0;
         housed.nobles_with_bad_teeth = std::min<uint8_t>(housed.nobles_with_bad_teeth + 1, 255);
