@@ -722,11 +722,11 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
         }
         g_memory.track_pack_texture(name.c_str(), atlas_data.width, atlas_data.height, true);
 
-#ifndef __ANDROID__
-        // delete temp data buffer in the atlas (except on Android where we need it for context loss)
-        delete[] atlas_data.temp.pixel_buffer;
-        atlas_data.temp.pixel_buffer = nullptr;
-#endif
+        if constexpr (!platform.is_android()) {
+            // delete temp data buffer in the atlas (except on Android where we need it for context loss)
+            delete[] atlas_data.temp.pixel_buffer;
+            atlas_data.temp.pixel_buffer = nullptr;
+        }
         if (g_args.is_log_resources()) {
             logs::info("VFS: Atlas texture %d/%d created successfully for folder pak '%s'", 
                        i + 1, atlas_pages.size(), name.c_str());
@@ -1131,11 +1131,11 @@ bool imagepak::load_pak(vfs::path pak_name, int starting_index) {
         }
         g_memory.track_pack_texture(name.c_str(), atlas_data.width, atlas_data.height, true);
 
-#ifndef __ANDROID__
-        // delete temp data buffer in the atlas
-        delete[] atlas_data.temp.pixel_buffer;
-        atlas_data.temp.pixel_buffer = nullptr;
-#endif
+        if constexpr (!platform.is_android()) {
+            // delete temp data buffer in the atlas
+            delete[] atlas_data.temp.pixel_buffer;
+            atlas_data.temp.pixel_buffer = nullptr;
+        }
 
         if (g_args.is_log_resources()) {
             logs::info("VFS: Atlas texture %d/%d created successfully for pak '%s'", 
@@ -1143,13 +1143,11 @@ bool imagepak::load_pak(vfs::path pak_name, int starting_index) {
         }
 
         // ********* DEBUGGING **********
-#if defined(GAME_PLATFORM_WIN)
-        if (game.save_debug_texture) {
+        if (platform.is_windows() && game.save_debug_texture) {
             vfs::path fs_fpath;
             fs_fpath.printf("DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i);
             g_render.save_texture_to_file(fs_fpath.c_str(), atlas_data.texture);
         }
-#endif
         // ******************************
     }
 

@@ -37,10 +37,6 @@ chunks_data_t g_chunks_data;
 
 void chunks_schema_chunk::bind_data(io_buffer* iob, size_t version) {
     FILE* debug_file = NULL;
-#if defined(GAME_PLATFORM_WIN)
-// const char *fs_fpath = dir_get_file("DEV_TESTING/CHUNKS_SCHEMA.txt", 0);
-// debug_file = fopen(fs_fpath, "wb+");
-#endif
     char temp_string[200] = "";
     iob->bind(BIND_SIGNATURE_UINT32, &g_chunks_data.chunks_in_used);
     if (debug_file) {
@@ -100,10 +96,6 @@ junk10_t g_junk10;
 void junk10a_chunk::bind_data(io_buffer* iob, size_t version) {
     const int r_version = g_chunk_io.get_file_version();
     FILE* debug_file = nullptr;
-#if defined(GAME_PLATFORM_WIN)
-// const char *fs_fpath = dir_get_file("DEV_TESTING/JUNK10.txt", 0);
-// debug_file = fopen(fs_fpath, "wb+");
-#endif
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
@@ -167,10 +159,6 @@ void junk11_chunk::bind_data(io_buffer* iob, size_t version) {
     // I have absolutely no idea about the need for this, or any of the rest.
     // the third field is set to "1" when "Edit objects" is active in the editor.
     FILE* debug_file = nullptr;
-#if defined(GAME_PLATFORM_WIN)
-// const char *fs_fpath = dir_get_file("DEV_TESTING/JUNK11.txt", 0);
-// debug_file = fopen(fs_fpath, "wb+");
-#endif
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK11_FIELDS; ++i) {
@@ -247,37 +235,22 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
 
         iob->bind(BIND_SIGNATURE_UINT32, &field.unk05);
 
-#if defined(GAME_PLATFORM_WIN)
-        sprintf(temp_string,
-                "%02i-%02i:     %4i %4i %4i %4i  %4i  %4i\n",
-                i,
-                j,
-                field.unk00,
-                field.unk01,
-                field.unk02,
-                field.unk03,
-                field.unk04,
-                //                field.unk04a, field.unk04b, field.unk04c,
-                field.unk05);
-        if (bizarre.debug_file) {
-            fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+        if constexpr (platform.is_windows()) {
+            sprintf(temp_string, "%02i-%02i:     %4i %4i %4i %4i  %4i  %4i\n", i, j, field.unk00, field.unk01,
+              field.unk02, field.unk03, field.unk04,
+              //                field.unk04a, field.unk04b, field.unk04c,
+              field.unk05);
+            if (bizarre.debug_file) {
+                fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+            }
         }
-#endif
     }
 }
 static void bizarre_ordered_fields_bind(io_buffer* iob, size_t version) {
     if (iob == &io_chunk_of<bizarre_ordered_fields_1_chunk>::registered) {
         bizarre.current_chunk = 0;
-#if defined(GAME_PLATFORM_WIN)
-        //bstrin256 fs_fpath = dir_get_file("DEV_TESTING/BIZARRE.txt", 0);
-        //bizarre.debug_file = fopen(fs_fpath, "wb+");
-#endif
     } else {
         bizarre.current_chunk++;
-#if defined(GAME_PLATFORM_WIN)
-        //bstring256 fs_fpath = dir_get_file("DEV_TESTING/BIZARRE.txt", 0);
-        //bizarre.debug_file = fopen(fs_fpath, "ab+");
-#endif
     }
     record_bizarre_fields(iob, bizarre.current_chunk);
 
