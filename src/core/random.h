@@ -2,6 +2,7 @@
 
 #include <ctime>
 #include <stdint.h>
+#include <utility>
 #include "grid/point.h"
 
 constexpr int MAX_RANDOM = 100;
@@ -63,6 +64,7 @@ enum e_random_hash_salt : uint32_t {
     RANDOM_SALT_KINGDOME_TRADER_CAPACITY = 0x100a,
     RANDOM_SALT_HUNTER_LOOK = 0x100b,
     RANDOM_SALT_DISTANT_BATTLE_TAG = 0x100c,
+    RANDOM_SALT_FLOODPLAIN_GROWTH = 0x100d,
 };
 
 // Stateless mix for non-OG sim choices: must not touch the LFSR or the crt (anti_scum) stream.
@@ -76,4 +78,13 @@ inline uint32_t random_hash(uint32_t a, uint32_t b, uint32_t c) {
     h *= 0xC2B2AE35u;
     h ^= h >> 16;
     return h;
+}
+
+template <typename T>
+void random_hash_shuffle_front(T& items, int count, uint32_t seed) {
+    const int n = (int)items.size();
+    for (int i = 0; i < count && i < n - 1; ++i) {
+        const int j = i + (int)(random_hash(seed, (uint32_t)i, (uint32_t)n) % (uint32_t)(n - i));
+        std::swap(items[i], items[j]);
+    }
 }

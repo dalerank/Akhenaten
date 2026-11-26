@@ -13,6 +13,7 @@
 #include "grid/property.h"
 #include "grid/image.h"
 #include "grid/random.h"
+#include "core/random.h"
 #include "city/city_floods.h"
 #include "grid/building.h"
 #include "core/calc.h"
@@ -26,7 +27,6 @@
 
 #include <cstdint>
 #include <algorithm>
-#include <random>
 
 constexpr uint32_t PH_FLOODPLAIN_GROWTH_MAX = 6;
 
@@ -71,11 +71,10 @@ void map_floodplain_advance_growth() {
             return (image_id == 0 || want_growth == 0);
         });
 
-        std::random_device rd;
-        std::mt19937 random(rd());
-        std::shuffle(floodplain_tiles_local.begin(), floodplain_tiles_local.end(), random);
-
         int size = std::min(floodplain_tiles_random.size() / 12, floodplain_tiles_local.size());
+        const random_data_t* rnd = random_data_struct();
+        random_hash_shuffle_front(floodplain_tiles_local, size,
+          random_hash(rnd->iv1, rnd->iv2, RANDOM_SALT_FLOODPLAIN_GROWTH));
         for (int i = 0; i < size; ++i) {
             int grid_offset = floodplain_tiles_local[i];
             map_floodplain_adv_growth_tile(0, grid_offset, 0);
@@ -233,10 +232,6 @@ int map_floodplain_rebuild_rows() {
             floodplain_tiles_random.push_back(tile_offset);
         }
     });
-
-    std::random_device rd;
-    std::mt19937 random(rd());
-    std::shuffle(floodplain_tiles_random.begin(), floodplain_tiles_random.end(), random);
 
     // fill in shore order data
     for (int row = -1; row < MAX_FLOODPLAIN_ROWS - 1; row++) {
