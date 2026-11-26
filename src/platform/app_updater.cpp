@@ -843,7 +843,7 @@ e_updater_state app_updater_state() {
 
 static void app_updater_apply() {
     if (!g_updater.can_swap) {
-        platform.open_url(updater::download_page_url(g_updater.asset).c_str(), "");
+        platform.open_url(updater::download_page_url(g_updater.asset).c_str());
         return;
     }
     switch (updater::button_action(app_updater_state())) {

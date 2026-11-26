@@ -8,12 +8,6 @@
 
 #include <SDL.h>
 
-void platform_t::open_url(pcstr url, pcstr prefix) {
-    bstring256 command(prefix, "xdg-open '", url, "'");
-    logs::info("%s", command);
-    [[maybe_unused]] auto result = ::system(command.c_str());
-}
-
 #include <pwd.h>
 #include <unistd.h>
 

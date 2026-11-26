@@ -73,10 +73,6 @@ void platform_resolve_user_directory(bstring512& dir) {
     }
 }
 
-void platform_t::open_url(pcstr url, pcstr prefix) {
-    ShellExecuteA(0, "Open", url, 0, 0, SW_SHOW);
-}
-
 #include <ShlObj.h>
 
 pcstr platform_t::get_steam_path() {

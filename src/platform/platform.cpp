@@ -2,6 +2,7 @@
 #include "platform/screen.h"
 #include "js/js_register.h"
 #include "core/bstring.h"
+#include "core/log.h"
 #include "platform/arguments.h"
 
 #include <SDL.h>
@@ -29,6 +30,32 @@ int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;
     SDL_GetVersion(&v);
     return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(major, minor, patch);
+}
+
+static bool url_is_web_link(pcstr url) {
+    if (!url) {
+        return false;
+    }
+    if (SDL_strncasecmp(url, "https://", 8) != 0 && SDL_strncasecmp(url, "http://", 7) != 0) {
+        return false;
+    }
+    for (pcstr p = url; *p; ++p) {
+        const unsigned char c = (unsigned char)*p;
+        if (c < 0x20 || c == 0x7f) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void platform_t::open_url(pcstr url) {
+    if (!url_is_web_link(url)) {
+        logs::warn("open_url: rejected %s", url ? url : "");
+        return;
+    }
+    if (SDL_OpenURL(url) != 0) {
+        logs::warn("open_url: %s failed: %s", url, SDL_GetError());
+    }
 }
 
 uint32_t platform_t::sdl_init_flags() {

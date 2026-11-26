@@ -74,10 +74,6 @@ void platform_resolve_user_directory(bstring512& dir) {
     }
 }
 
-void platform_t::open_url(pcstr url, pcstr prefix) {
-
-}
-
 pcstr platform_t::get_steam_path() {
     return "";
 }

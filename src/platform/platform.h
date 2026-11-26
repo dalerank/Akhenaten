@@ -109,9 +109,9 @@ struct platform_t {
 	}
 
 	inline pcstr name() { return GAME_PLATFORM_NAME; }
-	void open_url(pcstr url, pcstr prefix);
+    void open_url(pcstr url);
 
-	pcstr get_steam_path();
+    pcstr get_steam_path();
 
 	inline constexpr bool is_unix() const {
 #ifdef GAME_PLATFORM_UNIX
