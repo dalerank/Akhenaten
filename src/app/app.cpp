@@ -9,6 +9,7 @@
 #include "game/game_config.h"
 #include "game/game_events.h"
 #include "game/game_events_history.h"
+#include "platform/platform.h"
 #include "platform/screen.h"
 #include "graphics/screenshot.h"
 #include "graphics/elements/ui.h"
@@ -111,7 +112,9 @@ void application_t::register_hud_end_handler(event_handler_cb cb) {
 }
 
 void application_t::handle_window_event(void* ev) {
-#ifndef GAME_PLATFORM_NSWITCH
+    if constexpr (platform.is_switch()) {
+        return;
+    }
     const SDL_WindowEvent& event = ((SDL_Event*)ev)->window;
     switch (event.event) {
     case SDL_WINDOWEVENT_ENTER:
@@ -139,7 +142,6 @@ void application_t::handle_window_event(void* ev) {
         active = false;
         break;
     }
-#endif
 }
 
 void application_t::handle_keyboard_event(void* event) {

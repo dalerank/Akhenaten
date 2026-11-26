@@ -175,11 +175,7 @@ pcstr keyboard_t::key_modifier_name(int modifier) {
     case KEY_MOD_SHIFT:
         return "Shift";
     case KEY_MOD_GUI:
-#if defined(GAME_PLATFORM_MACOSX)
-        return "Cmd";
-#else
-        return "Gui";
-#endif
+        return platform.is_macos() ? "Cmd" : "Gui";
     case KEY_MOD_ALT:
         return "Alt";
     default:

@@ -37,10 +37,6 @@
 #include "js/js_debugger.h"
 #include "js/js_self_tests.h"
 
-#if defined(GAME_PLATFORM_ANDROID)
-#include "platform/android/android.h"
-#endif
-
 #include <filesystem>
 #include <new>
 #include <cstdlib>
@@ -533,47 +529,35 @@ int js_vm_load_file_and_exec(pcstr path) {
     }
 #endif
 
-#if defined(GAME_PLATFORM_ANDROID)
-    const bool prefer_internal_script = (*path == ':');
-#else
-    const bool prefer_internal_script = false;
-#endif
+    const bool prefer_internal_script = platform.is_android() && (*path == ':');
 
-#if defined(GAME_PLATFORM_ANDROID)
-    auto startup_log = [] (pcstr stage, pcstr detail) {
-        bstring1024 msg;
-        msg.printf("Startup: %s %s", stage, detail ? detail : "");
-        android_append_startup_log(msg.c_str());
+    auto startup_log = [](pcstr stage, pcstr detail) {
+        if constexpr (platform.is_android()) {
+            bstring1024 msg;
+            msg.printf("Startup: %s %s", stage, detail ? detail : "");
+            platform.append_startup_log(msg.c_str());
+        }
     };
-#endif
 
     pcstr npath = (*path == ':') ? (path + 1) : path;
 
     if (!prefer_internal_script) {
         auto r = mods_find_script(npath, true);
         if (!!r.reader) {
-#if defined(GAME_PLATFORM_ANDROID)
             startup_log("js open", r.path.c_str());
-#endif
             const uint32_t fsize = r.reader->size();
             std::string data = (char *)r.reader->data();
 
-#if defined(GAME_PLATFORM_ANDROID)
             startup_log("js parse", r.path.c_str());
-#endif
             int error = js_ploadstring(vm.J, r.path.c_str(), data.c_str());
             if (error) {
                 js_vm_log_script_parse_or_compile_failure(vm.J, r.path.c_str());
                 mods_mark_broken(r.mod, r.path.c_str());
-#if defined(GAME_PLATFORM_ANDROID)
                 startup_log("js parse failed", r.path.c_str());
-#endif
                 return 0;
             }
 
-#if defined(GAME_PLATFORM_ANDROID)
             startup_log("js exec", r.path.c_str());
-#endif
             js_getglobal(vm.J, "");
             int ok = js_vm_trypcall(vm.J, 0);
             if (!ok) {
@@ -589,14 +573,10 @@ int js_vm_load_file_and_exec(pcstr path) {
                         logs::error("Error details: %s", error_msg->value.c_str());
                     }
                 }
-#if defined(GAME_PLATFORM_ANDROID)
                 startup_log("js exec failed", r.path.c_str());
-#endif
                 return 0;
             }
-#if defined(GAME_PLATFORM_ANDROID)
             startup_log("js done", r.path.c_str());
-#endif
             return 1;
         }
     }
@@ -617,9 +597,7 @@ int js_vm_load_file_and_exec(pcstr path) {
         }
     }
 
-#if defined(GAME_PLATFORM_ANDROID)
     startup_log("js open", rpath.c_str());
-#endif
     if (!reader) {
         reader = vfs::file_open(rpath, "rt");
     }
@@ -629,30 +607,22 @@ int js_vm_load_file_and_exec(pcstr path) {
 
     if (!reader) {
         logs::info("!!! Cant find script at %s", rpath.c_str());
-#if defined(GAME_PLATFORM_ANDROID)
         startup_log("js open failed", rpath.c_str());
-#endif
         return 0;
     }
 
     const uint32_t fsize = reader->size();
     std::string data = (char *)reader->data();
 
-#if defined(GAME_PLATFORM_ANDROID)
     startup_log("js parse", rpath.c_str());
-#endif
     int error = js_ploadstring(vm.J, rpath, data.c_str());
     if (error) {
         js_vm_log_script_parse_or_compile_failure(vm.J, rpath.c_str());
-#if defined(GAME_PLATFORM_ANDROID)
         startup_log("js parse failed", rpath.c_str());
-#endif
         return 0;
     }
 
-#if defined(GAME_PLATFORM_ANDROID)
     startup_log("js exec", rpath.c_str());
-#endif
     js_getglobal(vm.J, "");
     int ok = js_vm_trypcall(vm.J, 0);
     if (!ok) {
@@ -665,15 +635,11 @@ int js_vm_load_file_and_exec(pcstr path) {
                 logs::error("Error details: %s", js_strnode_cstr(error_msg));
             }
         }
-        //js_pop(internal_J, 1);
-#if defined(GAME_PLATFORM_ANDROID)
+        // js_pop(internal_J, 1);
         startup_log("js exec failed", rpath.c_str());
-#endif
         return 0;
     }
-#if defined(GAME_PLATFORM_ANDROID)
     startup_log("js done", rpath.c_str());
-#endif
     return 1;
 }
 
@@ -762,11 +728,12 @@ bool js_vm_sync(const xstring &mission_id) {
         const std::string key = js_vm_file_key(vm.files2load[i].c_str());
         vm.queued_files.erase(key);
         logs::info("JS: script reloaded %s", vm.files2load[i].c_str());
-#if defined(GAME_PLATFORM_ANDROID)
-        bstring1024 startup_message;
-        startup_message.printf("Startup: js_vm_sync %d/%d %s", i + 1, vm.files2load.size(), vm.files2load[i].c_str());
-        android_append_startup_log(startup_message.c_str());
-#endif
+        if constexpr (platform.is_android()) {
+            bstring1024 startup_message;
+            startup_message.printf("Startup: js_vm_sync %d/%d %s", i + 1, vm.files2load.size(),
+              vm.files2load[i].c_str());
+            platform.append_startup_log(startup_message.c_str());
+        }
         js_vm_load_file_and_exec(vm.files2load[i]);
         if (!key.empty()) {
             vm.loaded_files.insert(key);
@@ -980,22 +947,22 @@ static void js_native_debugger_port(js_State *J) {
 }
 
 static void js_native_debugger_start(js_State *J) {
-#if defined(GAME_PLATFORM_ANDROID)
-    logs::warn("JS Debugger is not supported on Android");
-    js_pushboolean(J, false);
-    return;
-#else
-    int port = 4711;
-    if (J->gettop() >= 1 && J->isnumber(1)) {
-        port = (int)js_tonumber(J, 1);
-    }
-    if (g_mujs_debugger.is_running()) {
+    if constexpr (platform.is_android()) {
+        logs::warn("JS Debugger is not supported on Android");
         js_pushboolean(J, false);
         return;
+    } else {
+        int port = 4711;
+        if (J->gettop() >= 1 && J->isnumber(1)) {
+            port = (int)js_tonumber(J, 1);
+        }
+        if (g_mujs_debugger.is_running()) {
+            js_pushboolean(J, false);
+            return;
+        }
+        g_mujs_debugger.start(J, port);
+        js_pushboolean(J, true);
     }
-    g_mujs_debugger.start(J, port);
-    js_pushboolean(J, true);
-#endif
 }
 
 static void js_native_debugger_stop(js_State *J) {
@@ -1206,11 +1173,8 @@ void js_vm_add_scripts_folder(vfs::path folder) {
 }
 
 vfs::path js_vm_get_absolute_path(vfs::path path) {
-#if defined(GAME_PLATFORM_WIN)
-    bool is_absolute_path = path.data()[1] == ':' && path.len() > 2;
-#else
-    bool is_absolute_path = path.data()[0] == '/' && path.len() > 1;
-#endif
+    const bool is_absolute_path
+      = platform.is_windows() ? (path.data()[1] == ':' && path.len() > 2) : (path.data()[0] == '/' && path.len() > 1);
     if (is_absolute_path) {
         return path;
     }
@@ -1262,13 +1226,13 @@ void js_vm_setup() {
     js_reset_vm_state();
 
     vfs::path abspath = js_vm_get_absolute_path("");
-#if defined(GAME_PLATFORM_ANDROID)
-    logs::info("JS: skipping script directory watcher on Android for %s", abspath.c_str());
-#else
-    vfs::path modules_file(abspath, "/modules.js");
-    bool scripts_folder_exists = vfs::file_exists(modules_file.c_str());
-    if (scripts_folder_exists) {
-        js_vm_notifier_watch_directory_init(abspath);
+    if constexpr (platform.is_android()) {
+        logs::info("JS: skipping script directory watcher on Android for %s", abspath.c_str());
+    } else {
+        vfs::path modules_file(abspath, "/modules.js");
+        bool scripts_folder_exists = vfs::file_exists(modules_file.c_str());
+        if (scripts_folder_exists) {
+            js_vm_notifier_watch_directory_init(abspath);
+        }
     }
-#endif
 }

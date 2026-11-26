@@ -7,6 +7,7 @@
 
 #include "core/log.h"
 #include "core/variant.h"
+#include "platform/platform.h"
 
 #include <cstdio>
 #include <cstring>
@@ -140,19 +141,19 @@ cstring json_from_bvariant_map(const bvariant_map &m, pcstr raw_tail_key = nullp
 // ─────────────────────────────────────────────────────────────────────────────
 
 void MujsDebugger::start(js_State *J, int port) {
-#if defined(GAME_PLATFORM_ANDROID)
-    logs::warn("JS Debugger disabled on Android");
-    return;
-#else
-    if (running_) {
+    if constexpr (platform.is_android()) {
+        logs::warn("JS Debugger disabled on Android");
         return;
-    }
+    } else {
+        if (running_) {
+            return;
+        }
 
-    J_ = J;
-    port_ = port;
-    running_ = true;
-    server_thread_ = std::thread([this, port] () { server_loop(port); });
-#endif
+        J_ = J;
+        port_ = port;
+        running_ = true;
+        server_thread_ = std::thread([this, port]() { server_loop(port); });
+    }
 }
 
 void MujsDebugger::stop() {
@@ -192,34 +193,31 @@ void MujsDebugger::update_state(js_State *J) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 void MujsDebugger::on_line(js_State *J, const char *file, int line) {
-#if defined(GAME_PLATFORM_ANDROID)
-    (void)J;
-    (void)file;
-    (void)line;
-    return;
-#else
-    if (!running_) {
+    if constexpr (platform.is_android()) {
         return;
+    } else {
+        if (!running_) {
+            return;
+        }
+
+        if (client_sock_ == JS_DBG_SOCK_INVALID) {
+            return; // no client yet
+        }
+
+        J_ = J; // keep pointer current for inspection
+
+        if (verbose_) {
+            logs::info("JS DBG trace: %s:%d", file ? file : "<null>", line);
+        }
+
+        if (!should_break(file, line)) {
+            return;
+        }
+
+        logs::info("JS DBG stopped: %s:%d", file ? file : "<null>", line);
+        send_stopped_event("breakpoint", file, line);
+        block_until_command();
     }
-
-    if (client_sock_ == JS_DBG_SOCK_INVALID) {
-        return; // no client yet
-    }
-
-    J_ = J; // keep pointer current for inspection
-
-    if (verbose_) {
-        logs::info("JS DBG trace: %s:%d", file ? file : "<null>", line);
-    }
-
-    if (!should_break(file, line)) {
-        return;
-    }
-
-    logs::info("JS DBG stopped: %s:%d", file ? file : "<null>", line);
-    send_stopped_event("breakpoint", file, line);
-    block_until_command();
-#endif
 }
 
 bool MujsDebugger::should_break(const char *file, int line) {

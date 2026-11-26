@@ -6,6 +6,7 @@
 #include "input/keyboard.h"
 #include "input/keys.h"
 #include "app/app.h"
+#include "platform/platform.h"
 
 #include <SDL.h>
 
@@ -58,22 +59,20 @@ void keyboard_module_t::handle_key_down(SDL_Event* ev) {
         g_keyboard.press_end();
         break;
     case SDLK_AC_BACK:
-#if !defined(GAME_PLATFORM_ANDROID)
-        event->keysym.scancode = SDL_SCANCODE_ESCAPE;
-        break;
-#else
-    // Hack: since Android handles the right mouse button as a back button
-    // (or even as an "ESC" keypress) and SDL doesn't yet have a proper implementation
-    // for this, we'll treat the back button as a right mouse button when the mouse is active
     case SDLK_ESCAPE:
-        if (!mouse::get().is_touch) {
-            mouse::ref().set_right_down(1);
-            return;
-        } else {
+        if constexpr (platform.is_android()) {
+            // Hack: since Android handles the right mouse button as a back button
+            // (or even as an "ESC" keypress) and SDL doesn't yet have a proper implementation
+            // for this, we'll treat the back button as a right mouse button when the mouse is active
+            if (!mouse::get().is_touch) {
+                mouse::ref().set_right_down(1);
+                return;
+            }
+            event->keysym.scancode = SDL_SCANCODE_ESCAPE;
+        } else if (event->keysym.sym == SDLK_AC_BACK) {
             event->keysym.scancode = SDL_SCANCODE_ESCAPE;
         }
         break;
-#endif
     }
 
     // handle hotkeys
@@ -99,13 +98,12 @@ void keyboard_module_t::handle_key_up(SDL_Event* ev) {
     }
 
     SDL_KeyboardEvent* event = &ev->key;
-#if defined(GAME_PLATFORM_ANDROID)
     // Right mouse button hack: read above for explanation
-    if ((event->keysym.sym == SDLK_ESCAPE || event->keysym.sym == SDLK_AC_BACK) && !mouse::get().is_touch) {
+    if (platform.is_android() && (event->keysym.sym == SDLK_ESCAPE || event->keysym.sym == SDLK_AC_BACK)
+        && !mouse::get().is_touch) {
         mouse::ref().set_right_down(0);
         return;
     }
-#endif
 
     if (game.debug_console) {
         return;
