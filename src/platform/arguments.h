@@ -97,6 +97,7 @@ public:
     [[nodiscard]] bool is_integral_tests() const { return is("integral_tests", false); }
     void set_integral_tests(bool flag = true) { args_["integral_tests"] = bvariant(flag); }
     [[nodiscard]] bool integraltest_keep() const { return is("integraltest_keep", false); }
+    [[nodiscard]] bool integraltest_realtime() const { return is("integraltest_realtime", false); }
     void set_integraltest_keep(bool flag = true) { args_["integraltest_keep"] = bvariant(flag); }
     [[nodiscard]] bool is_editor() const { return is("editor", false); }
     [[nodiscard]] bool no_logo() const { return is("no_logo", false); }

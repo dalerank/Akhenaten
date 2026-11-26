@@ -46,6 +46,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "io/gamestate/file_schemas.h"
 #include "platform/integral_tests.h"
+#include "platform/arguments.h"
 #include "platform/renderer.h"
 #include "scenario/scenario.h"
 #include "sound/sound.h"
@@ -591,6 +592,13 @@ static int __test_run_ticks(int n) {
         return 0;
     }
     n = std::clamp(n, 0, 100000);
+    if (g_args.integraltest_realtime()) {
+        const int target = g_simulation.simtime.absolute_tick(true) + n;
+        while (!g_app.quit && g_simulation.simtime.absolute_tick(true) < target) {
+            g_app.pump_one_frame();
+        }
+        return n;
+    }
     for (int i = 0; i < n; ++i) {
         game.update_tick(g_simulation.simtime.tick);
         events::process();

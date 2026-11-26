@@ -96,6 +96,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --integraltests       run the built-in integral test suite and exit (see "Testing" below)
 --integraltest-only NAME  with --integraltests, run only tests whose filename starts with NAME (else: contains NAME)
 --integraltest-keep   with --integraltests, keep the window open after the suite (inspect final state)
+--integraltest-realtime  with --integraltests, tests that advance the game by ticks (__test_run_ticks) let it run
+                      at normal game speed in the window instead, e.g. to watch a reference playthrough
 --editor              start in the scenario editor (dev-only; blank map, bypasses main menu)
 --load-map PATH       load a .map straight into the city, bypassing the main menu
 --screenshot-dir PATH directory for screenshots (created if missing; default: working dir)
