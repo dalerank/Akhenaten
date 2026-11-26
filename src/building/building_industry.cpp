@@ -29,7 +29,7 @@ void building_industry::bind_dynamic(io_buffer* iob) {
 
     short tmp_short = 0;
     iob->bind_i16(tmp_short);
-    iob->bind(BIND_SIGNATURE_INT16, &base.progress);
+    iob->bind____skip(2);
     iob->bind_bool(d.spawned_worker_this_month);
     iob->bind_u8(d.max_gatheres);
     iob->bind_u8(d.water_stored);
@@ -44,11 +44,11 @@ void building_industry::bind_dynamic(io_buffer* iob) {
     }
     iob->bind(BIND_SIGNATURE_UINT8, &d.produce_multiplier);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &d.has_raw_materials);
     iob->bind____skip(1);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT16, &base.progress_max);
+    iob->bind____skip(2);
     if (base.progress_max == 0) {
         base.progress_max = 400;
     }

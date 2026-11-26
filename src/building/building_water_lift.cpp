@@ -90,7 +90,7 @@ void building_water_lift::bind_dynamic(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT32, &d.input_tiles[1]);
     iob->bind(BIND_SIGNATURE_UINT32, &d.output_tiles[0]);
     iob->bind(BIND_SIGNATURE_UINT32, &d.output_tiles[1]);
-    iob->bind_u8(base.orientation);
+    iob->bind____skip(1);
 }
 
 void building_water_lift::update_graphic() {

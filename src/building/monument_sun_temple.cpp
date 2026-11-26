@@ -1517,7 +1517,7 @@ void building_sun_temple::bind_dynamic(io_buffer* iob) {
     } else {
         iob->bind____skip(38);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
     }

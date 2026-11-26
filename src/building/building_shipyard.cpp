@@ -353,8 +353,8 @@ void building_shipyard::spawn_figure() {
 void building_shipyard::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
-    iob->bind(BIND_SIGNATURE_INT16, &base.progress);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(2);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &d.process_type);
     iob->bind(BIND_SIGNATURE_UINT8, &d.reparing);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);

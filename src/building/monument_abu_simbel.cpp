@@ -617,7 +617,7 @@ void building_abu_simbel::bind_dynamic(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work);
     iob->bind(BIND_SIGNATURE_UINT16, &d.spot_figure);
     iob->bind____skip(34);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
     }

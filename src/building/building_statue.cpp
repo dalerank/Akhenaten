@@ -103,7 +103,7 @@ void building_statue::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
     iob->bind____skip(38);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     iob->bind____skip(10);
     iob->bind(BIND_SIGNATURE_UINT8, &d.service);
     iob->bind(BIND_SIGNATURE_UINT8, &d.statue_offset);

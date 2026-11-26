@@ -285,13 +285,13 @@ void building_farm::bind_dynamic(io_buffer* iob) {
     iob->bind____skip(48);
 
     auto &d = runtime_data();
-    iob->bind(BIND_SIGNATURE_UINT16, &base.progress_max);
+    iob->bind____skip(2);
     iob->bind____skip(1); // was produce_multiplier (removed; keep save layout)
     iob->bind(BIND_SIGNATURE_UINT16, &d.work_camp_id);
     iob->bind(BIND_SIGNATURE_UINT16, &d.worker_id);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_state);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_days_left);
-    iob->bind(BIND_SIGNATURE_UINT16, &base.progress);
+    iob->bind____skip(2);
     iob->bind____skip(1);
 }
 

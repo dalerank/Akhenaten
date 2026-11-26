@@ -418,7 +418,7 @@ void building_temple_complex::on_place(int orientation, int variant) {
 void building_temple_complex::bind_dynamic(io_buffer* iob) {
     auto &d = runtime_data();
 
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &d.temple_complex_upgrades);
     iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 }

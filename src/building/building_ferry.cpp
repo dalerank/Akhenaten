@@ -395,7 +395,7 @@ void building_ferry::bind_dynamic(io_buffer* iob) {
     if (!link_stored) {
         d.linked_building_id = FERRY_LINK_UNKNOWN;
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
 }

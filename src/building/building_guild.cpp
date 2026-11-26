@@ -13,8 +13,8 @@ void building_guild::bind_dynamic(io_buffer* iob) {
 
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &d.max_walkers);
-    iob->bind(BIND_SIGNATURE_UINT16, &base.progress);
-    iob->bind(BIND_SIGNATURE_UINT16, &base.progress_max);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
 }
 
 void building_guild::on_create(int orientation) {

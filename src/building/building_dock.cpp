@@ -168,7 +168,7 @@ void building_dock::bind_dynamic(io_buffer* iob) {
     iob->bind____skip(9);
     iob->bind(BIND_SIGNATURE_UINT8, &d.num_ships);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT8, &base.orientation);
+    iob->bind____skip(1);
     iob->bind____skip(3);
 
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[0]);

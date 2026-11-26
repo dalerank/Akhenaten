@@ -577,7 +577,7 @@ void building_pharos_lighthouse::bind_dynamic(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &d.worker_fid);
     iob->bind(BIND_SIGNATURE_UINT8, &d.sleds);
     iob->bind____skip(31);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
     }

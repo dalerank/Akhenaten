@@ -994,7 +994,7 @@ void building_royal_tomb::bind_dynamic(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &d.lamp_stock);
     iob->bind(BIND_SIGNATURE_UINT8, &d.sealed);
     iob->bind(BIND_SIGNATURE_UINT8, &d.completion_shown);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &d.phase);
     iob->bind(BIND_SIGNATURE_UINT8, &d.funeral_done);
     iob->bind(BIND_SIGNATURE_UINT8, &d.preexisting);

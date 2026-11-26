@@ -842,7 +842,7 @@ static void bind_sparse_resource_bytes(io_buffer* iob, uint8_t (&values)[RESOURC
 void building_monument::bind_block_engine_state(io_buffer* iob, int alt_image_base) {
     auto& d = runtime_data();
 
-    iob->bind_u8(base.orientation);
+    iob->bind____skip(1);
     iob->bind_i8(d.phase);
     iob->bind_u8(d.layer);
     iob->bind_u8(d.stair_index);
