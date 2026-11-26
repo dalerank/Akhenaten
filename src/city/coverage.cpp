@@ -124,19 +124,12 @@ public:
         }
     }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_avg_coverage_33, SIM_PHASE_TICK, [](int tick) {
-                          if (tick != 33) {
-                              return;
-                          }
-                          city_avg_coverage().update();
-                      }});
         schedule.add({sim_step_avg_coverage_49, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 49) {
                               return;
                           }
                           city_avg_coverage().update();
                       }});
-        schedule.add({sim_step_avg_coverage_day, SIM_PHASE_DAY, [](int) { city_avg_coverage().update(); }});
     }
 };
 
