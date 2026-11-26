@@ -243,8 +243,6 @@ core/encoding/trad_chinese.cpp -> graphics/image.h
 core/memory_manager.cpp -> dev/debug.h
 core/profiler.cpp -> dev/debug.h
 core/random.h -> grid/point.h
-core/stacktrace_unix.cpp -> platform/arguments.h
-core/stacktrace_unix.cpp -> platform/screen.h
 core/variant.cpp -> game/game_pool.h
 core/variant.h -> grid/grid_area.h
 core/variant.h -> grid/point.h

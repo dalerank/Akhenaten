@@ -3,6 +3,7 @@
 
 #include "core/encoding.h"
 #include "core/stacktrace.h"
+#include "core/crash_hooks.h"
 #include "core/log.h"
 #include "figure/figure.h"
 #include "js/js.h"
@@ -65,6 +66,14 @@ namespace {
 
     void show_usage() {
         g_platform_screen.show_error_message_box("Command line interface", Arguments::usage());
+    }
+
+    bool crash_dialog_allowed() {
+        return g_args.use_crashdlg() && !g_args.is_integral_tests();
+    }
+
+    void show_crash_message(const char* title, const char* message) {
+        g_platform_screen.show_error_message_box(title, message);
     }
 
 } // namespace
@@ -721,6 +730,8 @@ int main(int argc, char** argv) {
         g_scroll.set_mouse_input(false);
     }
 
+    crash_hooks().dialog_allowed = crash_dialog_allowed;
+    crash_hooks().show_message = show_crash_message;
     crashhandler_install();
 
     logs::initialize();

@@ -1,9 +1,8 @@
 #include "stacktrace.h"
 
+#include "core/crash_hooks.h"
 #include "core/log.h"
-#include "platform/arguments.h"
 #include "platform/platform.h"
-#include "platform/screen.h"
 
 #include "SDL.h"
 
@@ -16,7 +15,8 @@
 #include <execinfo.h>
 
 static bool should_show_crash_dialog() {
-    if (!g_args.use_crashdlg() || g_args.is_integral_tests()) {
+    const crash_hooks_t& hooks = crash_hooks();
+    if (!hooks.show_message || !hooks.dialog_allowed || !hooks.dialog_allowed()) {
         return false;
     }
     const char *vid = SDL_getenv("SDL_VIDEODRIVER");
@@ -27,8 +27,7 @@ static bool should_show_crash_dialog() {
 }
 
 static void display_crash_message() {
-    g_platform_screen.show_error_message_box(
-      "Ozzy has crashed :(",
+    crash_hooks().show_message("Ozzy has crashed :(",
       "There was an unrecoverable error, which will now close.\n"
       "The piece of code that caused the crash has been saved to akhenaten-log.txt.\n"
       "If you can, please create an issue by going to:\n"
