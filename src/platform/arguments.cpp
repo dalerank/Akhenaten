@@ -64,46 +64,48 @@ std::string get_configuration_path() {
         logs::error("Failed to retrieve AppData path.");
         result = CFG_FILE_NAME;
     }
-#elif defined(GAME_PLATFORM_MACOSX) || defined(GAME_PLATFORM_ANDROID)
-    // SDL_GetPrefPath already creates the directory and ends with a separator.
-    char* tmp_path = SDL_GetPrefPath("", "Akhenaten");
-    if (tmp_path) {
-        result = std::string(tmp_path) + CFG_FILE_NAME;
-        SDL_free(tmp_path);
-    } else {
-        logs::error("Failed to retrieve SDL pref path.");
-        result = CFG_FILE_NAME;
-    }
-#else // Unix (Linux, etc.)
-    std::string cfg_dir_path;
-    if (const char* xdg_cfg_dir_path = std::getenv("XDG_CONFIG_HOME")) {
-        cfg_dir_path = std::string(xdg_cfg_dir_path) + '/' + CFG_FILE_DIR;
-    } else {
-        const passwd* pw = getpwuid(getuid());
-        if (!pw || !pw->pw_dir) {
-            logs::warn("Home folder to keep configuration file was not found");
-            return CFG_FILE_NAME;
+#else
+    if constexpr (platform.is_macos() || platform.is_android()) {
+        // SDL_GetPrefPath already creates the directory and ends with a separator.
+        char* tmp_path = SDL_GetPrefPath("", "Akhenaten");
+        if (tmp_path) {
+            result = std::string(tmp_path) + CFG_FILE_NAME;
+            SDL_free(tmp_path);
+        } else {
+            logs::error("Failed to retrieve SDL pref path.");
+            result = CFG_FILE_NAME;
         }
-        cfg_dir_path = std::string(pw->pw_dir) + "/.config/" + CFG_FILE_DIR;
+    } else {
+        std::string cfg_dir_path;
+        if (const char* xdg_cfg_dir_path = std::getenv("XDG_CONFIG_HOME")) {
+            cfg_dir_path = std::string(xdg_cfg_dir_path) + '/' + CFG_FILE_DIR;
+        } else {
+            const passwd* pw = getpwuid(getuid());
+            if (!pw || !pw->pw_dir) {
+                logs::warn("Home folder to keep configuration file was not found");
+                return CFG_FILE_NAME;
+            }
+            cfg_dir_path = std::string(pw->pw_dir) + "/.config/" + CFG_FILE_DIR;
+        }
+
+        // Try to create the directory, but continue even if it fails (directory might already exist)
+        std::error_code ec;
+        if (std::filesystem::create_directories(cfg_dir_path, ec)) {
+            logs::info(("Created configuration directory " + cfg_dir_path).c_str());
+        } else if (ec.value() != 0) {
+            constexpr int buffer_size = 1000;
+            auto const format = "Failed to create configuration directory %s; Error code: %i; Error message: %s";
+            char err_msg[buffer_size];
+
+            snprintf(err_msg, buffer_size, format, cfg_dir_path.c_str(), ec.value(), ec.message().c_str());
+            logs::warn(err_msg);
+            // Continue anyway - the directory might already exist and be readable
+        }
+
+        // Always return the full path, even if directory creation failed
+        // The file might still be readable if it was manually created
+        result = cfg_dir_path + '/' + CFG_FILE_NAME;
     }
-
-    // Try to create the directory, but continue even if it fails (directory might already exist)
-    std::error_code ec;
-    if (std::filesystem::create_directories(cfg_dir_path, ec)) {
-        logs::info(("Created configuration directory " + cfg_dir_path).c_str());
-    } else if (ec.value() != 0) {
-        constexpr int buffer_size = 1000;
-        auto const format = "Failed to create configuration directory %s; Error code: %i; Error message: %s";
-        char err_msg[buffer_size];
-
-        snprintf(err_msg, buffer_size, format, cfg_dir_path.c_str(), ec.value(), ec.message().c_str());
-        logs::warn(err_msg);
-        // Continue anyway - the directory might already exist and be readable
-    }
-
-    // Always return the full path, even if directory creation failed
-    // The file might still be readable if it was manually created
-    result = cfg_dir_path + '/' + CFG_FILE_NAME;
 #endif
 
     logs::info("get_configuration_path: returning %s", result.c_str());

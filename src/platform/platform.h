@@ -41,6 +41,7 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #define GAME_PLATFORM_NAME "emscripten"
 #elif defined(__SWITCH__)
 #define GAME_PLATFORM_NSWITCH
+#define GAME_PLATFORM_SWITCH
 #define GAME_PLATFORM_NX
 #define GAME_PLATFORM_NAME "switch"
 #else
@@ -205,6 +206,14 @@ struct platform_t {
 
 	void show_virtual_keyboard(const uint8_t *text, int max_length);
 	void hide_virtual_keyboard();
+
+    inline constexpr bool is_ios() const {
+#ifdef GAME_PLATFORM_IOS
+        return true;
+#else
+        return false;
+#endif
+    }
 };
 
 extern platform_t platform;

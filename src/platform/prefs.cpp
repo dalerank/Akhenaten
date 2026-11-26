@@ -16,11 +16,7 @@ static FILE* open_pref_file(pcstr filename, pcstr mode) {
 #if defined(GAME_PLATFORM_ANDROID)
     bstring512 dir_path = SDL_AndroidGetExternalStoragePath();
 #else
-#if defined(GAME_PLATFORM_MACOSX)
-    char* tmp_path = SDL_GetPrefPath("", "Akhenaten");
-#else
-    char* tmp_path = SDL_GetBasePath();
-#endif
+    char* tmp_path = platform.is_macos() ? SDL_GetPrefPath("", "Akhenaten") : SDL_GetBasePath();
     bstring512 dir_path(tmp_path);
     SDL_free(tmp_path);
 #endif

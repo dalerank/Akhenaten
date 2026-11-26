@@ -4,10 +4,6 @@
 #include "graphics/screen.h"
 #include "input/touch.h"
 
-#if defined(__APPLE__) && !defined(GAME_PLATFORM_IOS)
-static SDL_TouchID trackpad_id;
-#endif
-
 static vec2i get_touch_coordinates(float x, float y) {
     vec2i coords;
     coords.x = (int)(x * screen_width());
@@ -16,14 +12,16 @@ static vec2i get_touch_coordinates(float x, float y) {
 }
 
 void platform_touch_start(SDL_TouchFingerEvent* event) {
-#if defined(__APPLE__) && !defined(GAME_PLATFORM_IOS)
-    // Attempt to disable trackpad touches on MacOS
-    if (!trackpad_id)
-        trackpad_id = SDL_GetTouchDevice(0);
+    if constexpr (platform.is_macos() && !platform.is_ios()) {
+        // Attempt to disable trackpad touches on MacOS
+        static SDL_TouchID trackpad_id;
+        if (!trackpad_id)
+            trackpad_id = SDL_GetTouchDevice(0);
 
-    if (event->touchId == trackpad_id)
-        return;
-#elif defined(__vita__)
+        if (event->touchId == trackpad_id)
+            return;
+    }
+#if defined(__vita__)
     // Only use main screen for vita
     if (event->touchId == 1)
         return;

@@ -510,16 +510,16 @@ namespace {
     }
 
     bool install_writable(std::string& why) {
-#if defined(GAME_PLATFORM_MACOSX)
-        if (g_updater.program.generic_string().find("/AppTranslocation/") != std::string::npos) {
-            why = "macOS runs the game from App Translocation (move the app out of Downloads first)";
-            return false;
+        if constexpr (platform.is_macos()) {
+            if (g_updater.program.generic_string().find("/AppTranslocation/") != std::string::npos) {
+                why = "macOS runs the game from App Translocation (move the app out of Downloads first)";
+                return false;
+            }
+            if (g_updater.bundle.empty()) {
+                why = "the game does not run from an .app bundle, and the build artifact holds only the bundle";
+                return false;
+            }
         }
-        if (g_updater.bundle.empty()) {
-            why = "the game does not run from an .app bundle, and the build artifact holds only the bundle";
-            return false;
-        }
-#endif
         std::error_code ec;
         fs::create_directories(g_updater.work_dir, ec);
         if (ec) {
@@ -608,11 +608,11 @@ namespace {
                 logs::error("[updater] cannot write %s", to_utf8(target).c_str());
                 return false;
             }
-#if !defined(GAME_PLATFORM_WIN)
-            // GitHub artifacts do not keep the file modes
-            fs::permissions(target, fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec,
-              fs::perm_options::add, ec);
-#endif
+            if constexpr (!platform.is_windows()) {
+                // GitHub artifacts do not keep the file modes
+                fs::permissions(target, fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec,
+                  fs::perm_options::add, ec);
+            }
             ++extracted;
         }
         fs::remove(zip_path, ec);
@@ -757,9 +757,8 @@ namespace {
 #else
         std::vector<std::string> args = g_updater.argv;
         std::string path = installed_program().string();
-#if defined(GAME_PLATFORM_MACOSX)
         // "open -n" starts the bundle through LaunchServices as Finder would, as the old akhenaten-updater did.
-        if (!g_updater.bundle.empty()) {
+        if (platform.is_macos() && !g_updater.bundle.empty()) {
             std::vector<std::string> open_args = {"open", "-n", g_updater.bundle.string()};
             if (args.size() > 1) {
                 open_args.push_back("--args");
@@ -768,7 +767,6 @@ namespace {
             args = open_args;
             path = "/usr/bin/open";
         }
-#endif
         std::vector<char*> raw;
         for (std::string& arg : args) {
             raw.push_back(arg.data());

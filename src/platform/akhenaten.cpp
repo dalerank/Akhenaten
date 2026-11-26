@@ -78,12 +78,6 @@ namespace {
 
 } // namespace
 
-#if defined(GAME_PLATFORM_IOS)
-static constexpr bool platform_is_ios = true;
-#else
-static constexpr bool platform_is_ios = false;
-#endif
-
 static int init_sdl() {
     logs::info("Initializing SDL");
     Uint32 SDL_flags = SDL_INIT_VIDEO;
@@ -274,7 +268,7 @@ static void setup() {
     }
 
     const bool skip_data_bootstrap = g_args.is_integral_tests() || g_args.no_resource() || platform.is_android()
-                                     || platform.is_emscripten() || platform_is_ios;
+                                     || platform.is_emscripten() || platform.is_ios();
 
     // Optional: extract Pharaoh data from an Inno/GOG installer before path validation.
     if (!skip_data_bootstrap && !g_args.get_extract_installer().empty()) {
@@ -349,7 +343,7 @@ static void setup() {
     // and SDL_CreateRenderer there fails because the dummy video driver doesn't support
     // SDL_RENDERER_ACCELERATED, which is what options_window.cpp requests.
     const bool support_window_options
-      = !(platform.is_android() || platform.is_emscripten() || platform_is_ios || g_args.is_integral_tests());
+      = !(platform.is_android() || platform.is_emscripten() || platform.is_ios() || g_args.is_integral_tests());
     const bool pending_installer = !skip_data_bootstrap && !g_args.no_data_check()
                                    && g_args.get_extract_installer().empty()
                                    && !innoextract::installer_pending_bootstrap().empty()
@@ -370,7 +364,7 @@ static void setup() {
 
     while (!pre_init(g_args.get_data_directory())) {
             platform.append_startup_log("Startup: folder validation failed");
-            if (platform_is_ios) {
+            if (platform.is_ios()) {
                 SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Pharaoh data required",
                   "Akhenaten needs the original Pharaoh game files (campaign.txt).\n\n"
                   "A full Pharaoh + Cleopatra install is recommended.\n"

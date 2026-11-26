@@ -182,18 +182,18 @@ float get_ui_scale_for_display(int display_index) {
         scale = std::max(scale, dpi / 96.0f);
     }
 
-#if defined(GAME_PLATFORM_LINUX)
-    // Wayland/XWayland/Flatpak often report 96 DPI while the DE scale is >100%.
-    for (pcstr key : {"GDK_SCALE", "QT_SCALE_FACTOR", "ELM_SCALE"}) {
-        const float env_scale = parse_positive_float_env(key);
-        if (env_scale > 0.0f) {
-            scale = std::max(scale, env_scale);
+    if constexpr (platform.is_linux()) {
+        // Wayland/XWayland/Flatpak often report 96 DPI while the DE scale is >100%.
+        for (pcstr key : {"GDK_SCALE", "QT_SCALE_FACTOR", "ELM_SCALE"}) {
+            const float env_scale = parse_positive_float_env(key);
+            if (env_scale > 0.0f) {
+                scale = std::max(scale, env_scale);
+            }
+        }
+        if (const float gdk_dpi_scale = parse_positive_float_env("GDK_DPI_SCALE"); gdk_dpi_scale > 1.0f) {
+            scale = std::max(scale, gdk_dpi_scale);
         }
     }
-    if (const float gdk_dpi_scale = parse_positive_float_env("GDK_DPI_SCALE"); gdk_dpi_scale > 1.0f) {
-        scale = std::max(scale, gdk_dpi_scale);
-    }
-#endif
 
     if (platform.is_steamdeck()) {
         scale = std::max(scale, 1.5f);

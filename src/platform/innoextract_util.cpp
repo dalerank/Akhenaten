@@ -985,24 +985,26 @@ xstring default_extract_directory() {
         return xstring(dir.string().c_str());
     }
     return xstring("pharaoh-data");
-#elif defined(GAME_PLATFORM_MACOSX)
-    char *tmp = SDL_GetPrefPath("", "Akhenaten");
-    if (tmp) {
-        fs::path dir = fs::path(tmp) / "pharaoh-data";
-        SDL_free(tmp);
-        return xstring(dir.string().c_str());
-    }
-    return xstring("pharaoh-data");
 #else
-    if (const char *xdg = std::getenv("XDG_CONFIG_HOME")) {
-        fs::path dir = fs::path(xdg) / "akhenaten" / "pharaoh-data";
-        return xstring(dir.string().c_str());
+    if constexpr (platform.is_macos()) {
+        char* tmp = SDL_GetPrefPath("", "Akhenaten");
+        if (tmp) {
+            fs::path dir = fs::path(tmp) / "pharaoh-data";
+            SDL_free(tmp);
+            return xstring(dir.string().c_str());
+        }
+        return xstring("pharaoh-data");
+    } else {
+        if (const char* xdg = std::getenv("XDG_CONFIG_HOME")) {
+            fs::path dir = fs::path(xdg) / "akhenaten" / "pharaoh-data";
+            return xstring(dir.string().c_str());
+        }
+        if (const char* home = std::getenv("HOME")) {
+            fs::path dir = fs::path(home) / ".config" / "akhenaten" / "pharaoh-data";
+            return xstring(dir.string().c_str());
+        }
+        return xstring("pharaoh-data");
     }
-    if (const char *home = std::getenv("HOME")) {
-        fs::path dir = fs::path(home) / ".config" / "akhenaten" / "pharaoh-data";
-        return xstring(dir.string().c_str());
-    }
-    return xstring("pharaoh-data");
 #endif
 }
 

@@ -64,13 +64,11 @@ void platform_screen_t::set_scale_percentage(int new_scale, int pixel_width, int
     SDL_SetWindowMinimumSize(as_sdl_window(window), min_w, min_h);
 
     const char* scale_quality = "linear";
-#if !defined(GAME_PLATFORM_ANDROID)
     // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper.
     // But not on MacOS: users are used to the linear interpolation since that's what Apple also does.
-    if (scale_percentage % 100 == 0) {
+    if (!platform.is_android() && scale_percentage % 100 == 0) {
         scale_quality = "nearest";
     }
-#endif
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scale_quality);
 }
 
@@ -79,25 +77,8 @@ void* platform_screen_t::surface_format() {
     return scr_surface->format;
 }
 
-#if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_MACOSX)
-static void set_window_icon() {
-    // TODO platform_icon_get_pixels() not defined?
-    // SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
-    //     0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-    // if (!surface) {
-    //     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for icon. Reason: %s", SDL_GetError());
-    // }
-    // SDL_SetWindowIcon(SDL.window, surface);
-    // SDL_FreeSurface(surface);
-}
-#endif
-
 int platform_screen_t::create(const xstring& title, const xstring& renderer, bool fullscreen,
   int display_scale_percentage, vec2i screen_size) {
-#if defined(GAME_PLATFORM_ANDROID)
-    // scale.screen_density = android_get_screen_density();
-#endif
-
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     vec2i wsize;
@@ -130,12 +111,12 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
     destroy();
     windowed_pos_known = !fullscreen;
 
-#if defined(GAME_PLATFORM_ANDROID)
-    // Fix for wrong colors on some android devices
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-#endif
+    if constexpr (platform.is_android()) {
+        // Fix for wrong colors on some android devices
+        SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
+        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+    }
 
     logs::info("Creating screen %d x %d, %s, driver: %s", wsize.x, wsize.y, fullscreen ? "fullscreen" : "windowed",
       SDL_GetCurrentVideoDriver());
@@ -165,11 +146,6 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
         logs::error("Unable to create window: %s", SDL_GetError());
         return 0;
     }
-
-#if !defined(_WIN32) && !defined(__APPLE__)
-    // Windows and mac don't need setting a window icon. In fact the icon gets blurry if we do
-    set_window_icon();
-#endif
 
     // For emscripten and fullscreen-only platforms, always get the actual window size
     // as the canvas size may differ from the requested size
@@ -433,18 +409,16 @@ void platform_screen_t::center_window() {
 }
 
 void platform_screen_t::recreate_texture() {
-#if defined(GAME_PLATFORM_WIN)
     // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
     // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
     // texture every frame to bypass that issue.
-    if (is_window_fullscreen() && platform_renderer_lost_render_texture()) {
+    if (platform.is_windows() && is_window_fullscreen() && platform_renderer_lost_render_texture()) {
         SDL_DisplayMode mode;
         SDL_GetWindowDisplayMode(as_sdl_window(window), &mode);
         const vec2i base = render_base_size(mode.w, mode.h);
         g_screen.set_resolution(scale_pixels_to_logical(base.x), scale_pixels_to_logical(base.y));
         platform_renderer_create_render_texture(screen_width(), screen_height());
     }
-#endif
 }
 
 void platform_screen_t::show_error_message_box(const char* title, const char* message) {
