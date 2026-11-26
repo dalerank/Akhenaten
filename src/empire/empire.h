@@ -118,7 +118,6 @@ public:
         }
     }
 
-    int random_city();
 
     inline trade_route &get_route(int route_id) {
         route_id = std::max(route_id, 0);

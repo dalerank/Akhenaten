@@ -925,28 +925,11 @@ void event_manager_t::process_event_distant_battle(const event_ph_t& event, bool
 }
 
 void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
-    // Prefer explicit location, then city_id from create_chain_event({ city: "…" }),
-    // then a random open trade city.
+    // Prefer explicit location, then city_id from create_chain_event({ city: "…" }).
     int8_t cityid = event.location_fields[0];
     if (cityid < 0 && event.city_id >= 0) {
         cityid = event.city_id;
     }
-    if (cityid < 0) {
-        svector<empire_city *, 16> trade_cities;
-        g_empire.select_cities(trade_cities, [&] (empire_city *city) {
-            int route_id = g_empire.trade_route_for_city(city->name_id);
-            return g_empire.is_trade_route_open(route_id);
-        });
-
-        if (trade_cities.size() > 0) {
-            cityid = trade_cities[rand() % trade_cities.size()]->name_id;
-        }
-    }
-
-    if (cityid < 0) {
-        cityid = g_empire.random_city();
-    }
-
     if (cityid < 0) {
         logs::debug("CITY_UNDER_SIEGE: no valid trade city found");
         return;
