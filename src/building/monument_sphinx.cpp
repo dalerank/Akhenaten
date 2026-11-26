@@ -10,6 +10,7 @@
 #include "city/city_message.h"
 #include "construction/build_planner.h"
 #include "core/profiler.h"
+#include "core/random.h"
 #include "figure/figure.h"
 #include "game/simulation.h"
 #include "game/game_config.h"
@@ -170,7 +171,7 @@ namespace {
         if (choices.empty()) {
             return false;
         }
-        const vec2i c = choices[rand() % choices.size()];
+        const vec2i c = choices[anti_scum_random_15bit() % choices.size()];
         if (c.x < 0 || c.x >= (int)sc.sequences.size()) {
             return false;
         }
