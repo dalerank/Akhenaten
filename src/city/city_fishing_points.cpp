@@ -43,10 +43,9 @@ tile2i city_fishing_points_t::random_fishing_point(tile2i pos, bool free_only) {
         return tile2i::invalid;
     }
 
-    std::random_device rd;
-    std::mt19937 g(rd());
-
-    std::shuffle(std::begin(apoints), std::end(apoints), g);
+    const uint32_t seed
+      = random_hash(g_simulation.simtime.absolute_tick(), pos.grid_offset(), RANDOM_SALT_FISHING_POINT);
+    random_hash_shuffle_front(apoints, (int)apoints.size(), seed);
     for (auto p: apoints) {
         if (free_only) {
             grid_area area = map_grid_get_area(p, 1, 1);

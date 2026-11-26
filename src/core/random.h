@@ -65,6 +65,7 @@ enum e_random_hash_salt : uint32_t {
     RANDOM_SALT_HUNTER_LOOK = 0x100b,
     RANDOM_SALT_DISTANT_BATTLE_TAG = 0x100c,
     RANDOM_SALT_FLOODPLAIN_GROWTH = 0x100d,
+    RANDOM_SALT_FISHING_POINT = 0x100e,
 };
 
 // Stateless mix for non-OG sim choices: must not touch the LFSR or the crt (anti_scum) stream.
