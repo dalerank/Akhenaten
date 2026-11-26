@@ -9,7 +9,7 @@
 void figures_chunk::bind_data(io_buffer* iob, size_t version) {
     city_figures().init_figures();
     for (int i = 0; i < MAX_FIGURES; i++) {
-        bind_versioned<figure_save>(*figure_get(i), iob, (int)version);
+        bind_versioned<figure_save>(*figure_get(i), iob);
         figure_get(i)->id = i;
     }
 }

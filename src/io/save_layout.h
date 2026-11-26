@@ -23,9 +23,9 @@ namespace save_layouts {
     int find(const char* name);
 
     template <class H>
-    uint16_t of(int file_version) {
+    uint16_t of() {
         const int layout = find(H::name);
-        return layout > 0 ? uint16_t(layout) : H::layout_of_file(file_version);
+        return layout > 0 ? uint16_t(layout) : H::current;
     }
 } // namespace save_layouts
 
@@ -50,7 +50,7 @@ namespace save_layout_detail {
 
     template <class H, uint16_t... I>
     void dispatch(typename H::object& o, io_buffer* iob, uint16_t layout, std::integer_sequence<uint16_t, I...>) {
-        const bool done = ((layout == I + 1 ? (read<H, I + 1>(o, iob), true) : false) || ...);
+        const bool done = ((layout == I + H::oldest ? (read<H, I + H::oldest>(o, iob), true) : false) || ...);
         if (!done) {
             H::bind_current(o, iob);
         }
@@ -58,13 +58,13 @@ namespace save_layout_detail {
 } // namespace save_layout_detail
 
 template <class H>
-void bind_versioned(typename H::object& o, io_buffer* iob, int file_version) {
+void bind_versioned(typename H::object& o, io_buffer* iob) {
     if (!iob->is_read_access()) {
         H::bind_current(o, iob);
         return;
     }
-    save_layout_detail::dispatch<H>(o, iob, save_layouts::of<H>(file_version),
-      std::make_integer_sequence<uint16_t, H::current>{});
+    save_layout_detail::dispatch<H>(o, iob, save_layouts::of<H>(),
+      std::make_integer_sequence<uint16_t, H::current - H::oldest + 1>{});
 }
 
 template <class H>
