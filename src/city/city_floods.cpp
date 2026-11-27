@@ -199,10 +199,12 @@ void floods_t::cycle_states_recalc() {
     } else if (cycle < cycle_start - 28) {
         // normal farming period
         state = FLOOD_STATE_FARMABLE;
+        flood_progress_target = 30;
     } else if (cycle < cycle_start) {
         // flooding imminent!
         // tell all farms to DROP EVERYTHING and deliver food
         state = FLOOD_STATE_IMMINENT;
+        flood_progress_target = 30;
     } else if (cycle <= cycle_start + flooding_period) {
         // flooding in progress
         state = FLOOD_STATE_FLOODING;
