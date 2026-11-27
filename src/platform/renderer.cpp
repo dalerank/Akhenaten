@@ -1685,9 +1685,7 @@ void platform_renderer_invalidate_all_textures() {
     }
 
     // Recreate the main render texture
-    int w = data.max_texture_size.width ? data.max_texture_size.width : screen_width();
-    int h = data.max_texture_size.height ? data.max_texture_size.height : screen_height();
-    platform_renderer_create_render_texture(w, h);
+    platform_renderer_create_render_texture(screen_width(), screen_height());
 
     // Invalidate residency atlas so it repacks onto a fresh GPU texture
     res_atlas::invalidate();
