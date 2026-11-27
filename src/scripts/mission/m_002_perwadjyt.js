@@ -62,6 +62,7 @@ mission2 {
 		pottery_step1_population_cap : 500
 		pottery_step2_stored : 200
 		victory_last_action_delay : 3
+		last_action_time : 0
 
 		figs_stored_handled : false
 		disease_handled : false
