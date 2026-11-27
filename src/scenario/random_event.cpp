@@ -1,7 +1,6 @@
 #include "scenario.h"
 #include "city/city_trade.h"
 
-#include "building/destruction.h"
 #include "building/building_type.h"
 #include "city/city_finance.h"
 #include "city/city_health.h"

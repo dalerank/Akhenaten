@@ -21,7 +21,6 @@
 #include "core/object_property.h"
 #include "core/archive.h"
 #include "grid/floodplain.h"
-#include "building/destruction.h"
 #include "figure/figure.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figure/route.h"

@@ -3,7 +3,6 @@
 #include "grid/road_network.h"
 #include "building/building.h"
 #include "building/building_ferry.h"
-#include "building/destruction.h"
 #include "building/building_roadblock.h"
 #include "building/monuments.h"
 #include "city/city_recorded_paths.h"
@@ -22,6 +21,7 @@
 #include "grid/terrain.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "game/game_events.h"
 #include "game/game_config.h"
 #include "game/simulation.h"
 
@@ -220,7 +220,7 @@ void figure::advance_route_tile(int roaming_enabled) {
                 attack_direction = direction;
                 direction = DIR_FIGURE_ATTACK;
                 if (!(g_simulation.simtime.tick & 3)) {
-                    building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
+                    events::emit(event_building_enemy_damage{target_grid_offset, max_damage});
                 }
             }
         }

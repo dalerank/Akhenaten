@@ -9,7 +9,6 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/building_storage.h"
-#include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_recorded_paths.h"

@@ -10,7 +10,6 @@
 #include "io/chunk_serializer.h"
 
 #include "building/construction_blessing.h"
-#include "building/destruction.h"
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"
 #include "building/building_house.h"

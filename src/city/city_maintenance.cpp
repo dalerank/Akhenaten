@@ -27,6 +27,7 @@
 #include "city/city_message.h"
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "game/game_config.h"
 #include "game/undo.h"
@@ -140,6 +141,12 @@ void city_maintenance_t::reset() {
 
 void city_maintenance_t::subscribe_events() {
     events::subscribe([](event_advance_month) { city_maintenance().update_fire_direction(); });
+    events::subscribe([](event_building_enemy_damage ev) {
+        building* b = building_get(ev.grid_offset);
+        if (b->id) {
+            b->force_damage(e_damage_enemy, ev.damage);
+        }
+    });
 }
 
 void city_maintenance_t::update_fire_direction() {

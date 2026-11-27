@@ -1,7 +1,6 @@
 #include "earthquake.h"
 
 #include "building/building.h"
-#include "building/destruction.h"
 #include "building/building_wall.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

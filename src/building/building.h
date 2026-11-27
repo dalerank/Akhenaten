@@ -108,6 +108,10 @@ struct building_static_params;
 building* building_get(building_id id);
 
 struct event_building_create { building_id bid; };
+struct event_building_enemy_damage {
+    int grid_offset;
+    int damage;
+};
 
 struct building_store : public std::array<resource_value, 4> {
     inline building_store() {}

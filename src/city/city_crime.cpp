@@ -19,7 +19,6 @@
 #include "building/building_mansion.h"
 #include "figuretype/figure_rioter.h"
 #include "core/random.h"
-#include "building/destruction.h"
 #include "game/game_config.h"
 
 static void generate_rioter(building* b) {

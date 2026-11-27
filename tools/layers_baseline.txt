@@ -566,7 +566,6 @@ grid/tiles.cpp -> building/building_dike.h
 grid/tiles.cpp -> building/building_garden.h
 grid/tiles.cpp -> building/building_plaza.h
 grid/tiles.cpp -> building/building_road.h
-grid/tiles.cpp -> building/destruction.h
 grid/tiles.cpp -> city/city.h
 grid/tiles.cpp -> city/city_floods.h
 grid/tiles.cpp -> city/map.h

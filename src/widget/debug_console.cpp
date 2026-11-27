@@ -5,7 +5,6 @@
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/text.h"
-#include "building/destruction.h"
 #include "game/game.h"
 #include "dev/imgui_qconsole.h"
 #include "building/building.h"

@@ -12,7 +12,6 @@
 #include "core/calc.h"
 #include "building/building_house.h"
 #include "building/building_temple_complex.h"
-#include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/city_population.h"

@@ -5,7 +5,6 @@
 #include "game/sim_schedule.h"
 #include "scenario/scenario_invasion_chunks.h"
 
-#include "building/destruction.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"

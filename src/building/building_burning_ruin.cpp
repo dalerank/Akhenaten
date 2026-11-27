@@ -9,7 +9,6 @@
 #include "core/profiler.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"
-#include "building/destruction.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/random.h"

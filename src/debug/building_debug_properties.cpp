@@ -3,7 +3,6 @@
 #include "widget/debug_console.h"
 #include "imgui.h"
 #include "imgui_internal.h"
-#include "building/destruction.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_building_properties);
 void game_debug_show_properties_object_anim(pcstr prefix, building *b) {
