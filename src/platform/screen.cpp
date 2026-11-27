@@ -87,7 +87,7 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
     }
 
     // For emscripten, always use windowed mode and get size from canvas
-    if (platform.is_emscripten()) {
+    if constexpr (platform.is_emscripten()) {
         fullscreen = false;
         // Use a reasonable default size - actual size will be obtained after window creation
         wsize = {1920, 1080};
@@ -286,7 +286,7 @@ int platform_screen_t::scale_display(int display_scale_percentage) {
     // Keep the OS window pixel size fixed; only the logical backbuffer changes.
     ignore_size_changed = true;
 
-    if (!platform.is_android()) {
+    if constexpr (!platform.is_android()) {
         set_scale_percentage(display_scale_percentage, width, height);
     }
 
@@ -320,7 +320,7 @@ void platform_screen_t::set_fullscreen() {
     int display = SDL_GetWindowDisplayIndex(as_sdl_window(window));
     SDL_DisplayMode mode;
 
-    if (platform.is_emscripten()) {
+    if constexpr (platform.is_emscripten()) {
         // For emscripten, get the actual window size after setting fullscreen
         // as SDL_GetDesktopDisplayMode may return incorrect values
         if (0 != SDL_SetWindowFullscreen(as_sdl_window(window), SDL_WINDOW_FULLSCREEN_DESKTOP)) {
@@ -339,7 +339,7 @@ void platform_screen_t::set_fullscreen() {
         SDL_SetWindowDisplayMode(as_sdl_window(window), &mode);
     }
 
-    if (!platform.is_macos()) {
+    if constexpr (!platform.is_macos()) {
         if (SDL_GetNumVideoDisplays() > 1) {
             SDL_SetWindowGrab(as_sdl_window(window), SDL_TRUE);
         }

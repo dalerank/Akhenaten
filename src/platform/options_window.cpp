@@ -195,7 +195,7 @@ float get_ui_scale_for_display(int display_index) {
         }
     }
 
-    if (platform.is_steamdeck()) {
+    if constexpr (platform.is_steamdeck()) {
         scale = std::max(scale, 1.5f);
     }
 
@@ -588,7 +588,7 @@ void show_options_window(Arguments& args) {
                 ImGuiFileDialog::Instance()->OpenDialog("ChooseFolderDlgKey", "Choose Folder", nullptr, config);
             }
 
-            if (!platform.is_android() && !platform.is_emscripten()) {
+            if constexpr (!platform.is_android() && !platform.is_emscripten()) {
                 ImGui::SameLine();
                 if (!installer_prompt_checked) {
                     installer_prompt_checked = true;

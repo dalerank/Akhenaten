@@ -179,7 +179,7 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
     const bool atomic_write = !platform.is_android() && (file_offset == 0);
     const vfs::path write_path = atomic_write ? vfs::path(fs_path.c_str(), ".tmp") : fs_path;
 
-    if (!platform.is_android()) {
+    if constexpr (!platform.is_android()) {
         // A fresh data or user dir has no Maps/ or Save/<player>/ yet.
         std::error_code ec;
         const std::filesystem::path parent = std::filesystem::path(write_path.c_str()).parent_path();

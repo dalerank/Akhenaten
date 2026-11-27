@@ -350,7 +350,7 @@ void Arguments::parse(int argc, char** argv) {
     const bool file_exists = integraltests_mode ? false : arguments::load(*this);
     args_["config_file_exists"] = bvariant(file_exists);
 
-    if (platform.is_emscripten()) {
+    if constexpr (platform.is_emscripten()) {
         args_["log_resources"] = bvariant(true);
     }
 

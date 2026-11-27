@@ -485,7 +485,7 @@ void ANK_REGISTER_APPLICATION_MODULE(font_module) {
 
     if (g_font_data.use_internal_only) {
         g_font_data.fill_font_packer = fill_font_packer_internal_only;
-    } else if (platform.is_android()) {
+    } else if constexpr (platform.is_android()) {
         g_font_data.fill_font_packer = fill_font_packer_android;
     } else {
         g_font_data.fill_font_packer = fill_font_packer_pc;

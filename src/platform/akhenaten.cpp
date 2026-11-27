@@ -200,7 +200,7 @@ bool akhenaten_launcher_t::pre_init_dir_attempt(const xstring& data_dir, pcstr l
     }
 
     if (!g_args.no_resource() && !g_args.no_data_check()) {
-        if (platform.is_android()) {
+        if constexpr (platform.is_android()) {
             if (!vfs::file_exists("campaign.txt")) {
                 logs::info("%s: no Pharaoh data (campaign.txt via VFS)", data_dir.c_str());
                 return false;
@@ -242,7 +242,7 @@ bool akhenaten_launcher_t::pre_init(const xstring& custom_data_dir) {
         return !aborted;
     }
 
-    if (!platform.is_android()) {
+    if constexpr (!platform.is_android()) {
         pstr tmp_path = platform.is_macos() ? SDL_GetPrefPath("", "Akhenaten") : SDL_GetBasePath();
         xstring base_path(tmp_path);
         SDL_free(tmp_path);
@@ -346,7 +346,7 @@ bool akhenaten_launcher_t::validate_data_directory(bool support_window_options, 
             return false;
         }
         platform.append_startup_log("Startup: folder validation failed");
-        if (platform.is_ios()) {
+        if constexpr (platform.is_ios()) {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Pharaoh data required",
               "Akhenaten needs the original Pharaoh game files (campaign.txt).\n\n"
               "A full Pharaoh + Cleopatra install is recommended.\n"
@@ -457,12 +457,12 @@ void akhenaten_launcher_t::add_scripts_folders() {
     };
 
     vfs::path scripts_base_path(vfs::SCRIPTS_FOLDER);
-    if (!platform.is_android()) {
+    if constexpr (!platform.is_android()) {
         pcstr base_path = vfs::platform_file_manager_get_base_path();
         scripts_base_path = vfs::path(base_path, "/", vfs::SCRIPTS_FOLDER);
     }
     add_unpacked_scripts_folder(scripts_base_path);
-    if (!platform.is_android()) {
+    if constexpr (!platform.is_android()) {
         add_unpacked_scripts_folder(vfs::SCRIPTS_FOLDER);
     }
 }
@@ -499,7 +499,7 @@ bool akhenaten_launcher_t::init_game() {
         res_atlas::set_render(true);
     }
 
-    if (platform.is_emscripten()) {
+    if constexpr (platform.is_emscripten()) {
         game_features::gameopt_language = "en";
     } else if (!g_args.get_language().empty()) {
         logs::info("Language set from command line: %s", g_args.get_language().c_str());
@@ -524,7 +524,7 @@ bool akhenaten_launcher_t::setup() {
 
     platform.init_callback();
 
-    if (platform.is_android()) {
+    if constexpr (platform.is_android()) {
         g_args.set_data_directory("");
     }
 

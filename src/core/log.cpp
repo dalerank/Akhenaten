@@ -200,7 +200,7 @@ public:
         }
 
         // Desktop Unix: crashhandler_install() already owns SIGSEGV.
-        if (!platform.is_unix() || platform.is_android()) {
+        if constexpr (!platform.is_unix() || platform.is_android()) {
             signal(SIGSEGV, detail::sig_handler);
         }
         signal(SIGABRT, detail::sig_handler);

@@ -24,7 +24,7 @@ namespace vfs {
         if (!filepath || !*filepath) {
             return false;
         }
-        if (platform.is_windows()) {
+        if constexpr (platform.is_windows()) {
             const auto is_separator = [](char c) { return c == '/' || c == '\\'; };
             if (is_separator(filepath[0]) && is_separator(filepath[1])) {
                 return true;

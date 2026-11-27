@@ -41,7 +41,6 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #define GAME_PLATFORM_NAME "emscripten"
 #elif defined(__SWITCH__)
 #define GAME_PLATFORM_NSWITCH
-#define GAME_PLATFORM_SWITCH
 #define GAME_PLATFORM_NX
 #define GAME_PLATFORM_NAME "switch"
 #else
@@ -55,11 +54,11 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #endif
 
 #if defined(__clang__) || defined(__GNUC__)
-#		define forceinline	__attribute__((always_inline)) inline
-#		define notinline	__attribute__((noinline))
+#define forceinline __attribute__((always_inline)) inline
+#define notinline   __attribute__((noinline))
 #elif defined(_MSC_VER)
-#		define forceinline	__forceinline
-#		define notinline	__declspec(noinline)
+#define forceinline __forceinline
+#define notinline   __declspec(noinline)
 #else
 #error "unknown compiler"
 #endif
@@ -74,146 +73,144 @@ using platform_pump_frame_cb = xfunction<void()>;
 using platform_should_continue_cb = xfunction<bool()>;
 
 struct platform_t {
-	struct features_t {
-		uint32_t _vmx : 1;	// actually VMX or AltiVec
-		uint32_t _sse2 : 1;
-		uint32_t _avx : 1;
-		uint32_t _f16c : 1;
-		uint32_t _fma3 : 1;
-		uint32_t _avx2 : 1;
-		uint32_t _vrs : 1;
-		uint32_t _cpucount : 8;
-	};
+    struct features_t {
+        uint32_t _vmx : 1; // actually VMX or AltiVec
+        uint32_t _sse2 : 1;
+        uint32_t _avx : 1;
+        uint32_t _f16c : 1;
+        uint32_t _fma3 : 1;
+        uint32_t _avx2 : 1;
+        uint32_t _vrs : 1;
+        uint32_t _cpucount : 8;
+    };
 
-	features_t features;
+    features_t features;
 
-	uint64_t get_qpc();
+    uint64_t get_qpc();
     uint64_t get_qpf();
 
     uint64_t _qpc_per_second;
     uint64_t _qpc_base;
 
-	void init_timers();
+    void init_timers();
 
     uint64_t qpc_per_second = 0;
     uint64_t qpc_per_milisec = 0;
     uint64_t qpc_per_microsec = 0;
 
-	uint32_t start_time_ms = 0;
+    uint32_t start_time_ms = 0;
 
-	forceinline	uint64_t get_elapsed_ticks() {
-		return (get_qpc() - _qpc_base);
-	}
+    forceinline uint64_t get_elapsed_ticks() { return (get_qpc() - _qpc_base); }
 
-	forceinline	uint32_t get_elapsed_ms() {
-		return ((uint32_t)(get_elapsed_ticks() * (uint64_t)(1000) / _qpc_per_second));
-	}
+    forceinline uint32_t get_elapsed_ms() {
+        return ((uint32_t)(get_elapsed_ticks() * (uint64_t)(1000) / _qpc_per_second));
+    }
 
-	inline pcstr name() { return GAME_PLATFORM_NAME; }
+    inline pcstr name() { return GAME_PLATFORM_NAME; }
     void open_url(pcstr url);
 
     pcstr get_steam_path();
 
-	inline constexpr bool is_unix() const {
+    static constexpr bool is_unix() {
 #ifdef GAME_PLATFORM_UNIX
-		return true;
-#else
-		return false;
-#endif
-	}
-
-	inline constexpr bool is_android() const {
-#ifdef GAME_PLATFORM_ANDROID
-		return true;
-#else
-		return false;
-#endif
-	}
-
-	inline constexpr bool is_emscripten() const {
-#ifdef GAME_PLATFORM_BROWSER
-		return true;
-#else
-		return false;
-#endif
-	}
-
-	inline constexpr bool is_windows() const {
-#ifdef GAME_PLATFORM_WIN
-		return true;
-#else
-		return false;
-#endif
-	}
-
-	inline constexpr bool is_macos() const {
-#ifdef GAME_PLATFORM_MACOSX
-		return true;
-#else
-		return false;
-#endif
-	}
-
-	inline constexpr bool is_switch() const {
-#ifdef GAME_PLATFORM_SWITCH
         return true;
 #else
         return false;
 #endif
     }
 
-	inline constexpr bool is_linux() const {
-#ifdef GAME_PLATFORM_LINUX
-		return true;
+    static constexpr bool is_android() {
+#ifdef GAME_PLATFORM_ANDROID
+        return true;
 #else
-		return false;
+        return false;
 #endif
-	}
+    }
 
-	inline constexpr bool is_steamdeck() const {
-#ifdef GAME_PLATFORM_STEAMDECK
-		return true;
+    static constexpr bool is_emscripten() {
+#ifdef GAME_PLATFORM_BROWSER
+        return true;
 #else
-		return false;
+        return false;
 #endif
-	}
+    }
 
-	bool file_manager_should_case_correct_file();
+    static constexpr bool is_windows() {
+#ifdef GAME_PLATFORM_WIN
+        return true;
+#else
+        return false;
+#endif
+    }
 
-	uint32_t sdl_init_flags();
+    static constexpr bool is_macos() {
+#ifdef GAME_PLATFORM_MACOSX
+        return true;
+#else
+        return false;
+#endif
+    }
 
-	void post_hint_init();
-
-	void setup_begin();
-
-	void init_callback();
-
-	void per_frame_callback();
-
-	int poll_event(CoreEvent* event);
-
-	pcstr request_initial_data_directory();
-
-	void append_startup_log(pcstr message);
-
-	void hide_startup_log();
-
-	bool run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue);
-
-	pcstr user_directory();
-
-	void screen_warp_mouse(int *x, int *y);
-
-	void show_virtual_keyboard(const uint8_t *text, int max_length);
-	void hide_virtual_keyboard();
-
-    inline constexpr bool is_ios() const {
+    static constexpr bool is_ios() {
 #ifdef GAME_PLATFORM_IOS
         return true;
 #else
         return false;
 #endif
     }
+
+    static constexpr bool is_switch() {
+#ifdef GAME_PLATFORM_NSWITCH
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    static constexpr bool is_linux() {
+#ifdef GAME_PLATFORM_LINUX
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    static constexpr bool is_steamdeck() {
+#ifdef GAME_PLATFORM_STEAMDECK
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool file_manager_should_case_correct_file();
+
+    uint32_t sdl_init_flags();
+
+    void post_hint_init();
+
+    void setup_begin();
+
+    void init_callback();
+
+    void per_frame_callback();
+
+    int poll_event(CoreEvent* event);
+
+    pcstr request_initial_data_directory();
+
+    void append_startup_log(pcstr message);
+
+    void hide_startup_log();
+
+    bool run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue);
+
+    pcstr user_directory();
+
+    void screen_warp_mouse(int* x, int* y);
+
+    void show_virtual_keyboard(const uint8_t* text, int max_length);
+    void hide_virtual_keyboard();
 };
 
 extern platform_t platform;
