@@ -164,6 +164,7 @@ public:
     e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
+    static void warn_after_plots_placed();
     static const model_house &get_model(int level);
 };
 ANK_CONFIG_PROPERTY(building_house::runtime_data_t, population, tax_coverage, tax_bonus, house_happiness, entertainment,

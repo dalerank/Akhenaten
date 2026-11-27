@@ -36,6 +36,7 @@
 #include "game/game_events.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
+#include "building/building_house.h"
 #include "building/construction/construction_warnings.h"
 #include "clear.h"
 #include "figure/formation_batalion.h"
@@ -186,7 +187,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     }
 
     if (!measure_only) {
-        construction_warnings_t{}.check_house_plots();
+        building_house::warn_after_plots_placed();
         if (needs_road_warning) {
             events::emit(event_city_warning{ "#plots_too_far_from_road" });
         }

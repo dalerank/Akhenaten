@@ -128,7 +128,6 @@ public:
     // OG run_warnings: hints after a site building was placed. Venues get only the school hints.
     void check_site(building& b);
     void check_road_access(building& b);
-    void check_house_plots();
 
 private:
     template <typename List>

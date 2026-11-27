@@ -1,7 +1,6 @@
 #include "construction_warnings.h"
 #include "city/buildings.h"
 #include "city/city_resource.h"
-#include "city/city_food_supply.h"
 #include "city/city_labor.h"
 
 #include "building/building.h"
@@ -273,24 +272,4 @@ void construction_warnings_t::check_road_access(building& b) {
         return;
     }
     warn(shrine ? rules.shrine_road_access : rules.road_access);
-}
-
-void construction_warnings_t::check_house_plots() {
-    const auto& rules = params();
-    const int population = city_population().current;
-    if (population < rules.min_population) {
-        return;
-    }
-    const int produced
-      = calc_percentage<int>(city_food_supply().percentage(), city_resource().food_consumed_last_month());
-    if (!g_scenario.kingdom_supplies_grain && produced < rules.min_food_produced_percent) {
-        warn(rules.eating_more_than_produced);
-    }
-    const bool first_mission = g_scenario.mode() == e_scenario_normal && g_scenario.campaign_scenario_id == 0;
-    if (!first_mission && city_labor().unemployment_percentage > rules.max_unemployment_percent) {
-        warn(rules.too_few_jobs);
-    }
-    if ((int)city_resource().granary_total_stored <= city_resource().food_needed_per_month / 2) {
-        warn(rules.low_food);
-    }
 }

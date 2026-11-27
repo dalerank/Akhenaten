@@ -1,4 +1,7 @@
 #include "building_house.h"
+#include "building/construction/construction_warnings.h"
+#include "city/city_food_supply.h"
+#include "game/game_events.h"
 #include "city/city_figures.h"
 
 #include "building/building_temple_complex.h"
@@ -1514,4 +1517,28 @@ svector<e_building_type, BUILDING_MAX> building_house_types() {
         }
     }
     return types;
+}
+void building_house::warn_after_plots_placed() {
+    const auto& rules = construction_warnings_t::params();
+    if (city_population().current < rules.min_population) {
+        return;
+    }
+
+    auto warn = [](const xstring& id) {
+        if (!id.empty()) {
+            events::emit(event_construction_warning{id});
+        }
+    };
+    const int produced
+      = calc_percentage<int>(city_food_supply().percentage(), city_resource().food_consumed_last_month());
+    if (!g_scenario.kingdom_supplies_grain && produced < rules.min_food_produced_percent) {
+        warn(rules.eating_more_than_produced);
+    }
+    const bool first_mission = g_scenario.mode() == e_scenario_normal && g_scenario.campaign_scenario_id == 0;
+    if (!first_mission && city_labor().unemployment_percentage > rules.max_unemployment_percent) {
+        warn(rules.too_few_jobs);
+    }
+    if ((int)city_resource().granary_total_stored <= city_resource().food_needed_per_month / 2) {
+        warn(rules.low_food);
+    }
 }
