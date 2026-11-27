@@ -166,7 +166,7 @@ float zoom_t::get_percentage() {
     return (float)(int)(g_zoom.zoom + 0.5f);
 }
 
-void zoom_t::set_scale(float z) {
+void zoom_t::set_value(float z) {
     if (!game_features::gameui_zoom) {
         z = zoom_default;
     }
@@ -174,5 +174,9 @@ void zoom_t::set_scale(float z) {
     z = calc_bound(z, zoom_min, zoom_max);
     zoom = z;
     target = z;
+}
+
+void zoom_t::set_scale(float z) {
+    set_value(z);
     g_camera.refresh_viewport();
 }

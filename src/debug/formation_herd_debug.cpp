@@ -66,7 +66,7 @@ static void draw_animal_spawn_area(painter &ctx) {
         areas.push_back({spawn_point, m->reseach_radius});
     }
 
-    g_camera.foreach_valid_map_tile(ctx, [&](vec2i pixel, tile2i tile, painter &tile_ctx) {
+    ctx.view->foreach_valid_map_tile(ctx, [&](vec2i pixel, tile2i tile, painter& tile_ctx) {
         for (const auto &area : areas) {
             if (calc_maximum_distance(tile, area.spawn_point) <= area.radius) {
                 tile_ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE);

@@ -173,7 +173,7 @@ namespace {
                 return;
             }
             const color mask = tile_fits(t, on_rock) ? COLOR_MASK_GREEN_30 : COLOR_MASK_RED_30;
-            ghost_draw::draw_ground_tile(ctx, g_camera.lookup_tile_to_pixel(t), mask);
+            ghost_draw::draw_ground_tile(ctx, ctx.view->lookup_tile_to_pixel(t), mask);
         });
     }
 

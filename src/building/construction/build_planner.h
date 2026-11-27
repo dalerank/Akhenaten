@@ -234,9 +234,9 @@ namespace ghost_draw {
     void draw_ground_isometric(painter& ctx, int image_id, vec2i pixel, color color_mask);
     void draw_partially_blocked(painter& ctx, int fully_blocked, const blocked_tile_vec& blocked_tiles);
     void draw_partially_blocked(painter& ctx, int fully_blocked, const std::vector<blocked_tile>& blocked_tiles);
-    vec2i pixel_coord_offset(const build_planner& planner, int row, int column);
+    vec2i pixel_coord_offset(painter& ctx, const build_planner& planner, int row, int column);
     vec2i end_pixel(const build_planner& planner);
-    vec2i tile_pixel(tile2i tile);
+    vec2i tile_pixel(painter& ctx, tile2i tile);
     void draw_tile_graphics_array(const build_planner& planner, painter& ctx);
 } // namespace ghost_draw
 extern const vec2i VIEW_OFFSETS[];

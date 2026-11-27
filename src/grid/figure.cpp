@@ -54,7 +54,7 @@ int map_figure_id_get(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) ? map_grid_get(figure_grid_chunk::grid, grid_offset) : 0;
 }
 
-void map_figure_sort_by_y() {
+void map_figure_sort_by_y(const viewport_t& view) {
     OZZY_PROFILER_FUNCTION();
     g_figures_y_sort.clear();
     ++g_figures_y_sort_generation;
@@ -68,7 +68,7 @@ void map_figure_sort_by_y() {
             continue;
         }
 
-        const vec2i draw_pos = f->main_sprite_pixel();
+        const vec2i draw_pos = f->main_sprite_pixel(view);
         if (draw_pos.x == 0 && draw_pos.y == 0) { // tile outside viewport
             continue;
         }
@@ -98,17 +98,16 @@ void map_figure_sort_by_y() {
     });
 }
 
-xspan<figure_draw> map_figures_in_row(tile2i tile) {
-    vec2i pixel_begin = g_camera.lookup_tile_to_pixel(tile);
+xspan<figure_draw> map_figures_in_row(const viewport_t& view, tile2i tile) {
+    vec2i pixel_begin = view.lookup_tile_to_pixel(tile);
     vec2i pixel_end = pixel_begin + vec2i(0, TILE_HEIGHT_PIXELS);
 
-    vec2i pixel_begin_scr = g_camera.pixel_to_viewport(pixel_begin);
-    vec2i pixel_end_scr = g_camera.pixel_to_viewport(pixel_end);
+    vec2i pixel_begin_scr = view.pixel_to_viewport(pixel_begin);
+    vec2i pixel_end_scr = view.pixel_to_viewport(pixel_end);
 
     const float scale = g_zoom.get_scale();
-    if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0
-        || pixel_begin_scr.x * scale > g_camera.size_pixels.x
-        || pixel_begin_scr.y * scale > g_camera.size_pixels.y) {
+    if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0 || pixel_begin_scr.x * scale > view.size_pixels.x
+        || pixel_begin_scr.y * scale > view.size_pixels.y) {
         return {};
     }
 

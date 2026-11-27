@@ -73,18 +73,15 @@ void widget_map_editor_draw() {
     map_render_clear();
     ImageDraw::clear_render_commands();
 
-    g_camera.foreach_valid_map_tile(ctx,
-        [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_flat(pixel, tile, ctx); }
-    );
+    ctx.view->foreach_valid_map_tile(ctx,
+      [](vec2i pixel, tile2i tile, painter& ctx) { g_screen_city.draw_isometric_flat(pixel, tile, ctx); });
     g_screen_city.apply_water_frames();
-    g_camera.foreach_valid_map_tile(ctx,
-        [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_terrain_height(pixel, tile, ctx); }
-    );
+    ctx.view->foreach_valid_map_tile(ctx,
+      [](vec2i pixel, tile2i tile, painter& ctx) { g_screen_city.draw_isometric_terrain_height(pixel, tile, ctx); });
     ImageDraw::apply_render_commands(ctx, "editor_draw_flat");
 
-    g_camera.foreach_valid_map_tile(ctx,
-        [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_nonterrain_height(pixel, tile, ctx); }
-    );
+    ctx.view->foreach_valid_map_tile(ctx,
+      [](vec2i pixel, tile2i tile, painter& ctx) { g_screen_city.draw_isometric_nonterrain_height(pixel, tile, ctx); });
     ImageDraw::apply_render_commands(ctx, "editor_draw_height");
 
     map_editor_tool_draw(ctx, data.current_tile);

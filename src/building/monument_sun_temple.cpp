@@ -1068,7 +1068,7 @@ bool building_sun_temple::draw_ornaments_and_animations_height(painter &ctx, vec
         int max_y = point.y;
         for (const tile2i corner : {area.tmin(), tile2i(area.tmax().x(), area.tmin().y()),
                tile2i(area.tmin().x(), area.tmax().y()), area.tmax()}) {
-            max_y = std::max(max_y, ghost_draw::tile_pixel(corner).y);
+            max_y = std::max(max_y, ghost_draw::tile_pixel(ctx, corner).y);
         }
         auto &anchor = ImageDraw::create_command(ctx, render_command_t::ert_none);
         anchor.pixel = point;
@@ -1324,7 +1324,7 @@ void building_sun_temple::preview::ghost_preview(build_planner &planer, painter 
         if (blocked) {
             ghost_draw::draw_partially_blocked(ctx, true, planer.site_parts[i]);
         } else if (d.kind == SUN_TEMPLE_PART_TEMPLE) {
-            ghost_draw::draw_building_ghost(ctx, img_body > 0 ? img_body : preview, ghost_draw::tile_pixel(t));
+            ghost_draw::draw_building_ghost(ctx, img_body > 0 ? img_body : preview, ghost_draw::tile_pixel(ctx, t));
         } else {
             ghost_draw::draw_partially_blocked(ctx, false, planer.site_parts[i]);
         }

@@ -415,7 +415,7 @@ static void mastaba_draw_stick_at(painter &ctx, tile2i tile, tile2i expected, in
         return;
     }
 
-    vec2i offset = g_camera.lookup_tile_to_pixel(tile);
+    vec2i offset = ctx.view->lookup_tile_to_pixel(tile);
     auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
     command.image_id = image_stick;
     command.pixel = offset;
@@ -436,7 +436,7 @@ void building_mastaba::draw_flat_phase_site(painter &ctx, color color_mask, cons
                 continue;
             }
 
-            vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
+            vec2i offset = ctx.view->lookup_tile_to_pixel(ntile);
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
             command.image_id = image_grounded + ((dy * 4 + dx) & 7);
             command.pixel = offset;
@@ -460,7 +460,7 @@ void building_mastaba::draw_flat_phase_foundation(painter &ctx, color color_mask
     for (int dy = 0; dy < base.size; dy++) {
         for (int dx = 0; dx < base.size; dx++) {
             tile2i ntile = base.tile.shifted(dx, dy);
-            vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
+            vec2i offset = ctx.view->lookup_tile_to_pixel(ntile);
             uint32_t progress = map_monuments_get_progress(ntile);
 
             if (progress < 200) {
@@ -493,7 +493,7 @@ void building_mastaba::draw_flat_phase_bricks(painter &ctx, color color_mask, co
                 continue;
             }
 
-            vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
+            vec2i offset = ctx.view->lookup_tile_to_pixel(ntile);
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
             command.image_id = get_image(base.orientation, ntile, main->tile, end);
             command.pixel = offset;
@@ -599,7 +599,7 @@ void building_mastaba::draw_height_bricks(painter& ctx, color color_mask, const 
         }
         auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
         command.image_id = img;
-        command.pixel = g_camera.lookup_tile_to_pixel(tile) + city_offset;
+        command.pixel = ctx.view->lookup_tile_to_pixel(tile) + city_offset;
         command.mask = color_mask;
     }
 }
@@ -613,7 +613,7 @@ void building_mastaba::draw_height_side_figures(painter &ctx) {
     building *main = base.main();
     grid_tiles tile2common = map_grid_get_tiles(main->tile, mastaba_footprint_end(main));
     for (auto &t : tile2common) {
-        vec2i offset = g_camera.lookup_tile_to_pixel(t);
+        vec2i offset = ctx.view->lookup_tile_to_pixel(t);
         g_screen_city.draw_figures(offset, t, ctx, /*force*/true);
     }
 }
@@ -631,8 +631,8 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
         }
     }
 
-    std::sort(tiles2draw.begin(), tiles2draw.end(), [] (tile2i lhs, tile2i rhs) {
-        return g_camera.lookup_tile_to_pixel(lhs).y < g_camera.lookup_tile_to_pixel(rhs).y;
+    std::sort(tiles2draw.begin(), tiles2draw.end(), [&ctx](tile2i lhs, tile2i rhs) {
+        return ctx.view->lookup_tile_to_pixel(lhs).y < ctx.view->lookup_tile_to_pixel(rhs).y;
     });
 
     const int phase = runtime_data().phase;

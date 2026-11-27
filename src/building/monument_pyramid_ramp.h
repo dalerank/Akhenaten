@@ -28,7 +28,7 @@ void pyramid_engine_clear_all_ramps(building *main);
 void pyramid_engine_set_force_show_ramps(building *main, bool enable);
 
 // Serial: store ramp-links for this frame (call before parallel height ornaments).
-void pyramid_ramp_prepare_frame_links();
+void pyramid_ramp_prepare_frame_links(const viewport_t& view);
 
 // Draw cached ramp sprites for a part (OG ramp-link + own). Call from height ornaments.
 void pyramid_ramp_draw_part(painter &ctx, building &part, vec2i part_anchor_px, color mask);

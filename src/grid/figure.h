@@ -54,6 +54,6 @@ int map_figure_foreach_until(int grid_offset, int test);
 inline int map_figure_foreach_until(tile2i tile, int test) { return map_figure_foreach_until(tile.grid_offset(), test); }
 
 void map_figure_clear();
-void map_figure_sort_by_y();
+void map_figure_sort_by_y(const viewport_t& view);
 
-xspan<figure_draw> map_figures_in_row(tile2i tile);
+xspan<figure_draw> map_figures_in_row(const viewport_t& view, tile2i tile);

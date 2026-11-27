@@ -99,14 +99,14 @@ namespace {
 
         // Dim when the access tile has no route to kingdom entry (last-tick distances).
         const color mask = map_routing_distance(ports.tile) > 0 ? COLOR_MASK_AMBER : COLOR_MASK_AMBER_40;
-        vec2i access_pixel = g_camera.lookup_tile_to_pixel(ports.tile);
+        vec2i access_pixel = ctx.view->lookup_tile_to_pixel(ports.tile);
         ghost_draw::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, access_pixel,
           mask);
     }
 
     void draw_preview(build_planner& planner, painter& ctx) {
         if (planner.needBridge()) {
-            draw_bridge(planner.end, ghost_draw::pixel_coord_offset(planner, 0, 0), planner.build_type, ctx);
+            draw_bridge(planner.end, ghost_draw::pixel_coord_offset(ctx, planner, 0, 0), planner.build_type, ctx);
             return;
         }
 
@@ -114,7 +114,7 @@ namespace {
             return;
         }
 
-        const vec2i pixel = ghost_draw::pixel_coord_offset(planner, 0, 0);
+        const vec2i pixel = ghost_draw::pixel_coord_offset(ctx, planner, 0, 0);
         const auto& painter_of_type = ghost_painter_of(planner.build_type);
         if (planner.can_be_placed() == CAN_NOT_PLACE) {
             painter_of_type.ghost_blocked(planner, ctx, planner.start, planner.end, pixel, true);

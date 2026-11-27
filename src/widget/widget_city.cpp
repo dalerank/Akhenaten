@@ -133,8 +133,8 @@ int screen_city_t::pending_water_frames() const {
 
 void set_city_clip_rectangle(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
-    vec2i view_pos = g_camera.offset;
-    vec2i view_size = g_camera.size_pixels;
+    vec2i view_pos = ctx.view->offset;
+    vec2i view_size = ctx.view->size_pixels;
     graphics_set_clip_rectangle(view_pos, view_size);
 }
 
@@ -230,7 +230,7 @@ void draw_tile_boxes(vec2i pixel, tile2i point) {
 };
 
 void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
-    g_camera.record_mappoint_pixelcoord(tile, pixel);
+    ctx.view->record_mappoint_pixelcoord(tile, pixel);
 }
 
 void screen_city_t::clear_current_tile() {
@@ -240,7 +240,7 @@ void screen_city_t::clear_current_tile() {
 
 void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter &ctx) {
     OZZY_PROFILER_FUNCTION();
-    auto figures = map_figures_in_row(tile);
+    auto figures = map_figures_in_row(*ctx.view, tile);
 
     for (const auto &f : figures) {
         const figure_static_params &params = figure_static_params::get(f.f->type);
@@ -325,7 +325,7 @@ void screen_city_t::draw_building_road_access_marker(painter &ctx) {
     }
 
     const color mask = map_routing_distance(ports.tile) > 0 ? COLOR_MASK_AMBER : COLOR_MASK_AMBER_40;
-    vec2i pixel = g_camera.lookup_tile_to_pixel(ports.tile);
+    vec2i pixel = ctx.view->lookup_tile_to_pixel(ports.tile);
     ghost_draw::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel, mask);
 }
 
@@ -364,7 +364,7 @@ void screen_city_t::draw_recorded_delivery_paths(painter &ctx) {
 
 void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, [[maybe_unused]] bool force) {
     OZZY_PROFILER_FUNCTION();
-    auto figures = map_figures_in_row(tile);
+    auto figures = map_figures_in_row(*ctx.view, tile);
 
     static constexpr int k_figure_pair_x_pad = 48;
     const int row_x0 = pixel.x - TILE_WIDTH_PIXELS;
@@ -413,7 +413,7 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, [[maybe
 
 void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx) {
     int grid_offset = tile.grid_offset();
-    auto figures = map_figures_in_row(tile);
+    auto figures = map_figures_in_row(*ctx.view, tile);
 
     for (const auto &f : figures) {
         const figure_static_params &params = figure_static_params::get(f.f->type);
@@ -506,34 +506,32 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     map_render_clear();
     ImageDraw::clear_render_commands();
 
-    g_camera.clear_mappoint_pixelcoord();
+    ctx.view->clear_mappoint_pixelcoord();
 
     // Rebuild the coordinate mapping by iterating through all valid visible map tiles
     // This updates the pixel positions for each tile based on the current camera view
-    g_camera.foreach_valid_map_tile(ctx, update_tile_coords);
+    ctx.view->foreach_valid_map_tile(ctx, update_tile_coords);
 
     // Sort all figures by their Y coordinate for proper depth ordering
     // This ensures figures are drawn in the correct order (back-to-front) for isometric rendering
-    map_figure_sort_by_y();
+    map_figure_sort_by_y(*ctx.view);
 
     // PHASE 1+2: Draw flat + terrain height. Split by rows across threads when beneficial.
-    const int total_rows = g_camera.size_tiles.y + 21;
+    const int total_rows = ctx.view->size_tiles.y + 21;
     const size_t num_threads = game.mt.get_thread_count();
     const size_t num_blocks = (num_threads > 0 && total_rows > 1)
         ? std::min(num_threads, static_cast<size_t>(total_rows))
         : 0;
 
     if (num_blocks <= 1) {
-        g_camera.foreach_valid_map_tile(ctx,
-            [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
-            [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
-            draw_ornaments_flat
-        );
+        ctx.view->foreach_valid_map_tile(
+          ctx, [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
+          [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
+          draw_ornaments_flat);
         g_water_frame_queue.apply();
         sound_city().view_queue.apply();
-        g_camera.foreach_valid_map_tile(ctx,
-            [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
-        );
+        ctx.view->foreach_valid_map_tile(ctx,
+          [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); });
     } else {
         OZZY_PROFILER_SECTION(_, "draw_isometric_flat_parallel")
         const size_t block_size = total_rows / num_blocks;
@@ -552,11 +550,11 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
                 painter worker_ctx = ctx;
                 worker_ctx.command_buffer = &ImageDraw::parallel_block_commands(blk);
                 worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands(blk);
-                g_camera.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
-                    [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
-                    [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
-                    draw_ornaments_flat
-                );
+                worker_ctx.view->foreach_valid_map_tile_rows(
+                  worker_ctx, y_start, y_end,
+                  [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
+                  [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
+                  draw_ornaments_flat);
             }));
         }
 
@@ -576,9 +574,8 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
                 painter worker_ctx = ctx;
                 worker_ctx.command_buffer = &ImageDraw::parallel_block_commands(blk);
                 worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands(blk);
-                g_camera.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
-                    [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
-                );
+                worker_ctx.view->foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
+                  [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); });
             }));
         }
 
@@ -595,13 +592,12 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // This includes buildings with height, animated decorations, and all figures (people, animals, etc.)
     // These are drawn after flat terrain so they appear on top
     // Pyramid carpenter ramps: resolve OG ramp-link before parallel row blocks.
-    pyramid_ramp_prepare_frame_links();
+    pyramid_ramp_prepare_frame_links(*ctx.view);
     if (num_blocks <= 1) {
-        g_camera.foreach_valid_map_tile(ctx,
-            [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
-            [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
-            [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
-        );
+        ctx.view->foreach_valid_map_tile(
+          ctx, [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
+          [this](vec2i pixel, tile2i tile, painter& ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
+          [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures(pixel, tile, ctx, false); });
     } else {
         OZZY_PROFILER_SECTION(_, "draw_isometric_nonterrain_height_parallel")
         const size_t block_size = total_rows / num_blocks;
@@ -620,11 +616,15 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
                 painter worker_ctx = ctx;
                 worker_ctx.command_buffer = &ImageDraw::parallel_block_commands()[blk];
                 worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands()[blk];
-                g_camera.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
-                    [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
-                    [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
-                    [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
-                );
+                worker_ctx.view->foreach_valid_map_tile_rows(
+                  worker_ctx, y_start, y_end,
+                  [this](vec2i pixel, tile2i tile, painter& ctx) {
+                      draw_isometric_nonterrain_height(pixel, tile, ctx);
+                  },
+                  [this](vec2i pixel, tile2i tile, painter& ctx) {
+                      draw_ornaments_and_animations_height(pixel, tile, ctx);
+                  },
+                  [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures(pixel, tile, ctx, false); });
             }));
         }
 
@@ -649,16 +649,15 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     js_event(city_view_postrender_ev{}, "city_view", "postrender");
 
     // PHASE 5: post-processing of tiles that require special handling after all main elements are drawn
-    g_camera.foreach_valid_map_tile(ctx,
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_postrender_building_effects(pixel, tile, ctx); }
-    );
+    ctx.view->foreach_valid_map_tile(ctx,
+      [this](vec2i pixel, tile2i tile, painter& ctx) { draw_postrender_building_effects(pixel, tile, ctx); });
 
     ImageDraw::apply_render_commands(ctx, "draw_post_processing_tile");
 
     // PHASE 6: Draw debug overlays on top of everything else
     // These debug elements should be visible above all game elements for debugging purposes
     g_debug.prepare_render_handlers();
-    g_camera.foreach_valid_map_tile(ctx, draw_debug_tile);
+    ctx.view->foreach_valid_map_tile(ctx, draw_debug_tile);
     debug_draw_figures(ctx);
 
     ImageDraw::apply_render_commands(ctx, "draw_debug_tile");
@@ -673,8 +672,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     g_debug.draw_render_handlers(ctx);
 }
 
-void screen_city_t::draw_current_select_tile(painter &ctx) {
-    (void)ctx;
+void screen_city_t::draw_current_select_tile(painter& ctx) {
     if (!game_features::gameui_show_current_select_tile.to_bool()) {
         return;
     }
@@ -683,7 +681,7 @@ void screen_city_t::draw_current_select_tile(painter &ctx) {
         return;
     }
 
-    vec2i pixel = g_camera.lookup_tile_to_pixel(current_tile);
+    vec2i pixel = ctx.view->lookup_tile_to_pixel(current_tile);
     debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_BLACK);
 }
 
@@ -763,8 +761,8 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         }
     }
 
-    vec2i view_pos = g_camera.offset;
-    vec2i view_size = g_camera.size_pixels;
+    vec2i view_pos = ctx.view->offset;
+    vec2i view_size = ctx.view->size_pixels;
     int direction = SOUND_DIRECTION_CENTER;
     if (pixel.x < view_pos.x + 100) {
         direction = SOUND_DIRECTION_LEFT;
@@ -1089,18 +1087,17 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
     map_render_clear();
     ImageDraw::clear_render_commands();
 
-    g_camera.foreach_valid_map_tile(ctx, update_tile_coords);
+    ctx.view->foreach_valid_map_tile(ctx, update_tile_coords);
 
-    map_figure_sort_by_y();
-    g_camera.foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
+    map_figure_sort_by_y(*ctx.view);
+    ctx.view->foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
 
     ImageDraw::apply_render_commands(ctx, "draw_isometrics_overlay_flat");
 
-    g_camera.foreach_valid_map_tile(ctx,
-        draw_isometrics_overlay_height,
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_overlay(pixel, tile, ctx); },
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_overlay(pixel, tile, ctx); }
-    );
+    ctx.view->foreach_valid_map_tile(
+      ctx, draw_isometrics_overlay_height,
+      [this](vec2i pixel, tile2i tile, painter& ctx) { draw_ornaments_overlay(pixel, tile, ctx); },
+      [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_overlay(pixel, tile, ctx); });
 
     ImageDraw::apply_render_commands(ctx, "draw_ornaments_figures_overlay");
 
@@ -1114,7 +1111,7 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
 
     // finally, draw these on top of everything else
     g_debug.prepare_render_handlers();
-    g_camera.foreach_valid_map_tile(ctx, draw_debug_tile);
+    ctx.view->foreach_valid_map_tile(ctx, draw_debug_tile);
     debug_draw_figures(ctx);
 
     ImageDraw::apply_render_commands(ctx, "debug_draw_figures");

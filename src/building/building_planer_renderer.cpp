@@ -136,7 +136,7 @@ void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx
 
     for (int row = 0; row < planer.size.y; row++) {
         for (int column = 0; column < planer.size.x; column++) {
-            vec2i current_coord = ghost_draw::pixel_coord_offset(planer, row, column);
+            vec2i current_coord = ghost_draw::pixel_coord_offset(ctx, planer, row, column);
             color color_mask = (planer.is_blocked_tile(row, column) || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
             ghost_draw::draw_ground_tile(ctx, current_coord, color_mask);
         }

@@ -305,18 +305,17 @@ static void create_full_city_screenshot() {
     if (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military")) {
         return;
     }
-    vec2i original_camera_pixels = g_camera.camera_position;
+    viewport_t view = g_camera;
 
     // Extra scroll margin (test framing) expands scroll_min into values that make
     // go_to_pixel(…, false) hit OOB screentile lookup — clear for the stitch pass.
-    const int saved_margin = g_camera.extra_scroll_margin_tiles;
-    if (saved_margin != 0) {
-        g_camera.set_extra_scroll_margin(0);
+    if (view.extra_scroll_margin_tiles != 0) {
+        view.set_extra_scroll_margin(0);
     }
 
-    auto mm_view = g_camera.get_scrollable_pixel_limits();
+    auto mm_view = view.get_scrollable_pixel_limits();
 
-    vec2i view_size = g_camera.size_pixels;
+    vec2i view_size = view.size_pixels;
 
     mm_view.max += view_size;
 
@@ -327,9 +326,6 @@ static void create_full_city_screenshot() {
 
     if (!image_create(city_canvas_pixels, 0, canvas_height)) {
         logs::error("Unable to set memory for full city screenshot", 0, 0);
-        if (saved_margin != 0) {
-            g_camera.set_extra_scroll_margin(saved_margin);
-        }
         return;
     }
 
@@ -337,37 +333,33 @@ static void create_full_city_screenshot() {
     if (!image_begin_io(filename) || !image_write_header()) {
         logs::error("Unable to write screenshot to:", filename, 0);
         image_free();
-        if (saved_margin != 0) {
-            g_camera.set_extra_scroll_margin(saved_margin);
-        }
         return;
     }
 
     color *canvas = (color*)malloc(sizeof(color) * city_canvas_pixels.x * canvas_height);
     if (!canvas) {
         image_free();
-        if (saved_margin != 0) {
-            g_camera.set_extra_scroll_margin(saved_margin);
-        }
         return;
     }
     memset(canvas, 0, sizeof(color) * city_canvas_pixels.x * canvas_height);
 
-    // set_scale takes zoom *percentage* (same units as get_percentage), not get_scale().
-    const float old_zoom = g_zoom.get_percentage();
+    const float saved_zoom = g_zoom.zoom;
+    const float saved_zoom_target = g_zoom.target;
 
     int error = 0;
     int base_height = image_set_loop_height_limits(mm_view.min.y, mm_view.max.y);
     int size;
-    g_zoom.set_scale(100);
+    g_zoom.set_value(100);
     graphics_set_clip_rectangle({0, TOP_MENU_HEIGHT}, {canvas_width, canvas_height});
 
-    vec2i viewport_size = g_camera.size_pixels;
-    g_camera.set_screen_size(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
+    view.set_screen_size(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
 
-    // draw_without_overlay() iterates global g_camera (not ctx.view), so each strip
-    // must reposition g_camera itself. Restored to original_camera_pixels after the loop.
+    painter local_context;
+    local_context.view = &view;
+    local_context.global_render_scale = 1.f;
+    local_context.renderer = g_render.renderer();
+
     while ((size = image_request_rows()) != 0) {
         int y_offset = (current_height + canvas_height > mm_view.max.y) ? canvas_height - (mm_view.max.y - current_height) - TILE_Y_SIZE : 0;
 
@@ -379,12 +371,7 @@ static void create_full_city_screenshot() {
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
 
-            painter local_context;
-            local_context.view = &g_camera;
-            local_context.global_render_scale = 1.f;
-            local_context.renderer = g_render.renderer();
-
-            g_camera.go_to_pixel(vec2i{mm_view.min.x + width, current_height}, false);
+            view.go_to_pixel(vec2i{mm_view.min.x + width, current_height}, false);
             g_render.clear_screen();
             g_screen_city.draw_without_overlay(local_context, 0);
             g_render.save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
@@ -398,14 +385,10 @@ static void create_full_city_screenshot() {
         current_height += canvas_height;
     }
 
-    g_camera.set_screen_size(viewport_size.x + widget_sidebar_city_offset_max(), viewport_size.y + TOP_MENU_HEIGHT);
-    g_zoom.set_scale(old_zoom);
+    g_zoom.zoom = saved_zoom;
+    g_zoom.target = saved_zoom_target;
 
     graphics_reset_clip_rectangle();
-    g_camera.go_to_pixel(original_camera_pixels, true);
-    if (saved_margin != 0) {
-        g_camera.set_extra_scroll_margin(saved_margin);
-    }
 
     if (!error) {
         image_finish();

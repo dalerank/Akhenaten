@@ -61,7 +61,7 @@ void building_industry_office::draw_placeholder(painter &ctx, color color_mask) 
     for (int dy = 0; dy < k_size; dy++) {
         for (int dx = 0; dx < k_size; dx++) {
             tile2i t = tile().shifted(dx, dy);
-            vec2i px = g_camera.lookup_tile_to_pixel(t);
+            vec2i px = ctx.view->lookup_tile_to_pixel(t);
             draw_colored_tile(ctx, px, mask);
         }
     }
@@ -72,7 +72,7 @@ void building_industry_office::draw_postrender_effects(painter& ctx, vec2i point
     if (tile != this->tile()) {
         return;
     }
-    vec2i label = g_camera.lookup_tile_to_pixel(this->tile());
+    vec2i label = ctx.view->lookup_tile_to_pixel(this->tile());
     text_draw_centered("OFFICE", label.x - 40, label.y - 8, 80, FONT_SMALL_PLAIN, COLOR_WHITE);
 }
 

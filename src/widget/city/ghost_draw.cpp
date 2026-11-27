@@ -80,13 +80,13 @@ namespace ghost_draw {
 
     void draw_partially_blocked(painter& ctx, int fully_blocked, const blocked_tile_vec& blocked_tiles) {
         for (auto& tile : blocked_tiles) {
-            vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
+            vec2i pixel = ctx.view->lookup_tile_to_pixel(tile.tile);
             draw_ground_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
         }
     }
     void draw_partially_blocked(painter& ctx, int fully_blocked, const std::vector<blocked_tile>& blocked_tiles) {
         for (auto& tile : blocked_tiles) {
-            vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
+            vec2i pixel = ctx.view->lookup_tile_to_pixel(tile.tile);
             draw_ground_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
         }
     }
@@ -95,10 +95,10 @@ namespace ghost_draw {
         return g_camera.lookup_tile_to_pixel(planner.end);
     }
 
-    vec2i pixel_coord_offset(const build_planner& planner, int row, int column) {
-        vec2i view_tile = g_camera.lookup_tile_to_pixel(planner.end);
+    vec2i pixel_coord_offset(painter& ctx, const build_planner& planner, int row, int column) {
+        vec2i view_tile = ctx.view->lookup_tile_to_pixel(planner.end);
         if (view_tile.x == 0 && view_tile.y == 0) {
-            view_tile = g_camera.selected_tile;
+            view_tile = ctx.view->selected_tile;
         }
         const int x_offset = column - planner.pivot.x;
         const int y_offset = row - planner.pivot.y;
@@ -117,13 +117,13 @@ namespace ghost_draw {
                 if (image_id > 0) {
                     auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
                     command.image_id = image_id;
-                    command.pixel = pixel_coord_offset(planner, row, column);
+                    command.pixel = pixel_coord_offset(ctx, planner, row, column);
                     command.mask = COLOR_MASK_GREEN;
                     command.location = SOURCE_LOCATION;
                 } else if (image_id < 0) {
                     auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                     command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
-                    command.pixel = pixel_coord_offset(planner, row, column);
+                    command.pixel = pixel_coord_offset(ctx, planner, row, column);
                     command.mask = COLOR_MASK_GREEN;
                     command.location = SOURCE_LOCATION;
                 }
@@ -133,6 +133,6 @@ namespace ghost_draw {
 
 } // namespace ghost_draw
 
-vec2i ghost_draw::tile_pixel(tile2i tile) {
-    return g_camera.lookup_tile_to_pixel(tile);
+vec2i ghost_draw::tile_pixel(painter& ctx, tile2i tile) {
+    return ctx.view->lookup_tile_to_pixel(tile);
 }

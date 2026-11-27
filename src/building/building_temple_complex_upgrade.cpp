@@ -45,7 +45,7 @@ void building_temple_complex_altar::preview::ghost_preview(build_planner &planer
     case 3: offset = { bsize, bsize }; break;
     }
 
-    vec2i pixel_upgrade = g_camera.lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
+    vec2i pixel_upgrade = ctx.view->lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
     ghost_draw::draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 
@@ -87,7 +87,7 @@ void building_temple_complex_oracle::preview::ghost_preview(build_planner &plane
     case 3: offset = { bsize, -(bsize + params.building_size - 1) }; break;
     }
 
-    vec2i pixel_upgrade = g_camera.lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
+    vec2i pixel_upgrade = ctx.view->lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
     ghost_draw::draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 

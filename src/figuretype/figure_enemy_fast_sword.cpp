@@ -321,7 +321,7 @@ void figure_enemy_fast_sword::debug_draw(painter &ctx) {
             case 2: offset = { bsize, 0 }; break;
             case 3: offset = { bsize, bsize }; break;
             }
-            vec2i target_coords = g_camera.lookup_tile_to_pixel(target_building->tile.shifted(offset));
+            vec2i target_coords = ctx.view->lookup_tile_to_pixel(target_building->tile.shifted(offset));
 
             auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
             command.image_id = map_image_at(target_building->tile);
@@ -332,7 +332,7 @@ void figure_enemy_fast_sword::debug_draw(painter &ctx) {
     }
 
     {
-        vec2i target_coords = g_camera.lookup_tile_to_pixel(base.destination_tile);
+        vec2i target_coords = ctx.view->lookup_tile_to_pixel(base.destination_tile);
         auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(base.destination_tile);
         command.pixel = target_coords;
@@ -341,7 +341,7 @@ void figure_enemy_fast_sword::debug_draw(painter &ctx) {
     }
 
     {
-        vec2i target_coords = g_camera.lookup_tile_to_pixel(m->destination);
+        vec2i target_coords = ctx.view->lookup_tile_to_pixel(m->destination);
         auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(m->destination);
         command.pixel = target_coords;
@@ -353,7 +353,7 @@ void figure_enemy_fast_sword::debug_draw(painter &ctx) {
     if (base.target_figure_id > 0) {
         figure *target_f = figure_get(base.target_figure_id);
         if (target_f && target_f->is_valid() && !target_f->is_dead()) {
-            vec2i target_coords = g_camera.lookup_tile_to_pixel(target_f->tile);
+            vec2i target_coords = ctx.view->lookup_tile_to_pixel(target_f->tile);
             debug_draw_tile_box(target_coords.x, target_coords.y, COLOR_YELLOW, COLOR_FONT_YELLOW);
         }
     }

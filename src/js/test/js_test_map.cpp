@@ -28,6 +28,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/vegetation.h"
+#include "graphics/view/view.h"
 
 static void __test_make_wall(int x, int y) {
     map_terrain_add(tile2i(x, y), TERRAIN_WALL);
@@ -206,7 +207,7 @@ static void __test_figure_set_tile_raw(int fid, int x, int y) {
 ANK_FUNCTION_3(__test_figure_set_tile_raw);
 
 static void __test_map_figure_sort_by_y() {
-    map_figure_sort_by_y();
+    map_figure_sort_by_y(g_camera);
 }
 ANK_FUNCTION(__test_map_figure_sort_by_y);
 

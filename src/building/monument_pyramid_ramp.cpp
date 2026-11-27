@@ -473,9 +473,9 @@ static building *pyramid_ramp_link_neighbor(building &part, const pyramid_part_s
     return pyramid_ramp_neighbour_at(part, delta);
 }
 
-static vec2i pyramid_ramp_origin_for_part(building &part) {
+static vec2i pyramid_ramp_origin_for_part(const viewport_t& view, building& part) {
     const tile2i anchor = pyramid_part_draw_anchor(part);
-    const vec2i anchor_px = g_camera.lookup_tile_to_pixel(anchor);
+    const vec2i anchor_px = view.lookup_tile_to_pixel(anchor);
     building* head = part.main();
     const e_pyramid_style style = head ? g_monument_pyramid_engine.style_of(head) : PYRAMID_STYLE_NONE;
     const auto* ps = pyramid_part_state_get(part.id);
@@ -498,7 +498,7 @@ struct pyramid_ramp_frame_link {
 
 static std::vector<pyramid_ramp_frame_link> g_ramp_frame_links;
 
-void pyramid_ramp_prepare_frame_links() {
+void pyramid_ramp_prepare_frame_links(const viewport_t& view) {
     // Serial pre-pass: OG stores ramp-link on the closer neighbor before city draw.
     // Height ornaments later run in parallel row blocks — in-draw store/consume races
     // and a sort_pixel stand-in both break under camera rotate.
@@ -513,7 +513,7 @@ void pyramid_ramp_prepare_frame_links() {
         if (!neighbor || !pyramid_part_state_get(neighbor->id)) {
             continue;
         }
-        g_ramp_frame_links[neighbor->id] = {part->id, pyramid_ramp_origin_for_part(*part)};
+        g_ramp_frame_links[neighbor->id] = {part->id, pyramid_ramp_origin_for_part(view, *part)};
     }
 }
 

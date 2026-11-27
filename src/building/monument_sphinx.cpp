@@ -531,7 +531,7 @@ void building_sphinx::preview::ghost_preview(build_planner& planer, painter& ctx
 
     for (int p = 0; p < PARTS; ++p) {
         const tile2i anchor = anchor_from_origin(part_origin(origin, p), view);
-        const vec2i px = (p == 0) ? pixel : g_camera.lookup_tile_to_pixel(anchor);
+        const vec2i px = (p == 0) ? pixel : ctx.view->lookup_tile_to_pixel(anchor);
         ghost_draw::draw_building_ghost(ctx, sphinx_part_image(p, STAGE_FIRST), px);
     }
 }
@@ -700,7 +700,7 @@ bool building_sphinx::draw_ornaments_and_animations_height(painter& ctx, vec2i p
         int max_y = point.y;
         for (const vec2i corner : {vec2i{0, 0}, vec2i{PARTS * PART_SIZE - 1, 0}, vec2i{0, PART_SIZE - 1},
                vec2i{PARTS * PART_SIZE - 1, PART_SIZE - 1}}) {
-            max_y = std::max(max_y, g_camera.lookup_tile_to_pixel(origin.shifted(corner.x, corner.y)).y);
+            max_y = std::max(max_y, ctx.view->lookup_tile_to_pixel(origin.shifted(corner.x, corner.y)).y);
         }
         auto& anchor = ImageDraw::create_command(ctx, render_command_t::ert_none);
         anchor.pixel = point;

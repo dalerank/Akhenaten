@@ -325,7 +325,7 @@ void building_food_mill::draw_placeholder(painter &ctx, color color_mask) const 
     for (int dy = 0; dy < k_size; dy++) {
         for (int dx = 0; dx < k_size; dx++) {
             tile2i t = tile().shifted(dx, dy);
-            vec2i px = g_camera.lookup_tile_to_pixel(t);
+            vec2i px = ctx.view->lookup_tile_to_pixel(t);
             draw_colored_tile(ctx, px, mask);
         }
     }
@@ -336,7 +336,7 @@ void building_food_mill::draw_postrender_effects(painter& ctx, vec2i point, tile
     if (tile != this->tile()) {
         return;
     }
-    vec2i label = g_camera.lookup_tile_to_pixel(this->tile().shifted(1, 1));
+    vec2i label = ctx.view->lookup_tile_to_pixel(this->tile().shifted(1, 1));
     text_draw_centered("MILL", label.x - 40, label.y - 8, 80, FONT_SMALL_PLAIN, COLOR_WHITE);
 }
 

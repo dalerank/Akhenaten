@@ -34,6 +34,7 @@ struct zoom_t {
 
     float get_scale();
     float get_percentage();
+    void set_value(float z);
     void set_scale(float z);
 };
 ANK_CONFIG_STRUCT(zoom_t, zoom_default, zoom_min, zoom_max, zoom_epsilon, zoom_lerp_coeff, zoom_speed)

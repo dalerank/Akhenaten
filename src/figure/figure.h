@@ -30,6 +30,7 @@ struct tooltip_context;
 class building;
 
 struct animation_t;
+struct viewport_t;
 
 constexpr int MAX_FIGURES = 2000;
 constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
@@ -335,7 +336,7 @@ public:
 
     vec2i adjust_pixel_offset(const vec2i pixel);
     vec2i crowd_pixel_offset() const;
-    vec2i main_sprite_pixel() const;
+    vec2i main_sprite_pixel(const viewport_t& view) const;
     vec2i cart_sprite_pixel() const;
 
     void draw_debug(painter &ctx);

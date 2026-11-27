@@ -307,8 +307,8 @@ void clouds_t::draw_debug(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
 
     const float scale = g_zoom.get_scale();
-    const int view_w = (int)(g_camera.size_pixels.x / scale) + 64;
-    const int view_h = (int)(g_camera.size_pixels.y / scale) + 64;
+    const int view_w = (int)(ctx.view->size_pixels.x / scale) + 64;
+    const int view_h = (int)(ctx.view->size_pixels.y / scale) + 64;
     char str[64];
     for (int i = 0; i < (int)clouds.size(); i++) {
         const cloud_t &cloud = clouds[i];
@@ -362,16 +362,16 @@ void clouds_t::draw_city(painter &ctx) {
         pause();
     }
 
-    auto mm_view = g_camera.get_scrollable_pixel_limits();
+    auto mm_view = ctx.view->get_scrollable_pixel_limits();
     const vec2i offset = {
-        g_camera.camera_position.x - mm_view.min.x,
-        g_camera.camera_position.y - mm_view.min.y,
+      ctx.view->camera_position.x - mm_view.min.x,
+      ctx.view->camera_position.y - mm_view.min.y,
     };
 
     const float zoom = g_zoom.get_scale();
     const vec2i view_size = {
-        std::max(1, (int)(g_camera.size_pixels.x / zoom)),
-        std::max(1, (int)(g_camera.size_pixels.y / zoom)),
+      std::max(1, (int)(ctx.view->size_pixels.x / zoom)),
+      std::max(1, (int)(ctx.view->size_pixels.y / zoom)),
     };
 
     draw(ctx, offset, view_size);

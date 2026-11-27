@@ -965,7 +965,7 @@ void building_royal_tomb::preview::ghost_preview(build_planner &planer, painter 
                     continue;
                 }
                 const bool ok = connected && part_tile_allowed(l, i, t);
-                ghost_draw::draw_ground_tile(ctx, ghost_draw::tile_pixel(t),
+                ghost_draw::draw_ground_tile(ctx, ghost_draw::tile_pixel(ctx, t),
                   ok ? COLOR_MASK_GREEN_30 : COLOR_MASK_RED_30);
             }
         }
