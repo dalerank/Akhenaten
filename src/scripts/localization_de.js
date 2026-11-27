@@ -1760,4 +1760,5 @@ localization_de = [
   { key: "#lebanon", text: "LIBANON" }
   { key: "#canaan", text: "KANAAN" }
   { key:"#must_build_on_explored_land", text:"Bauen ist nur auf erkundetem Land möglich" }
+  { key:"#TR_CONFIG_FOG_OF_WAR", text:"Enhanced: Nebel des Krieges (unerkundetes Land schwarz, unbeobachtetes dunkel)" }
 ]

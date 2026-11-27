@@ -165,4 +165,5 @@ localization_ch = [
      { key: "#finance_historical_economy_hint", text: "Debens measure value (metal-weight account). Part of labour is paid from granary grain when available." },
      { key: "#finance_wages_paid_in_grain", text: "Wages paid in grain (deben-eq)" },
      { key:"#must_build_on_explored_land", text:"只能在已探索的土地上建造" },
+     { key:"#TR_CONFIG_FOG_OF_WAR", text:"Enhanced: 戰爭迷霧（未探索的土地為黑色，視野外的土地變暗）" },
 ]

@@ -204,4 +204,5 @@ localization_pr = [
      { key: "#hunt_bird_birds_are_wily", text: "Estas aves são astutas!" }
      { key: "#hunt_bird_birds_ready_for_roasting", text: "Estas aves estão prontas para assar!" }
      { key:"#must_build_on_explored_land", text:"Só é possível construir em terreno explorado" }
+     { key:"#TR_CONFIG_FOG_OF_WAR", text:"Enhanced: névoa de guerra (terra inexplorada preta, terra não vigiada escura)" }
 ]

@@ -2453,4 +2453,5 @@ localization_hu = [
   { key: "#lebanon", text: "LIBANON" }
   { key: "#canaan", text: "KÁNAÁN" }
   { key:"#must_build_on_explored_land", text:"Csak felderített területre lehet építeni" }
+  { key:"#TR_CONFIG_FOG_OF_WAR", text:"Enhanced: háború köde (a felderítetlen föld fekete, a nem figyelt sötét)" }
 ]

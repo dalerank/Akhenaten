@@ -235,4 +235,5 @@ localization_po = [
  { key: "#hunt_bird_birds_are_wily", text: "Te ptaki są przebiegłe!" }
  { key: "#hunt_bird_birds_ready_for_roasting", text: "Te ptaki są gotowe do pieczenia!" }
  { key:"#must_build_on_explored_land", text:"Można budować tylko na zbadanym terenie" }
+ { key:"#TR_CONFIG_FOG_OF_WAR", text:"Enhanced: mgła wojny (niezbadany teren czarny, nieobserwowany ciemny)" }
 ]

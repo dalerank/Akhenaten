@@ -1046,4 +1046,5 @@ localization_ru_f = [
     { key: "#abu_simbel_not_demolishable", text: "Абу-Симбел нельзя снести" }
     { key: "#monument_not_demolishable", text: "Монументы нельзя снести" }
     { key:"#must_build_on_explored_land", text:"Строить можно только на разведанной земле" }
+    { key:"#TR_CONFIG_FOG_OF_WAR", text:"Enhanced: туман войны (неразведанная земля чёрная, вне обзора — затемнена)" }
 ]

@@ -1915,4 +1915,5 @@ localization_fr = [
   { key:"#lebanon", text:"LIBAN" }
   { key:"#canaan", text:"CANAAN" }
   { key:"#must_build_on_explored_land", text:"Vous ne pouvez construire que sur un terrain exploré" }
+  { key:"#TR_CONFIG_FOG_OF_WAR", text:"Enhanced : brouillard de guerre (terre inexplorée noire, terre non surveillée sombre)" }
 ]

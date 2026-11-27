@@ -1870,4 +1870,5 @@ localization_it = [
   {key:"#lebanon", text:"LIBANO"}
   {key:"#canaan", text:"CANAAN"}
   { key:"#must_build_on_explored_land", text:"Puoi costruire solo su terreno esplorato" }
+  { key:"#TR_CONFIG_FOG_OF_WAR", text:"Migliorato: nebbia di guerra (terra inesplorata nera, terra non osservata scura)" }
 ]

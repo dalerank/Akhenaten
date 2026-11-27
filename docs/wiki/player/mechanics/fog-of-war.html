@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fog of war — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .cp-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.85rem; }
+    .cp-table th, .cp-table td { padding: 0.35rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .cp-table th { color: var(--text-muted); font-weight: normal; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Player Guide</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Mechanics</div>
+        <ul>
+          <li><a href="labor.html">Labor</a></li>
+          <li><a href="auto-resolve-invasions.html">Auto-resolve invasions</a></li>
+          <li><a href="flood-basins.html">Flood basins &amp; dikes</a></li>
+          <li><a href="food-mill.html">Food Mill &amp; variety</a></li>
+          <li><a href="industry-office.html">Industry Office</a></li>
+          <li><a href="fog-of-war.html" class="active">Fog of war</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#what">What it does</a></li>
+          <li><a href="#sight">Who sees</a></li>
+          <li><a href="#building">Building</a></li>
+          <li><a href="#unchanged">What stays as in Pharaoh</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../index.html">Wiki</a> / <a href="../index.html">Player Guide</a> / Fog of war</div>
+      <h1>Fog of war</h1>
+      <p class="section-intro">Optional Enhanced feature: the part of the map your city cannot see is dark, and land you have never seen is black. The original Pharaoh has no fog of war, so the default is <strong>OFF</strong>; it is also not switched on by <code>--enhanced</code>.</p>
+
+      <h2 id="what">What it does</h2>
+      <ol>
+        <li>Enable <em>Fog of war</em> under Features → New features. It takes effect on the next game tick (unpause to see it).</li>
+        <li>At the start of a mission (or the first time you turn it on in a running city) the land around the land and river entry points is known, and so is everything your buildings and walkers see.</li>
+        <li><strong>Unexplored</strong> land is black: no terrain, no figures, no tooltip, no info window. The minimap shows it black too.</li>
+        <li><strong>Fogged</strong> land (seen before, not watched now) is drawn darker. Terrain stays as it is, but enemies, animals, foreign traders and their ships are not shown there, on the map or the minimap.</li>
+        <li><strong>Visible</strong> land is drawn as usual; a thin darker rim marks the edge of what your city sees.</li>
+      </ol>
+      <p>Turning the feature off shows the whole map again and keeps what you explored, so turning it back on restores it. Some missions may switch fog off for themselves.</p>
+
+      <h2 id="sight">Who sees</h2>
+      <table class="cp-table">
+        <thead>
+          <tr><th>Source</th><th>Sight (tiles)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Buildings, by size 1 / 2 / 3 / 4+</td><td>3 / 4 / 5 / 6</td></tr>
+          <tr><td>Watch towers, tower sentries</td><td>10, sentries 8</td></tr>
+          <tr><td>Forts, palaces</td><td>8</td></tr>
+          <tr><td>Docks, ferries</td><td>6</td></tr>
+          <tr><td>Soldiers, warships</td><td>6</td></tr>
+          <tr><td>Walkers, cart pushers, priests, entertainers, boats</td><td>1</td></tr>
+          <tr><td>Burning ruins, roads, canals, walls</td><td>do not see</td></tr>
+          <tr><td>Enemies, animals, natives, criminals, foreign traders</td><td>do not see for you</td></tr>
+        </tbody>
+      </table>
+      <p>Sending soldiers out is how you explore far land; the sight updates ten times a day.</p>
+
+      <h2 id="building">Building</h2>
+      <p>You can only build on explored land. A footprint, a house plot or a road, canal or wall drag that touches unexplored land is refused (<em>You can only build on land you have explored</em>). A new building lights its surroundings at once, even while the game is paused.</p>
+
+      <h2 id="unchanged">What stays as in Pharaoh</h2>
+      <ul>
+        <li>The city simulates exactly the same with fog on or off: no walker, enemy or random decision looks at the fog.</li>
+        <li>Messages keep their locations (invasions, fires, collapses, predators), and the advisors report enemy numbers as before.</li>
+        <li>Sounds of figures in the fog are still heard.</li>
+        <li>A figure standing in the fog still blocks building on its tile.</li>
+        <li>Legion, warship and transport orders into fog or unexplored land are allowed.</li>
+      </ul>
+
+      <details>
+        <summary>Developer Reference</summary>
+        <div class="details-body">
+          <p>Flag: <span class="file-ref">gameplay_enhanced_fog_of_war</span> (<span class="file-ref">game_feature::not_in_enhanced</span>)</p>
+          <p>State and sim step: <span class="file-ref">src/city/city_fog_of_war.cpp</span>, save section <span class="file-ref">fog_of_war</span> (explored tiles only).</p>
+          <p>Config (sight radii, update rate, masks): <span class="file-ref">src/scripts/fog_of_war.js</span></p>
+          <p>Per mission: an optional <code>fog_of_war { enabled, initial_reveal_radius, reveal: [ { hint, tile, radius, from, to } ] }</code> block in the mission script.</p>
+          <p>Drawing: <span class="file-ref">src/widget/city/fog_tile.h</span> (tile tint carried on each render record), figures gated in <span class="file-ref">src/widget/widget_city.cpp</span>, minimap in <span class="file-ref">src/widget/widget_minimap.cpp</span>.</p>
+          <p>Placement gate: <span class="file-ref">src/building/construction/placement_checks.cpp</span>, <span class="file-ref">routed.cpp</span>, <span class="file-ref">build_planner.cpp</span>.</p>
+        </div>
+      </details>
+
+      <div class="bld-nav">
+        <a href="industry-office.html">← Industry Office</a>
+        <a href="../index.html">Player Guide →</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
