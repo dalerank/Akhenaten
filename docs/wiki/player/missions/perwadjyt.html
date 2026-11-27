@@ -329,15 +329,11 @@
 
       <div class="tutorial-step">
         <span class="step-tag">Start</span>
-        <span><a href="../buildings/firehouse.html">Firehouse</a>, <a href="../buildings/architect-post.html">Architect's Post</a>, Police Station, Village Palace, Water Supply, Figs Farm, <a href="../buildings/work-camp.html">Work Camp</a>, <a href="../buildings/booth.html">Booth</a>, Juggler's School, Bazaar, Granary, Temple of Osiris, Shrine of Osiris, and Festival Square are all available. Population is capped at 500 until the first pottery milestone is reached.</span>
+        <span><a href="../buildings/firehouse.html">Firehouse</a>, <a href="../buildings/architect-post.html">Architect's Post</a>, Police Station, Village Palace, Water Supply, Figs Farm, <a href="../buildings/work-camp.html">Work Camp</a>, <a href="../buildings/booth.html">Booth</a>, Juggler's School, Bazaar, Granary, Temple of Osiris, Shrine of Osiris, and Festival Square are all available.</span>
       </div>
       <div class="tutorial-step">
         <span class="step-tag">800 figs in granary</span>
         <span>When a single <a href="../buildings/granary.html">Granary</a> accumulates 800 units of figs, <a href="../buildings/clay-pit.html"><strong>Clay Pit</strong></a>, <a href="../buildings/pottery-workshop.html"><strong>Pottery Workshop</strong></a>, and <strong>Storage Yard</strong> unlock. Labor Advisor becomes available. The <em>Industry</em> tutorial popup is shown (<code>message_tutorial_industry</code>).</span>
-      </div>
-      <div class="tutorial-step">
-        <span class="step-tag">100 pottery stored</span>
-        <span>When Storage Yards collectively hold 100 units of pottery, the population cap of 500 is lifted — immigration resumes at the normal rate.</span>
       </div>
       <div class="tutorial-step">
         <span class="step-tag">200 pottery stored</span>
@@ -356,7 +352,7 @@
       <p>Place 10–12 Vacant Lots near the kingdom road. Build a <a href="../buildings/firehouse.html">Firehouse</a> and a Police Station near housing, and a Village Palace somewhere with access to ground water (grassy terrain). Identify the floodplain tiles along the Nile — they appear darker and more fertile — and place Fig Farms directly on them. Each farm needs peasant labor supplied by a <a href="../buildings/work-camp.html">Work Camp</a>; keep Work Camps within walking distance of the farms so peasants do not waste time in transit. Build a <a href="../buildings/granary.html">Granary</a> to receive the harvest and a <a href="../buildings/bazaar.html">Bazaar</a> to distribute figs to housing. Figs are the only food source until the mission ends, so build enough Granaries to buffer an entire year's supply.</p>
 
       <h3>Phase 2 — Industry and pottery</h3>
-      <p>The population cap of 500 stays in place until 100 pottery units are in Storage Yards. Once a Granary holds 800 figs, Clay Pit, Pottery Workshop, and Storage Yard unlock. Place the Clay Pit close to a water source (the Nile bank), a Pottery Workshop nearby to receive clay, and a Storage Yard to hold finished pottery and surplus clay. One Clay Pit can supply two Pottery Workshops. Workers from the <a href="../buildings/bazaar.html">Bazaar</a> will collect pottery from the Storage Yard and distribute it to houses — <a href="../resources/pottery.html">pottery</a> access is required for housing to evolve to Modest Homestead (level 6). Once 100 pottery is stored the cap lifts; at 200 pottery, decorative buildings (Statues, Gardens, Plazas, Bridges, Ferries) unlock, which can boost desirability enough to push houses to level 6.</p>
+      <p>Once a Granary holds 800 figs, Clay Pit, Pottery Workshop, and Storage Yard unlock. Place the Clay Pit close to a water source (the Nile bank), a Pottery Workshop nearby to receive clay, and a Storage Yard to hold finished pottery and surplus clay. One Clay Pit can supply two Pottery Workshops. Workers from the <a href="../buildings/bazaar.html">Bazaar</a> will collect pottery from the Storage Yard and distribute it to houses — <a href="../resources/pottery.html">pottery</a> access is required for housing to evolve to Modest Homestead (level 6). At 200 pottery, decorative buildings (Statues, Gardens, Plazas, Bridges, Ferries) unlock, which can boost desirability enough to push houses to level 6.</p>
 
       <h3>Phase 3 — Religion, entertainment, and growth</h3>
       <p>Temples and Shrines of Osiris are available from the start, but building them early is wise — Osiris's mood affects the Nile flood intensity, which directly impacts farm yields. Build a Festival Square and hold regular festivals for Osiris to maintain goodwill. A Booth (with a nearby Juggler's School) must be within walker range of all ten housing plots. With food, water, pottery, religion, and entertainment all covered, housing will evolve toward level 6 and population will climb toward 600.</p>
@@ -368,7 +364,6 @@
       <ul>
         <li>Figs farms only harvest once per year. Size your <a href="../buildings/granary.html">Granary</a> capacity before the harvest season — if Granaries are full when peasants arrive, food is lost.</li>
         <li><a href="../buildings/work-camp.html">Work Camps</a> are the bottleneck for farm output. Each Work Camp can service a limited number of farms; add a second one if peasants are walking excessively long distances.</li>
-        <li>The population cap of 500 is lifted only after 100 pottery is stored, not after production starts. Make sure a Storage Yard is in place and accepting pottery so the counter advances.</li>
         <li>Malaria risk is high near the Nile and marshland. Build <a href="../buildings/water-supply.html">Water Supplies</a> on grassy ground and keep housing slightly away from the riverbank where possible.</li>
         <li>Osiris temples raise farm productivity indirectly via flood mood — prioritise Osiris worship even before the entertainment chain is fully built.</li>
         <li>Once statues, gardens, and plazas unlock (200 pottery), a row of Plazas along the main road and small gardens between housing blocks can provide the desirability boost needed to push the last few houses to level 6.</li>
@@ -444,18 +439,15 @@
 
   <span class="kw">vars</span> {
     <span class="kw">figs_stored</span>                    : <span class="num">800</span>   <span class="cmt">// figs threshold to unlock pottery</span>
-    <span class="kw">pottery_step1_stored</span>           : <span class="num">100</span>   <span class="cmt">// pottery stored to lift pop cap</span>
-    <span class="kw">pottery_step1_population_cap</span>   : <span class="num">500</span>   <span class="cmt">// pop cap until step1 reached</span>
-    <span class="kw">pottery_step2_stored</span>           : <span class="num">200</span>   <span class="cmt">// pottery stored to unlock deco buildings</span>
+    <span class="kw">pottery_stored</span>                 : <span class="num">200</span>   <span class="cmt">// pottery stored to unlock deco buildings</span>
     <span class="kw">victory_last_action_delay</span>      : <span class="num">3</span>
 
     figs_stored_handled           : <span class="num">false</span>
     disease_handled               : <span class="num">false</span>
-    pottery_step1_stored_handled  : <span class="num">false</span>
-    pottery_step2_stored_handled  : <span class="num">false</span>
+    pottery_stored_handled        : <span class="num">false</span>
   }
 }</code></pre>
-            <p>To change the figs threshold that unlocks pottery, edit <code>figs_stored</code>. To adjust the population cap enforced until pottery production begins, edit <code>pottery_step1_population_cap</code>.</p>
+            <p>To change the figs threshold that unlocks pottery, edit <code>figs_stored</code>. To change the pottery threshold that unlocks the municipal structures, edit <code>pottery_stored</code>.</p>
           </div>
         </details>
 
@@ -465,56 +457,42 @@
             <p>Each function is bound to a game event via an attribute annotation. Handlers fire only while <code>mission=mission2</code> is active.</p>
             <ul class="event-list">
               <li>
-                <span class="ev-name">event_migration_update</span>
-                <span class="ev-line">line 49</span>
-                <span class="ev-desc">Enforces the pottery population cap. While <code>pottery_step1_stored_handled</code> is false, calls <code>migration.set_population_cap("pottery_not_produced_population_cap", 500)</code>. Lifted to 0 (no cap) once 100 pottery is stored.</span>
-                <span class="ev-fn">mission2_handle_population_cap</span>
-                <span></span>
-              </li>
-              <li>
                 <span class="ev-name">event_mission_start</span>
-                <span class="ev-line">line 71</span>
-                <span class="ev-desc">Enables the empire map, then hides all advisors. Re-enables Population, Entertainment, and Religion advisors unconditionally. On load/restart, re-unlocks industry buildings if <code>figs_stored_handled</code> is already set, decorative buildings if <code>pottery_step2_stored_handled</code> is set, and health buildings if <code>disease_handled</code> is set — restoring mid-mission state correctly.</span>
+                <span class="ev-line">line 85</span>
+                <span class="ev-desc">Enables the empire map, then hides all advisors. Re-enables Population, Entertainment, and Religion advisors unconditionally. On load/restart, re-unlocks industry buildings if <code>figs_stored_handled</code> is already set, decorative buildings if <code>pottery_stored_handled</code> is set, and health buildings if <code>disease_handled</code> is set — restoring mid-mission state correctly.</span>
                 <span class="ev-fn">mission2_on_start</span>
                 <span></span>
               </li>
               <li>
                 <span class="ev-name">event_granary_resource_added</span>
-                <span class="ev-line">line 109</span>
+                <span class="ev-line">line 123</span>
                 <span class="ev-desc">Fires when food is added to any Granary. Once a single Granary holds ≥ 800 figs (configurable via <code>figs_stored</code>), sets <code>figs_stored_handled = true</code>, unlocks Clay Pit / Pottery Workshop / Storage Yard, enables Labor Advisor, and shows <code>message_tutorial_industry</code> (ID 259). Runs only once.</span>
                 <span class="ev-fn">mission2_on_filled_granary</span>
                 <span></span>
               </li>
               <li>
-                <span class="ev-name">event_storageyard_stocks_calculated (step 1)</span>
-                <span class="ev-line">line 134</span>
-                <span class="ev-desc">Fires each time the storage yard stocks are recalculated (once a day). Once the city's total pottery across all Storage Yards reaches ≥ 100 units (configurable via <code>pottery_step1_stored</code>), sets <code>pottery_step1_stored_handled = true</code>, which lifts the population cap via <code>event_migration_update</code>. Runs only once.</span>
-                <span class="ev-fn">mission2_warehouse_pottery_1_check</span>
-                <span></span>
-              </li>
-              <li>
-                <span class="ev-name">event_storageyard_stocks_calculated (step 2)</span>
-                <span class="ev-line">line 149</span>
-                <span class="ev-desc">After step 1 is complete, watches for total pottery ≥ 200 units (configurable via <code>pottery_step2_stored</code>). Sets <code>pottery_step2_stored_handled = true</code>, unlocks Road Block / all Statues / Gardens / Plaza / Low Bridge / Ferry, and shows <code>message_tutorial_municipal_structures</code> (ID 256). Runs only once.</span>
-                <span class="ev-fn">mission2_warehouse_pottery_2_check</span>
+                <span class="ev-name">event_storageyard_stocks_calculated</span>
+                <span class="ev-line">line 148</span>
+                <span class="ev-desc">Fires each time the storage yard stocks are recalculated (once a day). Once the city's total pottery across all Storage Yards reaches ≥ 200 units (configurable via <code>pottery_stored</code>), sets <code>pottery_stored_handled = true</code>, unlocks Road Block / all Statues / Gardens / Plaza / Low Bridge / Ferry, and shows <code>message_tutorial_municipal_structures</code> (ID 256). Runs only once.</span>
+                <span class="ev-fn">mission2_warehouse_pottery_check</span>
                 <span></span>
               </li>
               <li>
                 <span class="ev-name">event_city_disease</span>
-                <span class="ev-line">line 179</span>
+                <span class="ev-line">line 174</span>
                 <span class="ev-desc">Fires on the first epidemic. Sets <code>disease_handled = true</code>, unlocks Apothecary and Physician, enables Health Advisor, and shows <code>message_basic_healthcare</code> (ID 250). Runs only once.</span>
                 <span class="ev-fn">mission2_on_disease</span>
                 <span></span>
               </li>
               <li>
                 <span class="ev-name">event_update_victory_state</span>
-                <span class="ev-line">line 197</span>
-                <span class="ev-desc">Checks all three scripted flags (<code>figs_stored_handled</code>, <code>pottery_step1_stored_handled</code>, <code>pottery_step2_stored_handled</code>) plus a 3-day cooldown after the last event. All must be true before the core win criteria (population 600, 10 houses at level 6+) can grant victory.</span>
+                <span class="ev-line">line 192</span>
+                <span class="ev-desc">Checks both scripted flags (<code>figs_stored_handled</code>, <code>pottery_stored_handled</code>) plus a 3-day cooldown after the last event. All must be true before the core win criteria (population 600, 10 houses at level 6+) can grant victory.</span>
                 <span class="ev-fn">mission2_handle_victory_state</span>
                 <span></span>
               </li>
             </ul>
-            <p style="margin-top:0.75rem">The goal tooltip function <code>mission2_get_goal_tooltip()</code> (line 55) returns a different hint string depending on which milestone is still pending — it is called by <code>city.goal_tooltip</code> to drive the in-game objective display.</p>
+            <p style="margin-top:0.75rem">The goal tooltip function <code>mission2_get_goal_tooltip()</code> (line 71) returns a different hint string depending on which milestone is still pending — it is called by <code>city.goal_tooltip</code> to drive the in-game objective display.</p>
           </div>
         </details>
 

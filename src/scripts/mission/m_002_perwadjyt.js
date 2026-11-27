@@ -3,13 +3,13 @@ log_info("akhenaten: mission 2 started")
 // Mission 2 — Perwadjyt (Buto), "The Precarious Nile". Rank 0 (Village Elder). Tutorial.
 //
 // Goals:     population 600, housing count 10, housing level 6, plus the tutorial steps: 800 figs in a granary,
-//            100 and then 200 pottery in storage yards.
+//            200 pottery in storage yards.
 // Start:     funds 3750, rescue loan 3750 (normal difficulty).
 // Gods:      Osiris.
 // Monuments: none.
 // Trade:     none (empire map off).
 // Enemies:   none (the map has a sea invasion point, but nothing is sent).
-// Timeline:  population capped at 500 until 100 pottery are stored. 800 figs in one granary — clay pit,
+// Timeline:  800 figs in one granary — clay pit,
 //            pottery workshop, storage yard; 200 pottery — roadblock, statues, gardens, plaza, low bridge,
 //            ferry; first disease — apothecary and physician.
 //
@@ -58,16 +58,13 @@ mission2 {
 
 	vars {
 		figs_stored : 800
-		pottery_step1_stored : 100
-		pottery_step1_population_cap : 500
-		pottery_step2_stored : 200
+		pottery_stored : 200
 		victory_last_action_delay : 3
 		last_action_time : 0
 
 		figs_stored_handled : false
 		disease_handled : false
-		pottery_step1_stored_handled : false
-		pottery_step2_stored_handled : false
+		pottery_stored_handled : false
 		start_message_shown : false
 	}
 
@@ -76,22 +73,12 @@ mission2 {
 			return "#mission2_store_figs"
 		}
 
-		if (!mission.pottery_step1_stored_handled) {
+		if (!mission.pottery_stored_handled) {
 			return "#mission2_pottery_step1"
 		}
 
-		if (!mission.pottery_step2_stored_handled) {
-			return "#mission2_pottery_step2"
-		}
-
-		return ""
+		return "#mission2_pottery_step2"
 	}
-}
-
-[es=event_migration_update, mission=mission2]
-function mission2_handle_population_cap(ev) {
-    var max_pop = (!mission.pottery_step1_stored_handled) ? mission.pottery_step1_population_cap : 0;
-    migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
 }
 
 [es=event_mission_start, mission=mission2]
@@ -110,7 +97,7 @@ function mission2_on_start(ev) {
 		city.set_advisor_available(ADVISOR_LABOR, 1)
 	}
 
-	if (mission.pottery_step2_stored_handled) {
+	if (mission.pottery_stored_handled) {
 		city.use_building(BUILDING_ROADBLOCK, true)
 		city.use_building(BUILDING_SMALL_STATUE, true)
 		city.use_building(BUILDING_MEDIUM_STATUE, true)
@@ -158,36 +145,17 @@ function mission2_on_filled_granary(ev) {
 }
 
 [es=event_storageyard_stocks_calculated, mission=mission2]
-function mission2_warehouse_pottery_1_check(ev) {
-    if (mission.pottery_step1_stored_handled) {
-        return
-    }
-
-    var amount = city.yards_stored(RESOURCE_POTTERY)
-    if (amount < mission.pottery_step1_stored) {
-        return
-    }
-
-	mission.pottery_step1_stored_handled = true
-	mission.last_action_time = game.absolute_day
-}
-
-[es=event_storageyard_stocks_calculated, mission=mission2]
-function mission2_warehouse_pottery_2_check(ev) {
-	if (!mission.pottery_step1_stored_handled) {
-        return
-    }
-
-	if (mission.pottery_step2_stored_handled) {
+function mission2_warehouse_pottery_check(ev) {
+	if (mission.pottery_stored_handled) {
         return
     }
 
 	var amount = city.yards_stored(RESOURCE_POTTERY)
-    if (amount < mission.pottery_step2_stored) {
+    if (amount < mission.pottery_stored) {
         return
     }
 
-	mission.pottery_step2_stored_handled = true
+	mission.pottery_stored_handled = true
 	mission.last_action_time = game.absolute_day
 
 	city.use_building(BUILDING_ROADBLOCK, true)
@@ -223,8 +191,7 @@ function mission2_on_disease(ev) {
 [es=event_update_victory_state, mission=mission2]
 function mission2_handle_victory_state(ev) {
 	city.victory.set_reason("figs_stored_handled", mission.figs_stored_handled)
-	city.victory.set_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)
-	city.victory.set_reason("pottery_step2_stored_handled", mission.pottery_step2_stored_handled)
+	city.victory.set_reason("pottery_stored_handled", mission.pottery_stored_handled)
 
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
 	city.victory.set_reason("some_days_after_last_action", some_days_after_last_action)
