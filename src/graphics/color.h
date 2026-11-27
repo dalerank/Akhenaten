@@ -117,3 +117,14 @@ inline color color_from_green_to_red(int value) {
     
     return (alpha << COLOR_BITSHIFT_ALPHA) | (red << COLOR_BITSHIFT_RED) | (green << COLOR_BITSHIFT_GREEN) | (blue << COLOR_BITSHIFT_BLUE);
 }
+
+inline color color_mul(color a, color b) {
+    if (!a) {
+        a = COLOR_MASK_NONE;
+    }
+    auto channel = [a, b](int shift) -> color {
+        return ((COLOR_COMPONENT(a, shift) * COLOR_COMPONENT(b, shift) + 127) / 255) << shift;
+    };
+    return channel(COLOR_BITSHIFT_ALPHA) | channel(COLOR_BITSHIFT_RED) | channel(COLOR_BITSHIFT_GREEN)
+           | channel(COLOR_BITSHIFT_BLUE);
+}

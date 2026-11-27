@@ -15,6 +15,7 @@
 #include "graphics/image_desc.h"
 #include "graphics/image.h"
 #include "graphics/view/lookup.h"
+#include "widget/city/fog_tile.h"
 #include "grid/floodplain.h"
 #include "grid/image.h"
 #include "grid/property.h"
@@ -79,6 +80,10 @@ static void draw_hippodrome_ornaments(vec2i pixel, tile2i point, painter &ctx) {
 void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
     OZZY_PROFILER_FUNCTION();
     int grid_offset = tile.grid_offset();
+    fog_tile_scope fog(ctx, tile);
+    if (fog.unexplored()) {
+        return;
+    }
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset)) {
         return;

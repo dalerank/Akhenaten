@@ -29,6 +29,7 @@ struct painter {
     /// When non-null, ImageDraw::create_command/create_subcommand push here instead of globals (for parallel tile rendering).
     ImageDraw::render_command_vec* command_buffer = nullptr;
     ImageDraw::render_command_vec* subcommand_buffer = nullptr;
+    uint32_t tile_tint = COLOR_MASK_NONE;
 
     void draw( SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color = COLOR_MASK_NONE,
                float scale_x = 1.f, float scale_y = 1.f, double angle = 0, ImgFlags flags = ImgFlag_None, bool force_linear = false);

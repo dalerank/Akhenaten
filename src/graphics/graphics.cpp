@@ -69,6 +69,7 @@ void ui::textured::graphics_draw_background(painter& ctx, int image_id, float sc
 
 void ImageDraw::execute_render_command(painter& ctx, const render_command_t& command) {
     OZZY_PROFILER_FUNCTION();
+    const uint32_t mask = command.tint == COLOR_MASK_NONE ? command.mask : color_mul(command.mask, command.tint);
 
     if (command.location != nullptr) {
         OZZY_PROFILER_TAG("location", command.location);
@@ -77,40 +78,41 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
     const image_t *img = nullptr;
     switch (command.rtype) {
     case render_command_t::ert_drawtile: {
-           img = ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
+        img = ctx.isometric_from_drawtile(command.image_id, command.pixel, mask, command.flags);
         }
         break;
 
     case render_command_t::ert_drawtile_top: {
-            img = ctx.isometric_from_drawtile_top(command.image_id, command.pixel, command.mask, command.flags);
+        img = ctx.isometric_from_drawtile_top(command.image_id, command.pixel, mask, command.flags);
         }
         break;
 
     case render_command_t::ert_drawtile_full: {
-            img = ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
-            int offset_y = image_iso_top_offset_y(img);
-            const vec2i pixel = command.pixel - vec2i{ 0, offset_y };
-            ctx.isometric_from_drawtile_top(command.image_id, pixel, command.mask, command.flags);
+        img = ctx.isometric_from_drawtile(command.image_id, command.pixel, mask, command.flags);
+        int offset_y = image_iso_top_offset_y(img);
+        const vec2i pixel = command.pixel - vec2i{0, offset_y};
+        ctx.isometric_from_drawtile_top(command.image_id, pixel, mask, command.flags);
         }
         break;
 
     case render_command_t::ert_generic: {
-            img = ctx.img_generic(command.image_id, command.pixel, command.mask, command.scale, command.flags);
+        img = ctx.img_generic(command.image_id, command.pixel, mask, command.scale, command.flags);
         }
         break;
 
     case render_command_t::ert_ornament: {
-            img = ctx.img_ornament(command.image_id, command.base_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
+        img
+          = ctx.img_ornament(command.image_id, command.base_id, command.pixel.x, command.pixel.y, mask, command.scale);
         }
         break;
 
     case render_command_t::ert_sprite: {
-            img = ctx.img_sprite(command.image_id, command.pixel, command.mask, command.scale, command.flags);
+        img = ctx.img_sprite(command.image_id, command.pixel, mask, command.scale, command.flags);
         }
         break;
 
     case render_command_t::ert_from_below: {
-            img = ctx.img_from_below(command.image_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
+        img = ctx.img_from_below(command.image_id, command.pixel.x, command.pixel.y, mask, command.scale);
         }
         break;
 
@@ -179,6 +181,7 @@ render_command_t& ImageDraw::create_command(painter& ctx, render_command_t::e_re
     command.rtype = rt;
     command.use_sort_pixel = false;
     command.layer = render_command_t::layer_scene;
+    command.tint = ctx.tile_tint;
     command.sort_pixel = {};
     command.start_subcommand = -1;
     command.finish_subcommand = -1;
@@ -189,6 +192,7 @@ render_command_t &ImageDraw::create_dcommand(render_command_t::e_render_type rt)
     auto &command = g_render_debug_commands.emplace_back();
     command.id = g_render_commands.size() - 1;
     command.rtype = rt;
+    command.tint = COLOR_MASK_NONE;
     command.use_sort_pixel = false;
     command.sort_pixel = {};
     command.start_subcommand = -1;
@@ -233,6 +237,7 @@ render_command_t& ImageDraw::create_subcommand(painter& ctx, render_command_t::e
     }
 
     subcommand.rtype = rt;
+    subcommand.tint = ctx.tile_tint;
     subcommand.use_sort_pixel = false;
     subcommand.sort_pixel = {};
     subcommand.start_subcommand = -1;

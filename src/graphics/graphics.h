@@ -74,6 +74,7 @@ struct render_command_t {
     int32_t base_id = 0;
     vec2i size = {};
     uint32_t mask = COLOR_MASK_NONE;
+    uint32_t tint = COLOR_MASK_NONE;
     float scale = 1.f;
     uint32_t flags = 0;
     uint32_t id = 0;

@@ -6,6 +6,7 @@
 #include "graphics/view/view.h"
 #include "building/monuments.h"
 #include "graphics/graphics.h"
+#include "widget/city/fog_tile.h"
 #include "graphics/image.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -156,6 +157,17 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
         return;
     }
 
+    fog_tile_scope fog(ctx, tile);
+    if (fog.unexplored()) {
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
+        command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+        command.pixel = pixel;
+        command.mask = COLOR_BLACK;
+        command.location = SOURCE_LOCATION;
+        map_render_set(tile, 0);
+        return;
+    }
+
     const auto overlay = g_city_overlay.get();
     if (overlay->draw_custom_footprint(pixel, tile, ctx)) {
         /*nothing*/
@@ -209,6 +221,11 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     //Planner.construction_record_view_position(pixel, point);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
+
+    fog_tile_scope fog(ctx, point);
+    if (fog.unexplored()) {
+        return;
+    }
 
     const auto overlay = g_city_overlay.get();
     if (grid_offset < 0) {

@@ -48,6 +48,7 @@
 #include "game/sound_effect.h"
 #include "sound/sound.h"
 #include "editor/tool.h"
+#include "widget/city/fog_tile.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/tile_draw.h"
 #include "widget/widget_minimap.h"
@@ -248,6 +249,10 @@ void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter
             continue;
         }
 
+        if (!city_fog_of_war().figure_seen(*f.f)) {
+            continue;
+        }
+
         if (map_figure_draw_state(f.f->id).main_pos.x < (pixel.x - TILE_WIDTH_PIXELS)
             || map_figure_draw_state(f.f->id).main_pos.x > (pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
@@ -387,6 +392,10 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, [[maybe
             continue; // Skip figures that render on flat tiles
         }
 
+        if (!city_fog_of_war().figure_seen(*f.f)) {
+            continue;
+        }
+
         const bool allow_main = !selected_figure_id || f.f->id == selected_figure_id;
         const int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
 
@@ -419,6 +428,10 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
         const figure_static_params &params = figure_static_params::get(f.f->type);
         if (params.render_on_flat_tiles) {
             continue; // Skip figures that render on flat tiles
+        }
+
+        if (!city_fog_of_war().figure_seen(*f.f)) {
+            continue;
         }
 
         if (!g_city_overlay.get()->show_figure(f.f)) {
@@ -709,6 +722,15 @@ void screen_city_t::debug_draw_figures(painter &ctx) {
     }
 }
 
+static void draw_unexplored_tile(vec2i pixel, tile2i tile, painter& ctx) {
+    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
+    command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+    command.pixel = pixel;
+    command.mask = COLOR_BLACK;
+    command.location = SOURCE_LOCATION;
+    map_render_set(tile, 0);
+}
+
 void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     OZZY_PROFILER_FUNCTION();
     // black tile outside of map
@@ -724,6 +746,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         return;
     }
 
+    fog_tile_scope fog(ctx, tile);
     int building_id = map_building_at(tile);
 
     color color_mask = COLOR_MASK_NONE;
@@ -756,6 +779,9 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
             }
 
             if (!force_tile_draw) {
+                if (fog.unexplored()) {
+                    draw_unexplored_tile(pixel, tile, ctx);
+                }
                 return;
             }
         }
@@ -792,6 +818,11 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         if (image_id != stored_image_id) {
             g_water_frame_queue.push(tile.grid_offset(), image_id);
         }
+    }
+
+    if (fog.unexplored()) {
+        draw_unexplored_tile(pixel, tile, ctx);
+        return;
     }
 
     if (map_property_is_constructing(tile)) {
@@ -861,6 +892,11 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         command.pixel = pixel;
         command.mask = COLOR_BLACK;
         command.location = SOURCE_LOCATION;
+        return;
+    }
+
+    fog_tile_scope fog(ctx, tile);
+    if (fog.unexplored()) {
         return;
     }
 
@@ -952,6 +988,11 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         return;
     }
 
+    fog_tile_scope fog(ctx, tile);
+    if (fog.unexplored()) {
+        return;
+    }
+
     if (!map_property_is_draw_tile(tile)) {
         return;
     }
@@ -1007,10 +1048,18 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
 void screen_city_t::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
     OZZY_PROFILER_FUNCTION();
     int grid_offset = tile.grid_offset();
+    fog_tile_scope fog(ctx, tile);
+    if (fog.unexplored()) {
+        return;
+    }
 
     // Bridges are terrain+sprite (no building_id); draw before the building early-out.
     if (map_is_bridge(grid_offset)) {
         city_draw_bridge(point, tile, ctx);
+        return;
+    }
+
+    if (fog.fogged()) {
         return;
     }
 
