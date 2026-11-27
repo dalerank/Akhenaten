@@ -1,5 +1,7 @@
 // Reference playthrough of m003 Nekhen: plays REF_M003_PLAN through the build planner day by day until the mission
-// is won. Log: one "[ref:m003] month=N ..." line per month (levels = houses at least modest homestead / spacious
+// is won. A row waits for its month, then for pop (population >= pop), unemployment (unemployment % >= value) and
+// after (that building type unlocked). Log: one "[ref:m003] month=N ..." line per month (mood = sentiment / low mood
+// cause, workers = employed / unfilled jobs / available, levels = houses at least modest homestead / spacious
 // homestead / modest apartment, beer/pottery in storage yards), "placed"/"lost"/"cleared" per build action and
 // "result won_month=N". Notes: tmp/reference-playthroughs.md.
 var REF_M003_TAG = '[ref:m003]'
@@ -14,61 +16,77 @@ var REF_M003_PLAN = [
     { month: 0, name: 'road_street', action: 'road', x: 32, y: 53, x2: 50, y2: 53 },
     { month: 0, name: 'road_east_link', action: 'road', x: 51, y: 50, x2: 51, y2: 68 },
     { month: 0, name: 'road_west_link', action: 'road', x: 33, y: 54, x2: 33, y2: 68 },
-    { month: 0, name: 'road_back_street', action: 'road', x: 34, y: 59, x2: 52, y2: 59 },
-    { month: 0, name: 'road_south_street', action: 'road', x: 34, y: 65, x2: 50, y2: 65 },
-    { month: 0, name: 'road_far_south_street', action: 'road', x: 34, y: 68, x2: 50, y2: 68 },
     { month: 0, name: 'farm_grain_1', action: 'build', type: BUILDING_GRAIN_FARM, x: 40, y: 39 },
     { month: 0, name: 'farm_grain_2', action: 'build', type: BUILDING_GRAIN_FARM, x: 43, y: 39 },
     { month: 0, name: 'farm_barley_1', action: 'build', type: BUILDING_BARLEY_FARM, x: 46, y: 39 },
     { month: 0, name: 'farm_barley_2', action: 'build', type: BUILDING_BARLEY_FARM, x: 49, y: 39 },
-    { month: 0, name: 'farm_grain_5', action: 'build', type: BUILDING_GRAIN_FARM, x: 52, y: 39 },
+    { month: 0, name: 'farm_barley_3', action: 'build', type: BUILDING_BARLEY_FARM, x: 52, y: 39 },
     { month: 0, name: 'farm_grain_3', action: 'build', type: BUILDING_GRAIN_FARM, x: 48, y: 43 },
     { month: 0, name: 'farm_grain_4', action: 'build', type: BUILDING_GRAIN_FARM, x: 51, y: 43 },
     { month: 0, name: 'firehouse_farms', action: 'build', type: BUILDING_FIREHOUSE, x: 56, y: 45 },
     { month: 0, name: 'architect_farms', action: 'build', type: BUILDING_ARCHITECT_POST, x: 56, y: 46 },
-    { month: 0, name: 'work_camp_1', action: 'build', type: BUILDING_WORK_CAMP, x: 72, y: 47 },
     { month: 0, name: 'work_camp_2', action: 'build', type: BUILDING_WORK_CAMP, x: 55, y: 47 },
-    { month: 0, name: 'clay_pit', action: 'build', type: BUILDING_CLAY_PIT, x: 58, y: 44 },
-    { month: 0, name: 'brewery_1', action: 'build', type: BUILDING_BREWERY_WORKSHOP, x: 58, y: 46 },
-    { month: 0, name: 'brewery_2', action: 'build', type: BUILDING_BREWERY_WORKSHOP, x: 74, y: 47 },
+    { month: 0, name: 'work_camp_1', action: 'build', type: BUILDING_WORK_CAMP, x: 72, y: 47 },
     { month: 0, name: 'granary', action: 'build', type: BUILDING_GRANARY, x: 60, y: 45 },
-    { month: 0, name: 'pottery', action: 'build', type: BUILDING_POTTERY_WORKSHOP, x: 64, y: 47 },
-    { month: 0, name: 'storage_yard_1', action: 'build', type: BUILDING_STORAGE_YARD, x: 66, y: 46 },
-    { month: 0, name: 'storage_yard_2', action: 'build', type: BUILDING_STORAGE_YARD, x: 69, y: 46 },
     { month: 0, name: 'architect_industry', action: 'build', type: BUILDING_ARCHITECT_POST, x: 58, y: 48 },
     { month: 0, name: 'firehouse_industry', action: 'build', type: BUILDING_FIREHOUSE, x: 59, y: 48 },
-    { month: 0, name: 'village_palace', action: 'build', type: BUILDING_VILLAGE_PALACE, x: 33, y: 45 },
-    { month: 0, name: 'lots_target', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 54, w: 17, h: 2 },
+    { month: 0, name: 'water_supply_1', action: 'build', type: BUILDING_WATER_SUPPLY, x: 36, y: 51 },
     { month: 0, name: 'lots_north_west', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 37, y: 47, w: 5, h: 2 },
     { month: 0, name: 'lots_north_east', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 43, y: 48, w: 12, h: 1 },
-    { month: 0, name: 'lots_south_1', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 63, w: 17, h: 2 },
-    { month: 0, name: 'lots_south_2', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 66, w: 17, h: 2 },
-    { month: 0, name: 'lots_south_3', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 69, w: 17, h: 2 },
-    { month: 0, name: 'bazaar_1', action: 'build', type: BUILDING_BAZAAR, x: 34, y: 51 },
-    { month: 0, name: 'water_supply_1', action: 'build', type: BUILDING_WATER_SUPPLY, x: 36, y: 51 },
-    { month: 0, name: 'water_supply_2', action: 'build', type: BUILDING_WATER_SUPPLY, x: 46, y: 51 },
-    { month: 0, name: 'bazaar_2', action: 'build', type: BUILDING_BAZAAR, x: 48, y: 51 },
-    { month: 0, name: 'temple_ra', action: 'build', type: BUILDING_TEMPLE_RA, x: 34, y: 60 },
-    { month: 0, name: 'juggler_school', action: 'build', type: BUILDING_JUGGLER_SCHOOL, x: 40, y: 60 },
-    { month: 0, name: 'booth', action: 'build', type: BUILDING_BOOTH, x: 32, y: 53 },
-    { month: 0, name: 'shrine_osiris_1', action: 'build', type: BUILDING_SHRINE_OSIRIS, x: 42, y: 60 },
-    { month: 0, name: 'shrine_bast_1', action: 'build', type: BUILDING_SHRINE_BAST, x: 43, y: 60 },
-    { month: 0, name: 'police', action: 'build', type: BUILDING_POLICE_STATION, x: 44, y: 60 },
-    { month: 0, name: 'firehouse', action: 'build', type: BUILDING_FIREHOUSE, x: 45, y: 60 },
-    { month: 0, name: 'architect', action: 'build', type: BUILDING_ARCHITECT_POST, x: 46, y: 60 },
-    { month: 0, name: 'shrine_osiris_2', action: 'build', type: BUILDING_SHRINE_OSIRIS, x: 47, y: 60 },
-    { month: 0, name: 'shrine_bast_2', action: 'build', type: BUILDING_SHRINE_BAST, x: 48, y: 60 },
-    { month: 0, name: 'statue_1', action: 'build', type: BUILDING_LARGE_STATUE, x: 34, y: 56 },
-    { month: 0, name: 'statue_2', action: 'build', type: BUILDING_LARGE_STATUE, x: 37, y: 56 },
-    { month: 0, name: 'statue_3', action: 'build', type: BUILDING_LARGE_STATUE, x: 40, y: 56 },
-    { month: 0, name: 'statue_4', action: 'build', type: BUILDING_LARGE_STATUE, x: 43, y: 56 },
-    { month: 0, name: 'statue_5', action: 'build', type: BUILDING_LARGE_STATUE, x: 46, y: 56 },
-    { month: 0, name: 'statue_north_1', action: 'build', type: BUILDING_LARGE_STATUE, x: 38, y: 50 },
-    { month: 0, name: 'statue_north_2', action: 'build', type: BUILDING_LARGE_STATUE, x: 43, y: 50 },
-    { month: 0, name: 'conservatory', action: 'build', type: BUILDING_CONSERVATORY, x: 37, y: 60 },
-    { month: 0, name: 'bandstand', action: 'build', type: BUILDING_BANDSTAND, x: 50, y: 57 },
-    { month: 0, name: 'physician', action: 'build', type: BUILDING_PHYSICIAN, x: 41, y: 51, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'lots_target', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 54, w: 17, h: 2 },
+
+    { month: 1, pop: 120, name: 'water_supply_2', action: 'build', type: BUILDING_WATER_SUPPLY, x: 46, y: 51 },
+    { month: 1, pop: 120, name: 'road_back_street', action: 'road', x: 34, y: 59, x2: 52, y2: 59 },
+    { month: 1, pop: 120, name: 'shrine_osiris_1', action: 'build', type: BUILDING_SHRINE_OSIRIS, x: 42, y: 60 },
+    { month: 1, pop: 120, name: 'shrine_bast_1', action: 'build', type: BUILDING_SHRINE_BAST, x: 43, y: 60 },
+    { month: 1, pop: 120, name: 'booth', action: 'build', type: BUILDING_BOOTH, x: 32, y: 53 },
+    { month: 1, pop: 120, name: 'juggler_school', action: 'build', type: BUILDING_JUGGLER_SCHOOL, x: 40, y: 60 },
+
+    { month: 2, pop: 250, name: 'storage_yard_1', action: 'build', type: BUILDING_STORAGE_YARD, x: 66, y: 46 },
+    { month: 2, pop: 250, name: 'brewery_1', action: 'build', type: BUILDING_BREWERY_WORKSHOP, x: 58, y: 46 },
+    { month: 2, pop: 250, name: 'road_south_street', action: 'road', x: 34, y: 65, x2: 50, y2: 65 },
+    { month: 2, pop: 250, name: 'lots_south_1', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 63, w: 17, h: 2 },
+    { month: 2, pop: 250, name: 'police', action: 'build', type: BUILDING_POLICE_STATION, x: 44, y: 60 },
+    { month: 2, pop: 250, name: 'firehouse', action: 'build', type: BUILDING_FIREHOUSE, x: 45, y: 60 },
+    { month: 2, pop: 250, name: 'architect', action: 'build', type: BUILDING_ARCHITECT_POST, x: 46, y: 60 },
+
+    { month: 4, pop: 400, name: 'brewery_2', action: 'build', type: BUILDING_BREWERY_WORKSHOP, x: 74, y: 47 },
+    { month: 4, pop: 400, name: 'storage_yard_2', action: 'build', type: BUILDING_STORAGE_YARD, x: 69, y: 46 },
+    { month: 4, pop: 400, name: 'clay_pit', action: 'build', type: BUILDING_CLAY_PIT, x: 58, y: 44 },
+    { month: 4, pop: 400, name: 'pottery', action: 'build', type: BUILDING_POTTERY_WORKSHOP, x: 64, y: 47 },
+    { month: 4, pop: 400, name: 'bazaar_1', action: 'build', type: BUILDING_BAZAAR, x: 34, y: 51 },
+
+    { month: 6, pop: 500, name: 'temple_ra', action: 'build', type: BUILDING_TEMPLE_RA, x: 34, y: 60 },
+    { month: 6, pop: 500, name: 'shrine_osiris_2', action: 'build', type: BUILDING_SHRINE_OSIRIS, x: 47, y: 60 },
+    { month: 6, pop: 500, name: 'shrine_bast_2', action: 'build', type: BUILDING_SHRINE_BAST, x: 48, y: 60 },
+    { month: 6, pop: 500, name: 'bazaar_2', action: 'build', type: BUILDING_BAZAAR, x: 48, y: 51 },
+
+    { month: 8, pop: 500, name: 'conservatory', action: 'build', type: BUILDING_CONSERVATORY, x: 37, y: 60 },
+    { month: 8, pop: 500, name: 'bandstand', action: 'build', type: BUILDING_BANDSTAND, x: 50, y: 57 },
+    { month: 10, pop: 500, name: 'village_palace', action: 'build', type: BUILDING_VILLAGE_PALACE, x: 33, y: 45 },
+
+    { month: 10, unemployment: 20, name: 'brewery_3', action: 'build', type: BUILDING_BREWERY_WORKSHOP, x: 64, y: 50 },
+    { month: 10, unemployment: 20, name: 'brewery_4', action: 'build', type: BUILDING_BREWERY_WORKSHOP, x: 66, y: 50 },
+    { month: 10, unemployment: 20, name: 'granary_2', action: 'build', type: BUILDING_GRANARY, x: 68, y: 50 },
+    { month: 10, unemployment: 20, name: 'storage_yard_3', action: 'build', type: BUILDING_STORAGE_YARD, x: 72, y: 50 },
+    { month: 14, unemployment: 20, name: 'tax_collector_2', action: 'build', type: BUILDING_TAX_COLLECTOR, x: 30, y: 47 },
+    { month: 14, unemployment: 20, name: 'work_camp_3', action: 'build', type: BUILDING_WORK_CAMP, x: 73, y: 53 },
+    { month: 14, unemployment: 20, name: 'brewery_5', action: 'build', type: BUILDING_BREWERY_WORKSHOP, x: 73, y: 55 },
+    { month: 14, unemployment: 20, name: 'bazaar_3', action: 'build', type: BUILDING_BAZAAR, x: 52, y: 61 },
+    { month: 14, unemployment: 20, name: 'apothecary', action: 'build', type: BUILDING_APOTHECARY, x: 52, y: 63 },
+
     { month: 0, name: 'tax_collector', action: 'build', type: BUILDING_TAX_COLLECTOR, x: 49, y: 60 },
+    { month: 0, name: 'physician', action: 'build', type: BUILDING_PHYSICIAN, x: 41, y: 51, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'road_far_south_street', action: 'road', x: 34, y: 68, x2: 50, y2: 68, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'lots_south_2', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 66, w: 17, h: 2, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, pop: 750, name: 'lots_south_3', action: 'lots', type: BUILDING_HOUSE_VACANT_LOT, x: 34, y: 69, w: 17, h: 2, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'statue_1', action: 'build', type: BUILDING_LARGE_STATUE, x: 34, y: 56, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'statue_2', action: 'build', type: BUILDING_LARGE_STATUE, x: 37, y: 56, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'statue_3', action: 'build', type: BUILDING_LARGE_STATUE, x: 40, y: 56, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'statue_4', action: 'build', type: BUILDING_LARGE_STATUE, x: 43, y: 56, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'statue_5', action: 'build', type: BUILDING_LARGE_STATUE, x: 46, y: 56, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'statue_north_1', action: 'build', type: BUILDING_LARGE_STATUE, x: 38, y: 50, after: BUILDING_TAX_COLLECTOR },
+    { month: 0, name: 'statue_north_2', action: 'build', type: BUILDING_LARGE_STATUE, x: 43, y: 50, after: BUILDING_TAX_COLLECTOR },
 ]
 
 var __ref_m003 = { won_month: -1, failed: '', rows: [] }
@@ -199,11 +217,17 @@ function ref_m003_ready(row, month) {
     if (month < row.month) {
         return false
     }
-    if (row.action == 'set_tax' || row.action == 'road') {
-        return true
+    if (row.pop && city.population < row.pop) {
+        return false
+    }
+    if (row.unemployment && city.labor.unemployment_percentage < row.unemployment) {
+        return false
     }
     if (row.after && !__scenario_building_allowed(row.after)) {
         return false
+    }
+    if (row.action == 'set_tax' || row.action == 'road') {
+        return true
     }
     return !!__scenario_building_allowed(row.type)
 }
@@ -284,6 +308,7 @@ function ref_m003_month_line(month) {
         + ' ' + ref_m003_date()
         + ' pop=' + city.population
         + ' funds=' + city.finance.treasury
+        + ' taxes=' + __city_finance_income('taxes', true)
         + ' culture=' + city.rating.culture
         + ' prosperity=' + city.rating.prosperity
         + ' monument=' + city.rating.monument
@@ -291,6 +316,8 @@ function ref_m003_month_line(month) {
         + ' houses=' + city.total_housing_buildings()
         + ' housing_goal=' + city.count_houses_at_least(wc.housing_level.goal) + '/' + wc.housing_count.goal
         + ' unemployment=' + city.labor.unemployment_percentage
+        + ' mood=' + __city_sentiment.value + '/' + __city_sentiment.low_mood_cause
+        + ' workers=' + city.labor.workers_employed + '/' + city.labor.workers_needed + '/' + city.labor.workers_available
         + ' levels=' + ref_m003_levels()
         + ' grain=' + city.resources.grain.city_stored
         + ' barley=' + city.resources.barley.city_stored
