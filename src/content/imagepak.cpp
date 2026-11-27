@@ -30,6 +30,7 @@
 #include <cinttypes>
 #include <cstring>
 #include <mutex>
+#include <utility>
 
 SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 image_packer packer;
@@ -392,6 +393,8 @@ imagepak::imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool sys
     should_convert_fonts = fonts;
     should_compact_system = compact_system;
     userpack = custom;
+    source_name = pak_name;
+    source_index = starting_index;
 
     if (g_args.is_log_resources()) {
         logs::info("VFS: Starting to load pack '%s' (id=%d, index=%d, custom=%d)", 
@@ -422,6 +425,37 @@ imagepak::imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool sys
 
 imagepak::~imagepak() {
     cleanup_and_destroy();
+}
+
+bool imagepak::reload_textures() {
+    imagepak fresh(pack, source_name, source_index, should_load_system_sprites, should_convert_fonts, userpack,
+      should_compact_system);
+    if (fresh.atlas_pages.size() != atlas_pages.size() || fresh.images_array.size() != images_array.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < atlas_pages.size(); ++i) {
+        const atlas_data_t& now = atlas_pages[i];
+        if (fresh.atlas_pages[i].width != now.width || fresh.atlas_pages[i].height != now.height) {
+            return false;
+        }
+    }
+    for (size_t i = 0; i < images_array.size(); ++i) {
+        if (fresh.images_array[i].atlas.index != images_array[i].atlas.index
+            || fresh.images_array[i].atlas.offset != images_array[i].atlas.offset) {
+            return false;
+        }
+    }
+
+    for (size_t i = 0; i < atlas_pages.size(); ++i) {
+        atlas_data_t& page = atlas_pages[i];
+        if (page.texture != nullptr) {
+            g_memory.track_pack_texture(name.c_str(), page.width, page.height, false);
+            res_atlas::forget_source(page.texture);
+            g_render.destroy_texture(page.texture);
+        }
+        page.texture = std::exchange(fresh.atlas_pages[i].texture, nullptr);
+    }
+    return true;
 }
 
 span_const<imagepak::bmp_name> imagepak::names() {

@@ -544,19 +544,32 @@ void image_invalidate_pak_cache(int pak_id) {
 
 void image_recreate_all_textures() {
     auto &data = *g_image_data;
-    for (auto &pak : data.pak_list) {
-        if (pak.handle) {
-            for (auto &atlas : pak.handle->atlas_pages) {
-                if (atlas.temp.pixel_buffer) {
-                    if (atlas.texture) {
-                        res_atlas::forget_source(atlas.texture);
-                        g_render.destroy_texture(atlas.texture);
-                        atlas.texture = nullptr;
-                    }
-                    atlas.texture = g_render.create_texture_from_buffer(atlas.temp.pixel_buffer, atlas.width, atlas.height);
-                }
-            }
+    bool regenerate_fonts = false;
+    for (int pak_id = 0; pak_id < static_cast<int>(data.pak_list.size()); ++pak_id) {
+        imagepak* pak = data.pak_list[pak_id].handle;
+        if (!pak || pak->atlas_pages.empty()) {
+            continue;
         }
+
+        const bool from_buffers = std::all_of(pak->atlas_pages.begin(), pak->atlas_pages.end(),
+          [](const atlas_data_t& page) { return page.temp.pixel_buffer != nullptr; });
+        if (from_buffers) {
+            for (auto& atlas : pak->atlas_pages) {
+                if (atlas.texture) {
+                    res_atlas::forget_source(atlas.texture);
+                    g_render.destroy_texture(atlas.texture);
+                }
+                atlas.texture = g_render.create_texture_from_buffer(atlas.temp.pixel_buffer, atlas.width, atlas.height);
+            }
+        } else if (pak_id == PACK_CUSTOM_FONT) {
+            regenerate_fonts = true;
+        } else if (!pak->reload_textures()) {
+            logs::error("image: pak '%s' could not be reloaded after the render device reset", pak->name.c_str());
+        }
+    }
+
+    if (regenerate_fonts) {
+        font_atlas_regenerate();
     }
 }
 

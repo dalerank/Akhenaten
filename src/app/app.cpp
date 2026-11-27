@@ -225,6 +225,9 @@ void application_t::handle_sdl_event(void* ev) {
         break;
 
     case SDL_RENDER_TARGETS_RESET:
+        platform_renderer_invalidate_target_textures();
+        break;
+
     case SDL_RENDER_DEVICE_RESET:
         platform_renderer_invalidate_all_textures();
         break;

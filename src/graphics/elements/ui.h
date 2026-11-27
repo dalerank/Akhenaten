@@ -980,7 +980,7 @@ namespace ui {
     struct eimage_button : public element {
         float scale = 1.f;
         image_desc img_desc;
-        void* icon_texture = nullptr;
+        xstring icon_texture;
         int param1 = 0;
         int param2 = 0;
         img_button_offsets offsets;

@@ -410,6 +410,15 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
       (uint8_t)mod_b, (uint8_t)mod_a, angle, !!(flags & ImgFlag_Mirrored)});
 }
 
+void painter::forget_grayscale_textures() {
+    for (const auto& entry : grayscaled_txs) {
+        if (entry.second) {
+            g_render.destroy_texture(entry.second);
+        }
+    }
+    grayscaled_txs.clear();
+}
+
 SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size) {
     if (!tx) {
         return nullptr;

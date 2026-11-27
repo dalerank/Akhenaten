@@ -1833,11 +1833,7 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     set_event(ONHOVER_EVENT, arch.r_string(ONHOVER_EVENT.c_str()));
     set_event(ONUNHOVER_EVENT, arch.r_string(ONUNHOVER_EVENT.c_str()));
 
-    xstring name_icon_texture = arch.r_string("icon_texture");
-    if (!name_icon_texture.empty()) {
-        vec2i tmp_size;
-        icon_texture = load_icon_texture(name_icon_texture.c_str(), tmp_size);
-    }
+    icon_texture = arch.r_string("icon_texture");
 }
 
 void ui::eimage_button::draw(UiFlags gflags) {
@@ -1873,14 +1869,14 @@ void ui::eimage_button::draw(UiFlags gflags) {
         btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
         push(cmd_t::saved_texture, Pos{scr_pos}, Size{size}, ImageId{texture_id});
         tsize = size;
-    } else if (icon_texture) {
+    } else if (SDL_Texture* icon = icon_texture_by_name(icon_texture)) {
         int icon_draw_flags = ImgFlag_Alpha;
         if (!!(flags & UiFlags_Grayscale)) {
             icon_draw_flags |= ImgFlag_Grayscale;
         }
         btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
         push(cmd_t::texture_icon, Pos{scr_pos}, Size{size}, Mask{COLOR_MASK_NONE}, Scale{scale},
-             ImgFlagsTag{(ImgFlag_)icon_draw_flags}, SdlTexture{icon_texture});
+          ImgFlagsTag{(ImgFlag_)icon_draw_flags}, SdlTexture{icon});
         tsize = size;
     }
 

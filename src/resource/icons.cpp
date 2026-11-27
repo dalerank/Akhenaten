@@ -23,9 +23,12 @@
 
 CMRC_DECLARE(akhenaten);
 
+#include "core/xvalue.h"
+
 #include <SDL.h>
 #include <string.h>
 #include <assert.h>
+#include <vector>
 
 SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 constexpr pcstr internal_res_path = "res/";
@@ -91,4 +94,37 @@ SDL_Surface *load_icon_surface(pcstr name, vec2i &size) {
     }
 
     return nullptr;
+}
+struct icon_textures_t {
+    struct entry {
+        xstring name;
+        SDL_Texture* texture;
+    };
+    std::vector<entry> entries;
+};
+
+SDL_Texture* icon_texture_by_name(const xstring& name) {
+    if (name.empty()) {
+        return nullptr;
+    }
+    auto& cache = xvalue<icon_textures_t>::ref();
+    for (const auto& e : cache.entries) {
+        if (e.name == name) {
+            return e.texture;
+        }
+    }
+    vec2i size;
+    SDL_Texture* texture = load_icon_texture(name.c_str(), size);
+    cache.entries.push_back({name, texture});
+    return texture;
+}
+
+void icon_textures_forget() {
+    auto& cache = xvalue<icon_textures_t>::ref();
+    for (const auto& e : cache.entries) {
+        if (e.texture) {
+            g_render.destroy_texture(e.texture);
+        }
+    }
+    cache.entries.clear();
 }

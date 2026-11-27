@@ -39,6 +39,8 @@ private:
     bool should_load_system_sprites;
     bool should_convert_fonts;
     bool should_compact_system;
+    xstring source_name;
+    int source_index;
 
     bool load_pak(vfs::path pak_name, int starting_index);
     bool load_zip_pak(vfs::path pak_name, int starting_index);
@@ -54,6 +56,8 @@ public:
 
     imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false, bool compact_system = false);
     ~imagepak();
+
+    bool reload_textures();
 
     span_const<bmp_name> names();
     span_const<uint16_t> image_ids();

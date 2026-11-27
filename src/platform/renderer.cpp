@@ -10,12 +10,14 @@
 #include "platform/screen.h"
 #include "platform/cursor.h"
 #include "graphics/image_groups.h"
+#include "graphics/painter.h"
 #include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
 #include "graphics/texture_alpha.h"
 #include "graphics/view/view.h"
 #include "game/game.h"
 #include "input/cursor.h"
+#include "resource/icons.h"
 
 #include <SDL.h>
 #include <SDL_video.h>
@@ -1661,15 +1663,6 @@ void platform_renderer_invalidate_all_textures() {
     flush_sprites();
     auto &data = g_renderer_data;
 
-    // Destroy texture buffers (TARGET textures)
-    for (auto &tb : data.texture_buffers) {
-        if (tb.texture) {
-            SDL_DestroyTexture(tb.texture);
-        }
-    }
-    data.texture_buffers.clear();
-
-    // Destroy custom textures (e.g. blend textures which are TARGET)
     for (int i = 0; i < CUSTOM_IMAGE_MAX; i++) {
         if (data.custom_textures[i].texture) {
             SDL_DestroyTexture(data.custom_textures[i].texture);
@@ -1677,7 +1670,6 @@ void platform_renderer_invalidate_all_textures() {
         }
     }
 
-    // Destroy unpacked images (STATIC textures, might be invalid)
     for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
         if (data.unpacked_images[i].texture) {
             SDL_DestroyTexture(data.unpacked_images[i].texture);
@@ -1685,20 +1677,23 @@ void platform_renderer_invalidate_all_textures() {
         }
     }
 
-    // Recreate the main render texture
-    platform_renderer_create_render_texture(screen_width(), screen_height());
-
-    // Invalidate residency atlas so it repacks onto a fresh GPU texture
-    res_atlas::invalidate();
-
-    // Recreate imagepak static textures from buffers
+    platform_renderer_invalidate_target_textures();
     image_recreate_all_textures();
+    painter::forget_grayscale_textures();
+    icon_textures_forget();
 }
-
 
 void platform_renderer_invalidate_target_textures() {
     flush_sprites();
     auto &data = g_renderer_data;
+
+    for (auto& tb : data.texture_buffers) {
+        if (tb.texture) {
+            SDL_DestroyTexture(tb.texture);
+        }
+    }
+    data.texture_buffers.clear();
+
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
         data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture = 0;
@@ -1709,6 +1704,8 @@ void platform_renderer_invalidate_target_textures() {
         data.custom_textures[CUSTOM_IMAGE_GREEN_FOOTPRINT].texture = 0;
         create_blend_texture(CUSTOM_IMAGE_GREEN_FOOTPRINT);
     }
+
+    platform_renderer_create_render_texture(screen_width(), screen_height());
 }
 
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR

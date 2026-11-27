@@ -58,6 +58,8 @@ struct painter {
     void fill_rect(vec2i p, vec2i size, color color);
     void draw_rect(vec2i p, vec2i size, color color);
 
+    static void forget_grayscale_textures();
+
 protected:
     void draw_grayscale(
         SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size,
