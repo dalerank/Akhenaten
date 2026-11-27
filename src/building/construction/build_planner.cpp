@@ -186,7 +186,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     }
 
     if (!measure_only) {
-        construction_warnings_check_house_plots();
+        construction_warnings_t{}.check_house_plots();
         if (needs_road_warning) {
             events::emit(event_city_warning{ "#plots_too_far_from_road" });
         }
@@ -740,9 +740,9 @@ void build_planner::checks_generic_rules(building* b) {
         return;
     }
 
-    construction_warnings_check_site(*b);
+    construction_warnings_t{}.check_site(*b);
     b->dcast()->on_place_checks();
-    construction_warnings_check_road_access(*b);
+    construction_warnings_t{}.check_road_access(*b);
 }
 
 void build_planner::construction_finalize() { // confirm final placement
