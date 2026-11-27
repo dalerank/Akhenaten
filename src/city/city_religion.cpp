@@ -571,7 +571,7 @@ bool city_gods_t::BAST_houses_destruction() {
 }
 
 void city_gods_t::perform_major_blessing(e_god god, bool force_construction) {
-    if (maybe_construction_blessing(god, /*major=*/true, force_construction)) {
+    if (construction_blessing().try_bless(god, true, force_construction)) {
         return;
     }
 
@@ -626,7 +626,7 @@ void city_gods_t::perform_major_blessing(e_god god, bool force_construction) {
 }
 
 void city_gods_t::perform_minor_blessing(e_god god, bool force_construction) {
-    if (maybe_construction_blessing(god, /*major=*/false, force_construction)) {
+    if (construction_blessing().try_bless(god, false, force_construction)) {
         return;
     }
 

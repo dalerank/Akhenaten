@@ -235,7 +235,7 @@ static int __test_construction_blessing_cap(int bid) {
     building* b = building_get(bid);
     building* head = b ? b->main() : nullptr;
     auto* mm = head ? head->dcast_monument() : nullptr;
-    return mm ? construction_blessing_cap_phase(*mm) : -1;
+    return mm ? construction_blessing_t::cap_phase(*mm) : -1;
 }
 ANK_FUNCTION_1(__test_construction_blessing_cap);
 
