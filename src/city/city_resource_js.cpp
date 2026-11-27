@@ -21,6 +21,11 @@ int __city_yards_stored_staffed(int resource) {
 }
 ANK_FUNCTION_1(__city_yards_stored_staffed)
 
+int __city_granary_stored(int resource) {
+    return city_resource().granary_stored((e_resource)resource);
+}
+ANK_FUNCTION_1(__city_granary_stored)
+
 int __city_resource_stored(int resource) {
     return city_resource().stored((e_resource)resource);
 }

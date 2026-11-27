@@ -2,14 +2,14 @@ log_info("akhenaten: mission 2 started")
 
 // Mission 2 — Perwadjyt (Buto), "The Precarious Nile". Rank 0 (Village Elder). Tutorial.
 //
-// Goals:     population 600, housing count 10, housing level 6, plus the tutorial steps: 800 figs in a granary,
+// Goals:     population 600, housing count 10, housing level 6, plus the tutorial steps: 800 figs in the granaries,
 //            200 pottery in storage yards.
 // Start:     funds 3750, rescue loan 3750 (normal difficulty).
 // Gods:      Osiris.
 // Monuments: none.
 // Trade:     none (empire map off).
 // Enemies:   none (the map has a sea invasion point, but nothing is sent).
-// Timeline:  800 figs in one granary — clay pit,
+// Timeline:  800 figs in the granaries — clay pit,
 //            pottery workshop, storage yard; 200 pottery — roadblock, statues, gardens, plaza, low bridge,
 //            ferry; first disease — apothecary and physician.
 //
@@ -119,16 +119,13 @@ function mission2_on_start(ev) {
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
 }
 
-[es=event_granary_resource_added, mission=mission2]
-function mission2_on_filled_granary(ev) {
+[es=event_granary_stocks_calculated, mission=mission2]
+function mission2_on_granary_stocks(ev) {
     if (mission.figs_stored_handled) {
         return
     }
 
-    var granary = city.get_granary(ev.bid)
-    var figs_stored = granary ? granary.amount(RESOURCE_FIGS) : 0
-
-    if (figs_stored < mission.figs_stored) {
+    if (city.granary_stored(RESOURCE_FIGS) < mission.figs_stored) {
         return
     }
 

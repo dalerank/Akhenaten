@@ -441,6 +441,8 @@ void city_resources_t::calculate_available_food() {
         }
         food_types_available[RESOURCE_GRAIN] = 1;
     }
+
+    events::emit(event_granary_stocks_calculated{});
 }
 
 void city_resources_t::calculate_food_stocks_and_supply_wheat() {

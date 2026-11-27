@@ -199,6 +199,7 @@ city {
     set_animals_area : __city_set_animals_area
     yards_stored : __city_yards_stored
     yards_stored_staffed : __city_yards_stored_staffed
+    granary_stored : __city_granary_stored
     building_is_temple : __city_building_is_temple
     building_is_tax_collector : __city_building_is_tax_collector
     count_active_buildings : __city_count_active_buildings

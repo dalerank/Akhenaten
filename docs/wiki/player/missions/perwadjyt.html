@@ -332,7 +332,7 @@
         <span><a href="../buildings/firehouse.html">Firehouse</a>, <a href="../buildings/architect-post.html">Architect's Post</a>, Police Station, Village Palace, Water Supply, Figs Farm, <a href="../buildings/work-camp.html">Work Camp</a>, <a href="../buildings/booth.html">Booth</a>, Juggler's School, Bazaar, Granary, Temple of Osiris, Shrine of Osiris, and Festival Square are all available.</span>
       </div>
       <div class="tutorial-step">
-        <span class="step-tag">800 figs in granary</span>
+        <span class="step-tag">800 figs in the granaries</span>
         <span>When a single <a href="../buildings/granary.html">Granary</a> accumulates 800 units of figs, <a href="../buildings/clay-pit.html"><strong>Clay Pit</strong></a>, <a href="../buildings/pottery-workshop.html"><strong>Pottery Workshop</strong></a>, and <strong>Storage Yard</strong> unlock. Labor Advisor becomes available. The <em>Industry</em> tutorial popup is shown (<code>message_tutorial_industry</code>).</span>
       </div>
       <div class="tutorial-step">
@@ -352,7 +352,7 @@
       <p>Place 10–12 Vacant Lots near the kingdom road. Build a <a href="../buildings/firehouse.html">Firehouse</a> and a Police Station near housing, and a Village Palace somewhere with access to ground water (grassy terrain). Identify the floodplain tiles along the Nile — they appear darker and more fertile — and place Fig Farms directly on them. Each farm needs peasant labor supplied by a <a href="../buildings/work-camp.html">Work Camp</a>; keep Work Camps within walking distance of the farms so peasants do not waste time in transit. Build a <a href="../buildings/granary.html">Granary</a> to receive the harvest and a <a href="../buildings/bazaar.html">Bazaar</a> to distribute figs to housing. Figs are the only food source until the mission ends, so build enough Granaries to buffer an entire year's supply.</p>
 
       <h3>Phase 2 — Industry and pottery</h3>
-      <p>Once a Granary holds 800 figs, Clay Pit, Pottery Workshop, and Storage Yard unlock. Place the Clay Pit close to a water source (the Nile bank), a Pottery Workshop nearby to receive clay, and a Storage Yard to hold finished pottery and surplus clay. One Clay Pit can supply two Pottery Workshops. Workers from the <a href="../buildings/bazaar.html">Bazaar</a> will collect pottery from the Storage Yard and distribute it to houses — <a href="../resources/pottery.html">pottery</a> access is required for housing to evolve to Modest Homestead (level 6). At 200 pottery, decorative buildings (Statues, Gardens, Plazas, Bridges, Ferries) unlock, which can boost desirability enough to push houses to level 6.</p>
+      <p>Once the working granaries hold 800 figs together, Clay Pit, Pottery Workshop, and Storage Yard unlock. Place the Clay Pit close to a water source (the Nile bank), a Pottery Workshop nearby to receive clay, and a Storage Yard to hold finished pottery and surplus clay. One Clay Pit can supply two Pottery Workshops. Workers from the <a href="../buildings/bazaar.html">Bazaar</a> will collect pottery from the Storage Yard and distribute it to houses — <a href="../resources/pottery.html">pottery</a> access is required for housing to evolve to Modest Homestead (level 6). At 200 pottery, decorative buildings (Statues, Gardens, Plazas, Bridges, Ferries) unlock, which can boost desirability enough to push houses to level 6.</p>
 
       <h3>Phase 3 — Religion, entertainment, and growth</h3>
       <p>Temples and Shrines of Osiris are available from the start, but building them early is wise — Osiris's mood affects the Nile flood intensity, which directly impacts farm yields. Build a Festival Square and hold regular festivals for Osiris to maintain goodwill. A Booth (with a nearby Juggler's School) must be within walker range of all ten housing plots. With food, water, pottery, religion, and entertainment all covered, housing will evolve toward level 6 and population will climb toward 600.</p>
@@ -464,29 +464,29 @@
                 <span></span>
               </li>
               <li>
-                <span class="ev-name">event_granary_resource_added</span>
+                <span class="ev-name">event_granary_stocks_calculated</span>
                 <span class="ev-line">line 123</span>
-                <span class="ev-desc">Fires when food is added to any Granary. Once a single Granary holds ≥ 800 figs (configurable via <code>figs_stored</code>), sets <code>figs_stored_handled = true</code>, unlocks Clay Pit / Pottery Workshop / Storage Yard, enables Labor Advisor, and shows <code>message_tutorial_industry</code> (ID 259). Runs only once.</span>
-                <span class="ev-fn">mission2_on_filled_granary</span>
+                <span class="ev-desc">Fires after every granary stock calculation. Once the working granaries together hold ≥ 800 figs (configurable via <code>figs_stored</code>), sets <code>figs_stored_handled = true</code>, unlocks Clay Pit / Pottery Workshop / Storage Yard, enables Labor Advisor, and shows <code>message_tutorial_industry</code> (ID 259). Runs only once.</span>
+                <span class="ev-fn">mission2_on_granary_stocks</span>
                 <span></span>
               </li>
               <li>
                 <span class="ev-name">event_storageyard_stocks_calculated</span>
-                <span class="ev-line">line 148</span>
+                <span class="ev-line">line 145</span>
                 <span class="ev-desc">Fires each time the storage yard stocks are recalculated (once a day). Once the city's total pottery across all Storage Yards reaches ≥ 200 units (configurable via <code>pottery_stored</code>), sets <code>pottery_stored_handled = true</code>, unlocks Road Block / all Statues / Gardens / Plaza / Low Bridge / Ferry, and shows <code>message_tutorial_municipal_structures</code> (ID 256). Runs only once.</span>
                 <span class="ev-fn">mission2_warehouse_pottery_check</span>
                 <span></span>
               </li>
               <li>
                 <span class="ev-name">event_city_disease</span>
-                <span class="ev-line">line 174</span>
+                <span class="ev-line">line 171</span>
                 <span class="ev-desc">Fires on the first epidemic. Sets <code>disease_handled = true</code>, unlocks Apothecary and Physician, enables Health Advisor, and shows <code>message_basic_healthcare</code> (ID 250). Runs only once.</span>
                 <span class="ev-fn">mission2_on_disease</span>
                 <span></span>
               </li>
               <li>
                 <span class="ev-name">event_update_victory_state</span>
-                <span class="ev-line">line 192</span>
+                <span class="ev-line">line 189</span>
                 <span class="ev-desc">Checks both scripted flags (<code>figs_stored_handled</code>, <code>pottery_stored_handled</code>) plus a 3-day cooldown after the last event. All must be true before the core win criteria (population 600, 10 houses at level 6+) can grant victory.</span>
                 <span class="ev-fn">mission2_handle_victory_state</span>
                 <span></span>
@@ -519,7 +519,7 @@
                   <td><code>message_tutorial_industry</code></td>
                   <td>259</td>
                   <td>3268</td>
-                  <td>Shown by <code>mission2_on_filled_granary</code> when granary holds 800 figs; introduces Clay Pit and Pottery Workshop</td>
+                  <td>Shown by <code>mission2_on_granary_stocks</code> when the granaries hold 800 figs; introduces Clay Pit and Pottery Workshop</td>
                 </tr>
                 <tr>
                   <td><code>message_tutorial_municipal_structures</code></td>
