@@ -605,6 +605,7 @@ void akhenaten_launcher_t::run_and_draw() {
 
         {
             NANO_PROFILE_SCOPE("_GameUpdate");
+            render_stats::phase_scope phase(render_stats::phase_update);
             game.update();
         }
 
@@ -660,7 +661,11 @@ void akhenaten_launcher_t::run_and_draw() {
 
         {
             NANO_PROFILE_SCOPE("_Present");
-            game.frame_pre_present();
+            {
+                render_stats::phase_scope phase(render_stats::phase_atlas);
+                game.frame_pre_present();
+            }
+            render_stats::phase_scope phase(render_stats::phase_present);
             platform_renderer_render();
         }
         render_stats::frame_end();

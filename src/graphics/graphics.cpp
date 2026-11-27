@@ -154,6 +154,7 @@ ImageDraw::render_command_vec& ImageDraw::parallel_block_subcommands(int blk) {
 }
 
 void ImageDraw::merge_block_commands_into_global(const render_command_block& block_commands, const render_command_block & block_subcommands) {
+    render_stats::phase_scope phase(render_stats::phase_merge);
     for (size_t b = 0; b < block_commands.size(); b++) {
         const auto& subcmds = block_subcommands[b];
         const size_t sub_offset = g_render_subcommands.size();
@@ -250,6 +251,7 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
     render_stats::recorded_scope recorded;
     {
         OZZY_PROFILER_SECTION(_, "sort");
+        render_stats::phase_scope phase(render_stats::phase_sort);
         auto sort_less = [](const render_command_t& lhs, const render_command_t& rhs) {
             if (lhs.layer != rhs.layer) {
                 return lhs.layer < rhs.layer;
@@ -328,6 +330,7 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
 
     {
         OZZY_PROFILER_SECTION(_, "draw");
+        render_stats::phase_scope phase(render_stats::phase_execute);
         for (const auto &command : g_render_commands) {
             execute_render_command(ctx, command);
         }
@@ -338,6 +341,7 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
 
 void ImageDraw::finalize_render(painter &ctx) {
     render_stats::recorded_scope recorded;
+    render_stats::phase_scope phase(render_stats::phase_execute);
     for (const auto &command : g_render_debug_commands) {
         execute_render_command(ctx, command);
     }

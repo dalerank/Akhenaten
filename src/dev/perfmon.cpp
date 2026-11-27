@@ -126,6 +126,17 @@ void game_perfmon_t::ensure_metrics() {
     widget.RegisterMetric(
       Perfmon::Metric("blend switches / frame", []() { return (double)render_stats::last_frame().blend_switches; },
         drawCountSettings, {10.0, 50.0, 200.0, 1000.0}));
+
+    Perfmon::PerfMetricSettings phaseTimeSettings;
+    phaseTimeSettings.goodValue = 1.0;
+    phaseTimeSettings.badValue = 8.0;
+
+    for (int p = 0; p < render_stats::phase_count; ++p) {
+        const std::string name
+          = std::string("frame part ") + render_stats::phase_name((render_stats::e_phase)p) + " (ms)";
+        widget.RegisterMetric(Perfmon::Metric(name, [p]() { return render_stats::last_frame().phase_ms[p]; },
+          phaseTimeSettings, {0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0}));
+    }
 }
 
 void game_perfmon_t::set_phase_ms(double update_ms, double draw_phase_ms) {
@@ -179,6 +190,21 @@ void ANK_REGISTER_APPLICATION_MODULE(register_perfmon_module) {
           tag.c_str(), get_video_driver().c_str(), res_atlas::render_enabled() ? "on" : "off", frames, avg.draws,
           avg.resident, avg.batches, avg.flushes, avg.texture_switches, avg.blend_switches, avg.frame_ms, avg.draw_ms,
           avg.present_ms, res_atlas::fill_percent());
+        logs::info("%s", line.c_str());
+        out.println(line.c_str());
+
+        const double* ms = avg.phase_ms;
+        double parts_ms = 0.0;
+        for (int p = 0; p < render_stats::phase_count; ++p) {
+            parts_ms += ms[p];
+        }
+        line.printf(
+          "render_stats[%s] parts_ms update=%.2f record=%.2f merge=%.2f sort=%.2f execute=%.2f ui=%.2f device=%.2f "
+          "atlas=%.2f present=%.2f other=%.2f",
+          tag.c_str(), ms[render_stats::phase_update], ms[render_stats::phase_record], ms[render_stats::phase_merge],
+          ms[render_stats::phase_sort], ms[render_stats::phase_execute], ms[render_stats::phase_ui],
+          ms[render_stats::phase_device], ms[render_stats::phase_atlas], ms[render_stats::phase_present],
+          avg.draw_ms + avg.present_ms - parts_ms);
         logs::info("%s", line.c_str());
         out.println(line.c_str());
     });

@@ -326,6 +326,7 @@ static void flush_sprites() {
         apply_clip(data.clip);
         return;
     }
+    render_stats::phase_scope phase(render_stats::phase_device);
     render_stats::note_flush();
     const size_t n = g_sprite_list.size();
     size_t i = 0;

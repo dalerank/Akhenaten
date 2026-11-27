@@ -1,5 +1,7 @@
 #include "graphics/render_stats.h"
 
+#include "core/main_thread.h"
+
 #include <SDL.h>
 
 namespace render_stats {
@@ -23,9 +25,21 @@ namespace render_stats {
         Uint64 g_draw_done = 0;
         Uint64 g_prev_frame_start = 0;
 
+        int g_active_phase = -1;
+        Uint64 g_phase_start = 0;
+
         double ticks_to_ms(Uint64 ticks) {
             const Uint64 freq = SDL_GetPerformanceFrequency();
             return freq ? (double)ticks * 1000.0 / (double)freq : 0.0;
+        }
+
+        void switch_phase(int next) {
+            const Uint64 now = SDL_GetPerformanceCounter();
+            if (g_active_phase >= 0) {
+                g_current.phase_ms[g_active_phase] += ticks_to_ms(now - g_phase_start);
+            }
+            g_active_phase = next;
+            g_phase_start = now;
         }
 
         void note_window_immediate() {
@@ -80,6 +94,33 @@ namespace render_stats {
         g_in_window_draw = false;
     }
 
+    const char* phase_name(e_phase phase) {
+        static const char* names[phase_count] = {
+          "update",
+          "record",
+          "merge",
+          "sort",
+          "execute",
+          "ui",
+          "device",
+          "atlas",
+          "present",
+        };
+        return (phase >= 0 && phase < phase_count) ? names[phase] : "?";
+    }
+
+    phase_scope::phase_scope(e_phase phase) : prev(g_active_phase), active(main_thread::is()) {
+        if (active) {
+            switch_phase(phase);
+        }
+    }
+
+    phase_scope::~phase_scope() {
+        if (active) {
+            switch_phase(prev);
+        }
+    }
+
     recorded_scope::recorded_scope() {
         ++g_recorded_depth;
     }
@@ -117,6 +158,9 @@ namespace render_stats {
         g_sum.frame_ms += g_last.frame_ms;
         g_sum.draw_ms += g_last.draw_ms;
         g_sum.present_ms += g_last.present_ms;
+        for (int p = 0; p < phase_count; ++p) {
+            g_sum.phase_ms[p] += g_last.phase_ms[p];
+        }
         ++g_sum_frames;
 
         g_current = frame_t{};
@@ -142,6 +186,9 @@ namespace render_stats {
             out.frame_ms = g_sum.frame_ms / n;
             out.draw_ms = g_sum.draw_ms / n;
             out.present_ms = g_sum.present_ms / n;
+            for (int p = 0; p < phase_count; ++p) {
+                out.phase_ms[p] = g_sum.phase_ms[p] / n;
+            }
         }
         g_sum = frame_t{};
         g_sum_frames = 0;

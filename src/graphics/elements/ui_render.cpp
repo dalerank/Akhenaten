@@ -215,6 +215,7 @@ void move_commands_below(size_t from, size_t below) {
 
 void flush_commands() {
     render_stats::recorded_scope recorded;
+    render_stats::phase_scope phase(render_stats::phase_ui);
     painter ctx = game.painter();
     for (size_t i = 0; i < g_ui_commands.size(); ++i) {
         const size_t queued = g_ui_commands.size();

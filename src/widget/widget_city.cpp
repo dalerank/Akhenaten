@@ -5,6 +5,7 @@
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
+#include "graphics/render_stats.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "grid/property.h"
@@ -1128,6 +1129,7 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
 
 void screen_city_t::draw(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
+    render_stats::phase_scope phase(render_stats::phase_record);
     update_zoom_level(ctx);
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
