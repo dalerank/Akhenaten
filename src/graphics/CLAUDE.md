@@ -25,6 +25,68 @@ Rendering abstraction over SDL2. Owns the painter, image atlas, fonts, and the U
 | `elements/panel.h` | Panel rendering (outer/inner styles) |
 | `elements/imui.h / .cpp` | ImGui integration (debug/overlay UIs only) |
 
+## Frame
+
+`akhenaten_launcher_t::run_and_draw()` (`platform/akhenaten.cpp`), in order:
+
+1. `game.update()` — simulation ticks.
+2. `game.frame_begin()` under `draw_phase::scope` — the window stack draws itself
+   (`graphics/window.cpp`). During this phase the simulation must not change:
+   `draw_phase::check_write` logs `[draw-phase] ... writes the simulation during the draw`
+   (tests 289, 334, 572, 581 check that drawing leaves the saved state unchanged).
+3. `game.handle_input_frame()` — input, planner.
+4. `game.frame_pre_present()` — the residency atlas packs this frame's misses and blits them onto
+   its page. `g_render.renderer()` flushes the queued sprites first, so code that calls SDL itself
+   (the atlas, ImGui) always draws after them.
+5. `platform_renderer_render()` — last sprite flush, filter, render texture copied to the window, present.
+
+### City view (`widget/widget_city.cpp`, `screen_city_t::draw`)
+
+- The visible tile rows are split into blocks, one task per block on `game.mt`. A worker gets a
+  copy of the `painter` whose `command_buffer` / `subcommand_buffer` point at its block
+  (`ImageDraw::parallel_block_commands(blk)`), and writes `render_command_t` records — it draws nothing.
+- `ImageDraw::merge_block_commands_into_global` appends the blocks in row order, renumbers `id`
+  and rebases the subcommand ranges.
+- `ImageDraw::apply_render_commands` sorts by (layer, sort y, sort x descending, id) — above 256 records
+  the blocks are sorted in parallel and merged — then executes every record through `painter` on the
+  main thread and clears the list.
+- Two such passes: flat (ground, flat figures/ornaments, then terrain height) and height
+  (buildings, animations, figures). Then single-threaded passes push records the same way:
+  placement preview, post-processing effects, debug. `finalize_render` runs the debug records.
+  The overlay view (`draw_with_overlay`) walks the tiles on the main thread only.
+- Workers must not write anything shared. What a tile draw has to change goes through a queue
+  applied on the main thread between the passes: water animation frames (`g_water_frame_queue` in
+  `widget_city.cpp`), city ambient sounds (`sound_city().view_queue`). A figure's per-frame draw state
+  lives in `figure_draw_state` (`grid/figure`), filled by `map_figure_sort_by_y`; pyramid ramp links
+  are resolved by `pyramid_ramp_prepare_frame_links()` before the height pass.
+
+### Records
+
+`render_command_t` (`graphics.h`, trivially copyable, ~80 bytes): `rtype`, `layer`
+(`layer_ground` sorts before `layer_scene`), `image_id`, `pixel`, an optional `sort_pixel`,
+`mask`, `scale`, `flags`, and `start_subcommand..finish_subcommand` — a range in the subcommand
+buffer drawn right after the parent, in order (`create_subcommand` attaches to the last
+non-ground record). The sort moves whole records.
+
+### painter → device
+
+`painter` resolves the image, swaps the texture for a residency-atlas page rect
+(`res_atlas::resolve`), computes scale and the software clip and hands a `sprite_draw_t` to
+`g_render.draw_sprite`. The device (`platform/renderer.cpp`) queues sprites; `flush_sprites()` merges
+consecutive sprites with the same material and clip into one `SDL_RenderGeometry`. Every primitive,
+texture create/destroy or read-back flushes the queue first.
+
+Window UI is pushed as `ui::cmd_t` and run by `ui::flush_commands()` at the end of the window draw;
+a command pushed while another runs is executed in its place.
+
+### Frame timers
+
+`render_stats::phase_scope` charges main-thread time to one frame part; a nested scope pauses the
+outer one, so the parts never overlap: `update`, `record` (city walk and record, waiting for the
+workers), `merge`, `sort`, `execute` (records through `painter`), `ui`, `device` (sprite flushes),
+`atlas` (`frame_pre_present`), `present`. Console `render_stats <tag>` logs the averages since the
+last call (`render_stats[<tag>] parts_ms ...`, `other` = what no part covers); perfmon shows each part.
+
 ## Rendering Patterns
 
 ### UI Command Accumulation (primary pattern)
@@ -100,6 +162,6 @@ widgets (persistent HUD)
 
 ## Invariants
 
-- No direct SDL calls outside `painter` and `graphics.cpp`
+- No SDL render calls outside `platform/` (see SDL2 Usage)
 - Game UI: custom `ui::cmd_t`; debug overlays: ImGui
 - Texture atlas IDs are stable — never hardcode pixel coordinates
