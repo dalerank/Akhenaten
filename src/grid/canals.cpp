@@ -233,7 +233,7 @@ void map_irrigation_restamp_from_wet_canals() {
 void set_terrain_canal_connections(int grid_offset, int direction, int multi_tile_mask, image_tiles_vec& tiles) {
     int offset = grid_offset + map_grid_direction_delta(direction);
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {
-        building *b = building_at(offset);
+        building* b = city_buildings().at(offset);
         if (b->type == BUILDING_WATER_LIFT) {
             int lift_direction_binary = b->orientation % 2;
             int canal_direction_binary = (direction / 2) % 2;

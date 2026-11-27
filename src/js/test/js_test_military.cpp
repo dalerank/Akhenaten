@@ -232,8 +232,8 @@ static int __test_gatehouse_place_2x2(int type, int x, int y) {
     map_terrain_add(road_a, TERRAIN_ROAD);
     map_terrain_add(road_b, TERRAIN_ROAD);
 
-    building* part_a = building_create(gate_type, road_a, 0);
-    building* part_b = building_create(gate_type, road_b, 0);
+    building* part_a = city_buildings().create(gate_type, road_a, 0);
+    building* part_b = city_buildings().create(gate_type, road_b, 0);
     if (!part_a || !part_b || part_a->id <= 0 || part_b->id <= 0) {
         return 0;
     }
@@ -849,7 +849,7 @@ int __test_player_transport_spawn_for_embark(int soldier_count) {
     }
 
     // Minimal home wharf so figure_action can run LEAVING/ANCHORED.
-    building* wharf_b = building_create(BUILDING_TRANSPORT_WHARF, shore, 0);
+    building* wharf_b = city_buildings().create(BUILDING_TRANSPORT_WHARF, shore, 0);
     if (!wharf_b || !wharf_b->id) {
         logs::info("[test:103] spawn fail: wharf create");
         return 0;

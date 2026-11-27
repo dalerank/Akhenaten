@@ -466,7 +466,7 @@ int building_abu_simbel::preview::construction_place(build_planner& planer, tile
     if (!p0) {
         return 0;
     }
-    building* b = building_create(planer.build_type, end.shifted(p0->dx, p0->dy), 0);
+    building* b = city_buildings().create(planer.build_type, end.shifted(p0->dx, p0->dy), 0);
     game_undo_add_building(b);
     if (!b || b->id <= 0) {
         return 0;
@@ -493,7 +493,7 @@ void building_abu_simbel::on_place_update_tiles(int /*orientation*/, int /*varia
     building *prev = &base;
     for (int i = 1; i < (int)params.parts.size(); ++i) {
         const abu_simbel_part_cfg& def = params.parts[i];
-        building* b = building_create(BUILDING_ABU_SIMBEL, origin.shifted(def.dx, def.dy), 0);
+        building* b = city_buildings().create(BUILDING_ABU_SIMBEL, origin.shifted(def.dx, def.dy), 0);
         game_undo_add_building(b);
         b->size = part_size(i);
         b->fire_proof = params.fire_proof;

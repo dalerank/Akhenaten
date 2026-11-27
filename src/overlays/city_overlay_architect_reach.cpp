@@ -159,7 +159,7 @@ bool city_overlay_architect_reach::draw_custom_footprint(vec2i pixel, tile2i poi
 
     // Reachable road under plaza / roadblock building tiles
     if (source_bid && dist >= 0 && map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        building *b = building_at(grid_offset);
+        building* b = city_buildings().at(grid_offset);
         if (b && (b->type == BUILDING_PLAZA || b->type == BUILDING_ROAD || b->type == BUILDING_ROADBLOCK)) {
             const int img_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY)
                 + reach_image_offset(dist, last_max_tiles);

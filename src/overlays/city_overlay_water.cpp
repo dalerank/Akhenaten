@@ -40,7 +40,7 @@ void city_overlay_water::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx)
         return;
     }
 
-    building *b = building_at(tile);
+    building* b = city_buildings().at(tile);
     if (b->is_valid()) {
         int column_height = get_column_height(b);
         if (column_height != COLUMN_TYPE_NONE) {
@@ -53,7 +53,7 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
     // roads, bushes, dunes, etc. are drawn normally
     if (map_terrain_is(tile, terrain_on_water_overlay())) {
         // (except for roadblocks on roads, draw these as flattened tiles)
-        if (building_at(tile)->type == BUILDING_ROADBLOCK) {
+        if (city_buildings().at(tile)->type == BUILDING_ROADBLOCK) {
             city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
         } else if (map_property_is_draw_tile(tile)) {
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
@@ -66,7 +66,7 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
     }
 
     int terrain = map_terrain_get(tile);
-    building* b = building_at(tile);
+    building* b = city_buildings().at(tile);
     // draw houses, wells and water supplies either fully or flattened
     if ((terrain & TERRAIN_BUILDING) && (b->dcast_house() || show_building(b))) {
         if (map_property_is_draw_tile(tile)) {
@@ -110,7 +110,7 @@ void city_overlay_water::get_tooltip(tooltip_context* c, tile2i tile, xstring &t
     constexpr int water_supply_good_from = 17;
 
     const bool in_well_range = map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE);
-    building* b = building_at(tile);
+    building* b = city_buildings().at(tile);
     auto house = b->dcast_house();
     if (!house) {
         if (in_well_range) {

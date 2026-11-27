@@ -355,13 +355,13 @@ void building_gatehouse::on_place(int orientation, int variant) {
     }
 
     if (!bactile_is_main) {
-        backside = building_create(type(), back_tile.tile, 0);
+        backside = city_buildings().create(type(), back_tile.tile, 0);
         backside->prev_part_building_id = id();
         base.next_part_building_id = backside->id;
         backside->next_part_building_id = 0;
         mainside = &base;
     } else {
-        backside = building_create(type(), back_tile.tile, 0);
+        backside = city_buildings().create(type(), back_tile.tile, 0);
         base.prev_part_building_id = backside->id;
         base.next_part_building_id = 0;
         backside->next_part_building_id = base.id;

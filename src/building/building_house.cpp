@@ -270,7 +270,7 @@ const model_house &building_house::get_model(int level) {
 }
 
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
-    building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
+    building* b = city_buildings().create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
 
     b->distance_from_entry = 0;
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
@@ -492,7 +492,7 @@ static void prepare_for_merge(int building_id, int num_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         int house_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(house_offset, TERRAIN_BUILDING)) {
-            auto house = building_at(house_offset)->dcast_house();
+            auto house = city_buildings().at(house_offset)->dcast_house();
             if (house && house->id() != building_id && house->runtime_data().hsize) {
                 if (house->runtime_data().frog_infest_days > 0) {
                     continue;
@@ -557,7 +557,7 @@ void building_house::merge() {
     for (int i = 0; i < 4; i++) {
         int tile_offset = base.tile.grid_offset() + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-            auto other_house = building_at(tile_offset)->dcast_house();
+            auto other_house = city_buildings().at(tile_offset)->dcast_house();
             if (!other_house) {
                 continue;
             }
@@ -890,7 +890,7 @@ bool building_house::can_expand(int num_tiles) {
         for (int i = 0; i < num_tiles; i++) {
             int tile_offset = base_offset + house_tile_offsets(i);
             if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-                auto other_house = building_at(tile_offset)->dcast_house();
+                auto other_house = city_buildings().at(tile_offset)->dcast_house();
                 if (!other_house) {
                     continue;
                 }
@@ -922,7 +922,7 @@ bool building_house::can_expand(int num_tiles) {
                 continue;
             }
 
-            auto other_house = building_at(tile_offset)->dcast_house();
+            auto other_house = city_buildings().at(tile_offset)->dcast_house();
             if (!other_house) {
                 continue;
             }
@@ -962,7 +962,7 @@ bool building_house::can_expand(int num_tiles) {
                 continue;
             }
 
-            auto other_house = building_at(tile_offset)->dcast_house();
+            auto other_house = city_buildings().at(tile_offset)->dcast_house();
             if (!other_house) {
                 continue;
             }
@@ -1007,7 +1007,7 @@ e_house_progress building_house::check_evolve_desirability() {
 }
 
 static void create_house_tile(e_building_type type, tile2i tile, int image_id, int population, xspan<int> inventory, xspan<int> foods) {
-    auto house = building_create(type, tile, 0)->dcast_house();
+    auto house = city_buildings().create(type, tile, 0)->dcast_house();
 
     auto &housed = house->runtime_data();
     housed.population = population;
@@ -1112,7 +1112,7 @@ void building_house::split(int num_tiles) {
             continue;
         }
 
-        auto other_house = building_at(tile_offset)->dcast_house();
+        auto other_house = city_buildings().at(tile_offset)->dcast_house();
         if (!other_house) {
             continue;
         }

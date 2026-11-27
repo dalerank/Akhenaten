@@ -144,7 +144,8 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
     int global_rotation = placement_rotation();
-    building* ground = building_create(BUILDING_FORT_GROUND, tile().shifted(offsets_x[global_rotation], offsets_y[global_rotation]), 0);
+    building* ground = city_buildings().create(BUILDING_FORT_GROUND,
+      tile().shifted(offsets_x[global_rotation], offsets_y[global_rotation]), 0);
     game_undo_add_building(ground);
     ground->prev_part_building_id = id();
     base.next_part_building_id = ground->id;

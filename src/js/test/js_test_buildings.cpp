@@ -118,13 +118,13 @@ static int __test_building_create(int type, int x, int y) {
     tile2i place = (x < 0 || y < 0) ? tile2i::invalid : tile2i(x, y);
     // Reuse only for unspecified tile; explicit coords create a second instance when needed.
     if (!place.valid()) {
-        if (building* existing = building_first((e_building_type)type)) {
+        if (building* existing = city_buildings().first((e_building_type)type)) {
             return existing->id;
         }
         place.set(g_scenario.map.width / 2, g_scenario.map.height / 2);
     }
 
-    building* b = building_create((e_building_type)type, place, 0);
+    building* b = city_buildings().create((e_building_type)type, place, 0);
     if (!b || b->id <= 0) {
         return 0;
     }
@@ -169,7 +169,7 @@ static int __test_building_release_slot(int bid, int via_delete) {
     }
     if (via_delete) {
         b->state = BUILDING_STATE_DELETED_BY_PLAYER;
-        building_update_state();
+        city_buildings().update_state();
     } else {
         b->dcast()->destroy_by_poof(false);
     }
@@ -632,7 +632,7 @@ static int __test_map_random_at(int x, int y) {
 ANK_FUNCTION_2(__test_map_random_at);
 
 static int __test_burning_ruin_create(int x, int y) {
-    building* b = building_create(BUILDING_BURNING_RUIN, tile2i(x, y), 0);
+    building* b = city_buildings().create(BUILDING_BURNING_RUIN, tile2i(x, y), 0);
     return (b && b->id > 0) ? b->id : 0;
 }
 ANK_FUNCTION_2(__test_burning_ruin_create);
@@ -862,7 +862,7 @@ static pcstr __test_houses_in_area(int x0, int y0, int x1, int y1) {
     out.clear();
     for (int y = y0; y <= y1; ++y) {
         for (int x = x0; x <= x1; ++x) {
-            building* b = building_at(tile2i(x, y));
+            building* b = city_buildings().at(tile2i(x, y));
             auto* house = b ? b->dcast_house() : nullptr;
             if (!house || !b->is_valid() || b->tile != tile2i(x, y)) {
                 continue;

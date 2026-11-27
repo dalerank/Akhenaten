@@ -373,7 +373,7 @@ public:
         city_building_stats().reset();
         city_building_stats().reset_tracked_buildings_counters();
         building_storage_clear_all();
-        building_clear_all();
+        city_buildings().clear_all();
     }
     void push_save_sections() override {
         g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);

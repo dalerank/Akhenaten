@@ -107,7 +107,7 @@ void game_t::update_tick(int simtick) {
 
     static const bool guard_stub_records = g_args.is_integral_tests();
     if (guard_stub_records) {
-        stub_records_guard_check("between ticks");
+        city_buildings().stub_records_guard_check("between ticks");
     }
 
     g_simulation.schedule.run(SIM_PHASE_TICK_BEGIN, simtick);
@@ -121,7 +121,7 @@ void game_t::update_tick(int simtick) {
     g_simulation.schedule.run(SIM_PHASE_TICK_END, simtick);
 
     if (guard_stub_records) {
-        stub_records_guard_check("during tick");
+        city_buildings().stub_records_guard_check("during tick");
         building_index().verify("during tick");
     }
 }

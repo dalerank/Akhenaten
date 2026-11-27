@@ -64,7 +64,7 @@ void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, painter &c
 
     if (!drawn) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
-            building *b = building_at(grid_offset);
+            building* b = city_buildings().at(grid_offset);
             int offset = 2;
 
             if (b && !building_on_routing_overlay(b->type)) {
@@ -78,7 +78,7 @@ void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, painter &c
         }
     }
 
-    building *b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
     if (!drawn) {
         bool road = map_terrain_is(grid_offset, TERRAIN_ROAD);
         bool building_road = b && building_on_routing_overlay(b->type);

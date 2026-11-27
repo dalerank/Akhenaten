@@ -113,7 +113,7 @@ void map_natives_init() {
                 map_building_tiles_remove(0, tile2i(x, y));
                 continue;
             }
-            building* b = building_create(type, tile2i(x, y), 0);
+            building* b = city_buildings().create(type, tile2i(x, y), 0);
             map_building_set(grid_offset, b->id);
             b->state = BUILDING_STATE_VALID;
             switch (type) {
@@ -174,7 +174,7 @@ void map_natives_init_editor(void) {
                 map_building_tiles_remove(0, tile2i(x, y));
                 continue;
             }
-            building* b = building_create(type, tile2i(x, y), 0);
+            building* b = city_buildings().create(type, tile2i(x, y), 0);
             b->state = BUILDING_STATE_VALID;
             map_building_set(grid_offset, b->id);
             if (type == BUILDING_UNUSED_NATIVE_MEETING_89) {

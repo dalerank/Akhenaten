@@ -947,7 +947,7 @@ void building_mausoleum::preview::setup_preview_graphics(build_planner &planer) 
 
 int building_mausoleum::preview::construction_place(build_planner &planer, tile2i /*start*/, tile2i end, int orientation, int variant) const {
     planer.last_created_building = nullptr;
-    building *b = building_create(planer.build_type, origin_from_cursor(end), orientation);
+    building* b = city_buildings().create(planer.build_type, origin_from_cursor(end), orientation);
     game_undo_add_building(b);
     if (b->id <= 0) {
         return 0;
@@ -1079,7 +1079,7 @@ void building_mausoleum::on_place_update_tiles(int /*orientation*/, int variant)
     building *prev = &base;
     for (int i = 1; i < parts_count(); ++i) {
         const vec2i o = part_offset(i, view, view);
-        building *b = building_create(BUILDING_MAUSOLEUM, org.shifted(o.x, o.y), view);
+        building* b = city_buildings().create(BUILDING_MAUSOLEUM, org.shifted(o.x, o.y), view);
         if (!b || b->id <= 0) {
             for (building *p = &base; p;) {
                 building *next = p->has_next() ? p->next() : nullptr;

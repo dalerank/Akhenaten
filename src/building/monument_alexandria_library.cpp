@@ -1146,7 +1146,7 @@ void building_alexandria_library::on_place_update_tiles(int /*orientation*/, int
         const auto &d = part_desc(part_i);
         tile2i origin = tile().shifted(-d0.offset.x, -d0.offset.y);
         tile2i part_tile = origin.shifted(d.offset.x, d.offset.y);
-        building *b = building_create(BUILDING_ALEXANDRIA_LIBRARY, part_tile, 0);
+        building* b = city_buildings().create(BUILDING_ALEXANDRIA_LIBRARY, part_tile, 0);
         if (!b || b->id <= 0) {
             ok = false;
             break;

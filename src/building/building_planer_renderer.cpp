@@ -207,7 +207,7 @@ int building_planer_renderer::construction_place(build_planner &planer, tile2i s
 
     // create building
     planer.last_created_building = nullptr;
-    building *b = building_create(planer.build_type, end, orientation);
+    building* b = city_buildings().create(planer.build_type, end, orientation);
     game_undo_add_building(b);
     if (b->id <= 0) { // building creation failed????
         return 0;

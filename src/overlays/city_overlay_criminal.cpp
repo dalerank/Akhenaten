@@ -23,7 +23,7 @@ static int has_deleted_building(int grid_offset) {
     if (!game_features::gameui_visual_feedback_on_delete)
         return 0;
 
-    building* b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
     b = b->main();
     return b->id && (b->is_deleted || map_property_is_deleted(b->tile));
 }

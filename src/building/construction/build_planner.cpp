@@ -171,7 +171,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
                     map_property_clear_constructing_and_deleted();
                     events::emit(event_city_warning{ "#cannot_build_over_animal_breeding_grounds" });
                 } else {
-                    building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile2i(x, y), 0);
+                    building* b = city_buildings().create(BUILDING_HOUSE_VACANT_LOT, tile2i(x, y), 0);
                     game_undo_add_building(b);
                     if (b->id > 0) {
                         items_placed++;

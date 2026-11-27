@@ -434,7 +434,7 @@ int building_pharos_lighthouse::preview::finalize_check(build_planner& p, tile2i
 int building_pharos_lighthouse::preview::construction_place(build_planner& planer, tile2i /*tile*/, tile2i end,
   int orientation, int variant) const {
     planer.last_created_building = nullptr;
-    building* b = building_create(BUILDING_PHAROS_LIGHTHOUSE, end, orientation);
+    building* b = city_buildings().create(BUILDING_PHAROS_LIGHTHOUSE, end, orientation);
     game_undo_add_building(b);
     if (b->id <= 0) {
         return 0;
@@ -466,7 +466,7 @@ void building_pharos_lighthouse::on_place_update_tiles(int orientation, int /*va
     refresh_tower_tiles();
 
     const tile2i land_tile = land_part_tile(tile());
-    building* land = building_create(BUILDING_PHAROS_LIGHTHOUSE, land_tile, orientation);
+    building* land = city_buildings().create(BUILDING_PHAROS_LIGHTHOUSE, land_tile, orientation);
     if (!land || land->id <= 0) {
         base.next_part_building_id = 0;
         return;

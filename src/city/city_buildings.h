@@ -6,44 +6,80 @@
 #include "core/hvector.h"
 #include "city/building_index.h"
 
-xspan<building> city_buildings();
+#include <array>
+#include <functional>
+#include <vector>
 
-inline building *building_begin() { return building_get(1); }
-inline building *building_end() { return city_buildings().data() + MAX_BUILDINGS; }
+class city_building_registry_t {
+public:
+    building* get(building_id id) {
+        verify_no_crash(id < MAX_BUILDINGS);
+        if (id >= MAX_BUILDINGS) {
+            return &_records[0];
+        }
+        return &_records[id];
+    }
 
-building *building_next(building_id id, e_building_type type);
+    building* begin() { return _records.data(); }
+    building* end() { return _records.data() + MAX_BUILDINGS; }
 
-building_id building_id_first(e_building_type type);
-building_id building_id_closest(e_building_type type, tile2i center, int8_t radius);
+    building* at(int grid_offset);
+    building* at(int x, int y);
+    building* at(tile2i tile);
 
-hvector<building_id, 16> buildings_find_farms_in_radius(tile2i center, int radius);
-hvector<building_id, 16> buildings_find_monuments_in_radius(tile2i center, int radius);
-hvector<building_id, 64> buildings_find_manageable_industry_in_radius(tile2i tile, int size, int radius);
-bool building_is_manageable_industry(const building &b);
+    building* exists_at(int grid_offset);
+    building* exists_at(tile2i tile);
 
-building *building_first(e_building_type type);
+    building* create(e_building_type type, tile2i tile, int orientation);
+    building* first(e_building_type type);
+    building* next(building_id id, e_building_type type);
 
-building *building_create(e_building_type type, tile2i tile, int orientation);
+    building_id id_first(e_building_type type);
+    building_id id_closest(e_building_type type, tile2i center, int8_t radius);
 
-building *building_at(int grid_offset);
-building *building_at(int x, int y);
-building *building_at(tile2i tile);
+    hvector<building_id, 16> find_farms_in_radius(tile2i center, int radius);
+    hvector<building_id, 16> find_monuments_in_radius(tile2i center, int radius);
+    hvector<building_id, 64> find_manageable_industry_in_radius(tile2i tile, int size, int radius);
 
-building *building_exists_at(int grid_offset);
-building *building_exists_at(tile2i point);
+    building_id closest_route(
+      building& home, std::function<bool(building&)> pred,
+      std::function<int(building&)> fweight = [](auto&) { return 0; });
 
-void building_clear_all();
+    void clear_all();
+    void update_state();
 
-// Integral tests only: record 0 of buildings and figures is the shared fallback for invalid ids and is
-// saved, so nothing may write to it except the OG scratch use (see stub_records_guard_check).
-void stub_records_guard_reset();
-void stub_records_guard_check(pcstr phase);
-void building_update_state();
-building_id building_closest_route(building &home, std::function<bool(building &)> pred, std::function<int (building &)> fweight = [] (auto &) { return 0; });
+    // Integral tests only: record 0 of buildings and figures is the shared fallback for invalid ids and is
+    // saved, so nothing may write to it except the OG scratch use (see stub_records_guard_check).
+    void stub_records_guard_reset();
+    void stub_records_guard_check(pcstr phase);
+
+private:
+    void delete_UNSAFE(building* b);
+
+    struct stub_records_guard_t {
+        bool armed = false;
+        std::vector<uint8_t> building0;
+        std::vector<uint8_t> figure0;
+    };
+
+    std::array<building, MAX_BUILDINGS> _records;
+    stub_records_guard_t _stub_guard;
+};
+
+city_building_registry_t& city_buildings();
+
+inline building* building_begin() {
+    return building_get(1);
+}
+inline building* building_end() {
+    return city_buildings().end();
+}
+
+bool building_is_manageable_industry(const building& b);
 
 template<typename T>
 T* building_at_ex(tile2i tile) {
-    building *b = building_at(tile);
+    building* b = city_buildings().at(tile);
     return smart_cast<T>(b);
 }
 
@@ -115,7 +151,7 @@ inline B *building_first_ex(T pred) {
 }
 
 inline building* building_first_of_type(e_building_type type) {
-    return building_next(1, type);
+    return city_buildings().next(1, type);
 }
 
 template <typename T>

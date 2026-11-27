@@ -77,7 +77,7 @@ int figure_rioter::collapse_building() {
         if (!map_building_at(grid_offset))
             continue;
 
-        building *b = building_at(grid_offset);
+        building* b = city_buildings().at(grid_offset);
         switch (b->type) {
         case BUILDING_STORAGE_ROOM:
         case BUILDING_STORAGE_YARD:

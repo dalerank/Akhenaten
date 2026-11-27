@@ -66,7 +66,7 @@ void building_conservatory::update_month() {
 building_id building_conservatory::find_square_in_city() {
     // First check for festival square
     if (city_building_stats().festival_square.grid_offset() > 0) {
-        building* square = building_at(city_building_stats().festival_square);
+        building* square = city_buildings().at(city_building_stats().festival_square);
         if (square && square->is_valid() && square->type == BUILDING_FESTIVAL_SQUARE) {
             return square->id;
         }

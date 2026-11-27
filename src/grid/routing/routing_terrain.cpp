@@ -57,7 +57,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_config) {
 }
 
 static int get_land_type_citizen_building(int grid_offset) {
-    auto base = building_at(grid_offset);
+    auto base = city_buildings().at(grid_offset);
     auto b = base->dcast();
     int land_result;
     if (b->get_route_citizen_land_type(grid_offset, land_result)) {
@@ -107,14 +107,14 @@ static int get_land_type_citizen_canal(int grid_offset) {
 }
 
 int map_routing_land_penalty_amphibia(int grid_offset) {
-    building* b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
     return routing_amphibia_buildings[b->type].penalty;
 }
 
 // OG noncitizen_building_value (routing_terrain.c:176): enemies treat any building as one to break through,
 // except forts, fort ground, the ferry and the monuments/native buildings that block them outright.
 static int get_land_type_noncitizen(int grid_offset) {
-    building *b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
     switch (b->type) {
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_ARCHERS:

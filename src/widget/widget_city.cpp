@@ -300,7 +300,7 @@ void screen_city_t::draw_building_road_access_marker(painter &ctx) {
         return;
     }
 
-    building *b = building_at(current_tile);
+    building* b = city_buildings().at(current_tile);
     if (!b || !b->is_valid()) {
         return;
     }
@@ -350,7 +350,7 @@ void screen_city_t::draw_recorded_delivery_paths(painter &ctx) {
             }
         }
     } else if (current_tile.valid()) {
-        building *b = building_at(current_tile);
+        building* b = city_buildings().at(current_tile);
         if (b && b->is_valid()) {
             src = b->main();
         }
@@ -1020,7 +1020,7 @@ void screen_city_t::draw_ornaments_and_animations_height(vec2i point, tile2i til
     }
 
 
-    building *b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
     if (b->type == 0 || b->state == BUILDING_STATE_UNUSED) {
         return;
     }
@@ -1058,7 +1058,7 @@ void screen_city_t::draw_ornaments_overlay(vec2i pixel, tile2i point, painter &c
     int b_id = map_building_at(grid_offset);
 
     if (b_id) {
-        const building *b = building_at(grid_offset);
+        const building* b = city_buildings().at(grid_offset);
         if (g_city_overlay.get()->show_building(b)) {
             color save = force_mask;
             force_mask = g_city_overlay.get()->color_mask_building_def(b);
@@ -1915,7 +1915,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
             const bool ctrl = (SDL_GetModState() & KMOD_CTRL) != 0;
             if (ctrl && city_flat_view_active() && !g_city_planner.build_type
                 && input_coords_in_city(m->x, m->y) && current_tile.valid()) {
-                building *b = building_at(current_tile);
+                building* b = city_buildings().at(current_tile);
                 if (b && city_flat_building_alive(*b)) {
                     building *main_b = b->main();
                     if (main_b && city_flat_building_alive(*main_b)) {

@@ -70,7 +70,7 @@ static void draw_hippodrome_ornaments(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int image_id = map_image_at(grid_offset);
     const image_t* img = image_get(image_id);
-    building* b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
     if (img->animation.num_sprites && map_property_is_draw_tile(grid_offset) && b->type == BUILDING_SENET_HOUSE) {
         ctx.img_generic(image_id + 1, pixel + img->animation.sprite_offset + vec2i{ 0, -img->height + 90 }, drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
@@ -84,7 +84,7 @@ void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
         return;
     }
 
-    building* b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
 
     if (b->type == 0 || b->state == BUILDING_STATE_UNUSED) {
         return;

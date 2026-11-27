@@ -591,7 +591,7 @@ void building_sphinx::on_place_update_tiles(int orientation, int /*variant*/) {
 
     building* prev = &base;
     for (int p = 1; p < PARTS; ++p) {
-        building* b = building_create(BUILDING_SPHINX, part_origin(tile(), p), 0);
+        building* b = city_buildings().create(BUILDING_SPHINX, part_origin(tile(), p), 0);
         game_undo_add_building(b);
         if (auto* sp = b->dcast_sphinx()) {
             sp->runtime_data().variant = (uint8_t)p;

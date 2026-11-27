@@ -688,7 +688,7 @@ void building::destroy_on_fire_impl(bool plagued) {
         }
 
         // FIXME: possible can't render image & fire animation
-        building *ruin = building_create(BUILDING_BURNING_RUIN, tile, 0);
+        building* ruin = city_buildings().create(BUILDING_BURNING_RUIN, tile, 0);
         ruin->has_plague = plagued;
     });
 

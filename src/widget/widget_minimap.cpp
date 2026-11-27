@@ -260,7 +260,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
     int terrain = map_terrain_get(grid_offset);
     // exception for fort ground: display as empty land
     if (terrain & TERRAIN_BUILDING) {
-        if (building_at(grid_offset)->type == BUILDING_FORT_GROUND) {
+        if (city_buildings().at(grid_offset)->type == BUILDING_FORT_GROUND) {
             terrain = 0;
         }
     }
@@ -268,7 +268,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
     if (terrain & TERRAIN_BUILDING) {
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
-            building* b = building_at(grid_offset);
+            building* b = city_buildings().at(grid_offset);
             //if (terrain & TERRAIN_ROAD) {
             //    if (building_is_entertainment(b->type)) {
             //        image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal

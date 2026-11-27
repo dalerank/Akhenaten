@@ -1391,7 +1391,7 @@ void building_sun_temple::on_place_update_tiles(int /*orientation*/, int /*varia
         // Origin is main tile - d0 offset.
         tile2i origin = tile().shifted(-d0.offset.x, -d0.offset.y);
         tile2i part_tile = origin.shifted(d.offset.x, d.offset.y);
-        building *b = building_create(BUILDING_SUN_TEMPLE, part_tile, 0);
+        building* b = city_buildings().create(BUILDING_SUN_TEMPLE, part_tile, 0);
         if (!b || b->id <= 0) {
             ok = false;
             break;

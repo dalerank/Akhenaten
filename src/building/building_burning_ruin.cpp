@@ -28,8 +28,8 @@ tile2i building_burning_ruin::can_be_accessed() {
         int grid_offset = base_offset + tile_delta;
 
         if (road_tile_valid_access(grid_offset)
-            || (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
-            && building_at(grid_offset)->fire_duration <= 0)) {
+            || (city_buildings().at(grid_offset)->type == BUILDING_BURNING_RUIN
+                && city_buildings().at(grid_offset)->fire_duration <= 0)) {
             return tile2i(grid_offset);
         }
     }

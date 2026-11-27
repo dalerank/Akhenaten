@@ -28,25 +28,22 @@
 #include "grid/grid_area.h"
 #include "city/city_figures.h"
 
-building g_all_buildings[MAX_BUILDINGS];
-xspan<building> g_city_buildings = make_span(g_all_buildings);
-
-building *building_get(building_id id) {
-    verify_no_crash(id < MAX_BUILDINGS);
-    if (id >= MAX_BUILDINGS) {
-        return &g_all_buildings[0];
-    }
-    return &g_all_buildings[id];
+namespace {
+    city_building_registry_t g_city_building_registry;
 }
 
-xspan<building> city_buildings() {
-    return g_city_buildings;
+city_building_registry_t& city_buildings() {
+    return g_city_building_registry;
 }
 
-building *building_next(building_id bid, e_building_type type) {
+building* building_get(building_id id) {
+    return g_city_building_registry.get(id);
+}
+
+building* city_building_registry_t::next(building_id bid, e_building_type type) {
     building_id id = bid > 0 ? bid - 1 : 0;
     while ((id = building_index().next_after(type, id)) != 0) {
-        building* b = building_get(id);
+        building* b = get(id);
         if (b->state == BUILDING_STATE_VALID && b->type == type) {
             return b;
         }
@@ -54,19 +51,19 @@ building *building_next(building_id bid, e_building_type type) {
     return nullptr;
 }
 
-building_id building_id_first(e_building_type type) {
-    building* b = building_next(1, type);
+building_id city_building_registry_t::id_first(e_building_type type) {
+    building* b = next(1, type);
     return b ? b->id : 0;
 }
 
-building_id building_id_closest(e_building_type type, tile2i center, int8_t radius) {
+building_id city_building_registry_t::id_closest(e_building_type type, tile2i center, int8_t radius) {
     grid_area area = map_grid_get_area(center, 1, radius);
     building_id result = 0;
     float dist = 100.f;
     map_grid_area_foreach(area, [&] (tile2i t) {
         building_id bid = map_building_at(t);
         int cur_dist = t.dist(center);
-        if (bid && building_get(bid)->is_valid() && cur_dist < dist) {
+        if (bid && get(bid)->is_valid() && cur_dist < dist) {
             dist = cur_dist;
             result = bid;
         }
@@ -75,7 +72,7 @@ building_id building_id_closest(e_building_type type, tile2i center, int8_t radi
     return result;
 }
 
-hvector<building_id, 16> buildings_find_farms_in_radius(tile2i center, int radius) {
+hvector<building_id, 16> city_building_registry_t::find_farms_in_radius(tile2i center, int radius) {
     hvector<building_id, 16> result;
     const float max_dist_sq = (float)(radius * radius);
     buildings_valid_farms_do([&] (building &b) {
@@ -86,10 +83,10 @@ hvector<building_id, 16> buildings_find_farms_in_radius(tile2i center, int radiu
     return result;
 }
 
-hvector<building_id, 16> buildings_find_monuments_in_radius(tile2i center, int radius) {
+hvector<building_id, 16> city_building_registry_t::find_monuments_in_radius(tile2i center, int radius) {
     hvector<building_id, 16> result;
     const float max_dist_sq = (float)(radius * radius);
-    for (auto &b : city_buildings()) {
+    for (auto& b : *this) {
         if (!b.is_valid() || !b.is_monument()) {
             continue;
         }
@@ -128,7 +125,8 @@ bool building_is_manageable_industry(const building &b) {
     return true;
 }
 
-hvector<building_id, 64> buildings_find_manageable_industry_in_radius(tile2i tile, int size, int radius) {
+hvector<building_id, 64> city_building_registry_t::find_manageable_industry_in_radius(tile2i tile, int size,
+  int radius) {
     hvector<building_id, 64> result;
     if (size < 1) {
         size = 1;
@@ -138,7 +136,7 @@ hvector<building_id, 64> buildings_find_manageable_industry_in_radius(tile2i til
     }
 
     const grid_area area = map_grid_get_area(tile, size, radius);
-    for (auto &b : city_buildings()) {
+    for (auto& b : *this) {
         if (!building_is_manageable_industry(b)) {
             continue;
         }
@@ -159,27 +157,27 @@ hvector<building_id, 64> buildings_find_manageable_industry_in_radius(tile2i til
     return result;
 }
 
-building *building_first(e_building_type type) {
+building* city_building_registry_t::first(e_building_type type) {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
-        building *b = building_get(i);
+        building* b = get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == type)
             return b;
     }
     return nullptr;
 }
 
-building *building_create(e_building_type type, tile2i tile, int orientation) {
+building* city_building_registry_t::create(e_building_type type, tile2i tile, int orientation) {
     building *b = nullptr;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (g_all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
-            b = &g_all_buildings[i];
+        if (_records[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
+            b = &_records[i];
             break;
         }
     }
 
     if (!b) {
         events::emit(event_city_warning{ "#data_limit_reached" });
-        return &g_all_buildings[0];
+        return &_records[0];
     }
 
     b->reset_slot(b->id);
@@ -198,22 +196,22 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
     return b;
 }
 
-building *building_at(int grid_offset) {
-    return building_get(map_building_at(grid_offset));
+building* city_building_registry_t::at(int grid_offset) {
+    return get(map_building_at(grid_offset));
 }
 
-building *building_at(int x, int y) {
-    return building_get(map_building_at(tile2i(x, y)));
+building* city_building_registry_t::at(int x, int y) {
+    return get(map_building_at(tile2i(x, y)));
 }
 
-building *building_at(tile2i point) {
-    return building_get(map_building_at(point.grid_offset()));
+building* city_building_registry_t::at(tile2i point) {
+    return get(map_building_at(point.grid_offset()));
 }
 
-building *building_exists_at(int grid_offset) {
+building* city_building_registry_t::exists_at(int grid_offset) {
     int b_id = map_building_at(grid_offset);
     if (b_id > 0) {
-        building *b = building_get(b_id);
+        building* b = get(b_id);
         if (b->state > BUILDING_STATE_UNUSED) {
             return b;
         }
@@ -221,10 +219,10 @@ building *building_exists_at(int grid_offset) {
     return nullptr;
 }
 
-building *building_exists_at(tile2i tile) {
+building* city_building_registry_t::exists_at(tile2i tile) {
     int b_id = map_building_at(tile);
     if (b_id > 0) {
-        building *b = building_get(b_id);
+        building* b = get(b_id);
         if (b->state > BUILDING_STATE_UNUSED) {
             return b;
         }
@@ -232,21 +230,22 @@ building *building_exists_at(tile2i tile) {
     return nullptr;
 }
 
-void building_clear_all() {
+void city_building_registry_t::clear_all() {
     stub_records_guard_reset();
     pyramid_engine_clear_all();
     building_index().clear();
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        g_all_buildings[i].reset_slot(i);
+        _records[i].reset_slot(i);
     }
 }
 
-static void building_delete_UNSAFE(building *b) {
+void city_building_registry_t::delete_UNSAFE(building* b) {
     b->clear_related_data();
     b->reset_slot(b->id);
 }
 
-building_id building_closest_route(building &home, std::function<bool(building &)> pred, std::function<int(building &)> fweight) {
+building_id city_building_registry_t::closest_route(building& home, std::function<bool(building&)> pred,
+  std::function<int(building&)> fweight) {
     int min_dist = 10000;
     building *min_building = nullptr;
     tile2i home_tile{ home.tile };
@@ -278,7 +277,7 @@ building_id building_closest_route(building &home, std::function<bool(building &
     return 0;
 }
 
-void building_update_state() {
+void city_building_registry_t::update_state() {
     OZZY_PROFILER_FUNCTION();
     bool lands_recalc = false;
     bool walls_recalc = false;
@@ -288,7 +287,7 @@ void building_update_state() {
     bool buildings_removed = false;
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = &g_all_buildings[i];
+        building* b = &_records[i];
         if (b->state == BUILDING_STATE_CREATED) {
             b->state = BUILDING_STATE_VALID;
         }
@@ -310,7 +309,7 @@ void building_update_state() {
                 map_building_tiles_remove(i, b->tile);
                 roads_recalc = true; // always recalc underlying road tiles
                 lands_recalc = true;
-                building_delete_UNSAFE(b);
+                delete_UNSAFE(b);
                 buildings_removed = true;
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 auto house = b->dcast_house();
@@ -318,10 +317,10 @@ void building_update_state() {
                     city_population().remove_home_removed(house->house_population());
                 }
 
-                building_delete_UNSAFE(b);
+                delete_UNSAFE(b);
                 buildings_removed = true;
             } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
-                building_delete_UNSAFE(b);
+                delete_UNSAFE(b);
                 buildings_removed = true;
             }
         }
@@ -361,7 +360,7 @@ public:
                           if (tick != 40) {
                               return;
                           }
-                          building_update_state();
+                          city_buildings().update_state();
                       }});
     }
 };

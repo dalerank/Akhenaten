@@ -563,7 +563,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_DELIVERING, &warehouse->base, std::min(available, barracks_want), resource };
     };
 
-    building *recruiter = building_first(BUILDING_RECRUITER);
+    building* recruiter = city_buildings().first(BUILDING_RECRUITER);
     const bool chariots_first = recruiter && recruiter->stored_amount(RESOURCE_CHARIOTS) < recruiter->stored_amount(RESOURCE_WEAPONS);
     const e_resource first = chariots_first ? RESOURCE_CHARIOTS : RESOURCE_WEAPONS;
     const e_resource second = chariots_first ? RESOURCE_WEAPONS : RESOURCE_CHARIOTS;
@@ -885,7 +885,7 @@ void building_storage_yard::on_post_load() {
 }
 
 building* building_storage_yard::add_storageyard_space(int x, int y, building* prev) {
-    building* b = building_create(BUILDING_STORAGE_ROOM, tile2i(x, y), 0);
+    building* b = city_buildings().create(BUILDING_STORAGE_ROOM, tile2i(x, y), 0);
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;

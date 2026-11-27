@@ -238,12 +238,12 @@ bool __city_resource_is_mothballed(int resource) {
 ANK_FUNCTION_1(__city_resource_is_mothballed)
 
 hvector<building_id, 16> __city_find_farms(tile2i center, int radius) {
-    return buildings_find_farms_in_radius(center, radius);
+    return city_buildings().find_farms_in_radius(center, radius);
 }
 ANK_FUNCTION_2(__city_find_farms)
 
 hvector<building_id, 16> __city_find_monuments(tile2i center, int radius) {
-    return buildings_find_monuments_in_radius(center, radius);
+    return city_buildings().find_monuments_in_radius(center, radius);
 }
 ANK_FUNCTION_2(__city_find_monuments)
 
@@ -259,7 +259,7 @@ hvector<building_id, 64> __city_find_buildings(int btype, tile2i center, int rad
 ANK_FUNCTION_3(__city_find_buildings)
 
 hvector<building_id, 64> __city_find_manageable_industry(tile2i tile, int size, int radius) {
-    return buildings_find_manageable_industry_in_radius(tile, size, radius);
+    return city_buildings().find_manageable_industry_in_radius(tile, size, radius);
 }
 ANK_FUNCTION_3(__city_find_manageable_industry)
 

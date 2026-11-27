@@ -50,7 +50,7 @@ void building_temple_complex_altar::preview::ghost_preview(build_planner &planer
 }
 
 int building_temple_complex_altar::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {
-    auto complex = building_at(end)->main()->dcast_temple_complex();
+    auto complex = city_buildings().at(end)->main()->dcast_temple_complex();
     if (!complex) {
         return false;
     }
@@ -92,7 +92,7 @@ void building_temple_complex_oracle::preview::ghost_preview(build_planner &plane
 }
 
 int building_temple_complex_oracle::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {
-    auto complex = building_at(end)->main()->dcast_temple_complex();
+    auto complex = city_buildings().at(end)->main()->dcast_temple_complex();
     if (!complex) {
         return false;
     }

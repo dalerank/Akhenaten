@@ -319,7 +319,7 @@ void game_undo_perform() {
 
         tile2i tile(grid_offset);
 
-        building* new_house = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
+        building* new_house = city_buildings().create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
         if (new_house->id > 0) {
             map_building_tiles_add(new_house->id, tile, 1, vacant_lot_image, TERRAIN_BUILDING);
         }

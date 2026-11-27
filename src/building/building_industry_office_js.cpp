@@ -23,7 +23,8 @@ hvector<building_id, 64> __building_industry_office_managed_ids(int bid) {
     if (!office) {
         return empty;
     }
-    return buildings_find_manageable_industry_in_radius(office->tile(), office->size(), office->management_radius());
+    return city_buildings().find_manageable_industry_in_radius(office->tile(), office->size(),
+      office->management_radius());
 }
 ANK_FUNCTION_1(__building_industry_office_managed_ids)
 
@@ -34,7 +35,8 @@ int __building_industry_office_mothball_all(int bid, bool mothball) {
     }
 
     int changed = 0;
-    auto ids = buildings_find_manageable_industry_in_radius(office->tile(), office->size(), office->management_radius());
+    auto ids = city_buildings().find_manageable_industry_in_radius(office->tile(), office->size(),
+      office->management_radius());
     for (building_id id : ids) {
         building *b = building_get(id);
         if (!b) {

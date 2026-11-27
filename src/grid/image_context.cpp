@@ -262,14 +262,14 @@ void map_image_context_set_tiles_road(tile2i tile, image_tiles_vec& tiles) {
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
-            building* b = building_at(offset);
+            building* b = city_buildings().at(offset);
             if ((b->type == BUILDING_MUD_GATEHOUSE || b->type == BUILDING_DECORATIVE_GATEHOUSE) && b->orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
                 tiles[i] = 1;
             }
         } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP)) {
             tiles[i] = 1;
         } else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
-            building* b = building_at(offset);
+            building* b = city_buildings().at(offset);
             //if (b->type == BUILDING_GRANARY) {
             //    tiles[i] = (offset == b->tile.grid_offset() + GRID_OFFSET(1, 0)) ? 1 : 0;
             //    tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(0, 1)) ? 1 : 0;

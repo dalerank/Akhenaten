@@ -293,7 +293,7 @@ void build_planner::update_special_case_orientations_check() {
     const bool temple_oracle = is_flag(PLANNER_RULE_TEMPLE_UPGRADE_ORACLE);
     const int temple_options = (temple_altar ? etc_upgrade_altar : 0) | (temple_oracle ? etc_upgrade_oracle : 0);
     if (temple_altar || temple_oracle) {
-        auto complex = building_at(end)->main()->dcast_temple_complex();
+        auto complex = city_buildings().at(end)->main()->dcast_temple_complex();
         if (!complex) {
             immediate_warning = "#must_have_completed_temple_first";
             can_place = CAN_NOT_PLACE;

@@ -88,7 +88,7 @@ static void destroy_copper_mine() {
         return;
     }
 
-    building* b = building_first(BUILDING_COPPER_MINE);
+    building* b = city_buildings().first(BUILDING_COPPER_MINE);
     if (!b) {
         return;
     }
@@ -102,7 +102,7 @@ static void destroy_clay_pit(void) {
         return;
     }
 
-    building* b = building_first(BUILDING_CLAY_PIT);
+    building* b = city_buildings().first(BUILDING_CLAY_PIT);
     if (!b) {
         return;
     }

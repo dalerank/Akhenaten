@@ -444,7 +444,7 @@ void building_caesareum::preview::setup_preview_graphics(build_planner &planer) 
 int building_caesareum::preview::construction_place(build_planner &planer, tile2i /*start*/, tile2i end,
   int orientation, int variant) const {
     planer.last_created_building = nullptr;
-    building *b = building_create(planer.build_type, origin_from_center(end), orientation);
+    building* b = city_buildings().create(planer.build_type, origin_from_center(end), orientation);
     game_undo_add_building(b);
     if (b->id <= 0) {
         return 0;
@@ -513,7 +513,7 @@ void building_caesareum::create_parts(bool undo) {
     building *prev = &base;
     for (int p = 1; p < PARTS; ++p) {
         const tile2i off = part_offset(p);
-        building *b = building_create(BUILDING_CAESAREUM, tile().shifted(off.x(), off.y()), base.orientation);
+        building* b = city_buildings().create(BUILDING_CAESAREUM, tile().shifted(off.x(), off.y()), base.orientation);
         if (undo) {
             game_undo_add_building(b);
         }

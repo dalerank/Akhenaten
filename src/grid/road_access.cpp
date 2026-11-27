@@ -31,7 +31,7 @@ bool road_tile_valid_access(int grid_offset) {
     }
 
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {// general case -- no buildings over road!
-        e_building_type btype = building_at(grid_offset)->type; // exceptions: vvv
+        e_building_type btype = city_buildings().at(grid_offset)->type; // exceptions: vvv
         if (building_type_any_of(btype, { BUILDING_MUD_GATEHOUSE, BUILDING_DECORATIVE_GATEHOUSE, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE })) {
             return true;
         }
@@ -112,7 +112,7 @@ bool map_has_road_access_nearby(tile2i tile, int distance) {
                 continue;
             }
             if (map_terrain_is(t, TERRAIN_BUILDING)) {
-                const e_building_type type = building_at(t.grid_offset())->type;
+                const e_building_type type = city_buildings().at(t.grid_offset())->type;
                 if (type == BUILDING_ROADBLOCK || type == BUILDING_FERRY) {
                     continue;
                 }
@@ -244,7 +244,7 @@ bool map_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile
                 continue;
             }
             // Don't spawn walkers on roadblocks
-            if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) {
+            if (city_buildings().at(grid_offset)->type == BUILDING_ROADBLOCK) {
                 continue;
             }
 
@@ -511,7 +511,7 @@ static bool is_adjacent_road_tile_for_roaming(int grid_offset, e_permission perm
         return is_road;
     }
 
-    building* b = building_at(grid_offset);
+    building* b = city_buildings().at(grid_offset);
     if (b->type == BUILDING_MUD_GATEHOUSE || b->type == BUILDING_DECORATIVE_GATEHOUSE) {
         return false;
     }
@@ -594,7 +594,7 @@ int map_has_adjacent_granary_road(int grid_offset) {
     tiles[2] = grid_offset + GRID_OFFSET(0, 1);
     tiles[3] = grid_offset + GRID_OFFSET(-1, 0);
     for (int i = 0; i < 4; i++) {
-        if (building_at(tiles[i])->type != BUILDING_GRANARY)
+        if (city_buildings().at(tiles[i])->type != BUILDING_GRANARY)
             continue;
         switch (map_property_multi_tile_xy(tiles[i])) {
         case EDGE_X1Y0:

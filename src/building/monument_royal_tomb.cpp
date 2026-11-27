@@ -676,7 +676,7 @@ void building_royal_tomb::place_parts() {
     building* prev = &base;
     for (int i = 1; i < l.part_count; ++i) {
         const auto& p = l.parts[i];
-        building* b = building_create(type(), origin.shifted(p.dx, p.dy), 0);
+        building* b = city_buildings().create(type(), origin.shifted(p.dx, p.dy), 0);
         if (!b || b->id <= 0) {
             break;
         }
@@ -903,7 +903,7 @@ bool building_royal_tomb::preview::ghost_allow_tile(build_planner&, tile2i) cons
 int building_royal_tomb::preview::construction_place(build_planner& planer, tile2i /*start*/, tile2i end,
   int orientation, int variant) const {
     planer.last_created_building = nullptr;
-    building *b = building_create(planer.build_type, end, orientation);
+    building* b = city_buildings().create(planer.build_type, end, orientation);
     game_undo_add_building(b);
     if (b->id <= 0) {
         return 0;

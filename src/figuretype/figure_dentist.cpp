@@ -78,21 +78,22 @@ building_id figure_dentist::find_noble_house_with_bad_teeth() {
         return 0;
     }
 
-    return building_closest_route(*home_building,
-        [] (building &b) {
-            auto house = b.dcast_house();
-            if (!house || !house->is_nobles() || house->house_population() <= 0) {
-                return false;
-            }
-            return house->runtime_data().nobles_with_bad_teeth > 0;
-        },
-        [] (building &b) {
-            auto house = b.dcast_house();
-            if (!house) {
-                return 0;
-            }
-            return 100 - (house->runtime_data().nobles_with_bad_teeth * 10);
-        });
+    return city_buildings().closest_route(
+      *home_building,
+      [](building& b) {
+          auto house = b.dcast_house();
+          if (!house || !house->is_nobles() || house->house_population() <= 0) {
+              return false;
+          }
+          return house->runtime_data().nobles_with_bad_teeth > 0;
+      },
+      [](building& b) {
+          auto house = b.dcast_house();
+          if (!house) {
+              return 0;
+          }
+          return 100 - (house->runtime_data().nobles_with_bad_teeth * 10);
+      });
 }
 
 void figure_dentist::treat_nobles_in_house(building_house *house) {

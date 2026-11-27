@@ -384,7 +384,7 @@ void building_mastaba::on_place(int orientation, int variant) {
             continue;
         }
 
-        part.b = building_create(part.type, tile().shifted(part.offset), 0);
+        part.b = city_buildings().create(part.type, tile().shifted(part.offset), 0);
         // Part JS configs historically omitted building_size; force 2Ã—2 like the main piece.
         if (part.b->size <= 0) {
             part.b->size = base.size > 0 ? base.size : 2;

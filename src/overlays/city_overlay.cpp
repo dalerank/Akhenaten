@@ -457,7 +457,7 @@ void city_overlay::draw_overlay_building_column(building* b, vec2i pixel, tile2i
 }
 
 void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
-    building* b = building_at(tile);
+    building* b = city_buildings().at(tile);
 
     if (show_building(b)) {
         color color_mask = color_mask_building_def(b);

@@ -132,7 +132,7 @@ static void bind_building_record(io_buffer* iob, building* b, building_id i) {
 
 void buildings_chunk::bind_data(io_buffer* iob) {
     if (iob->is_read_access()) {
-        stub_records_guard_reset();
+        city_buildings().stub_records_guard_reset();
     }
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         bind_building_record(iob, building_get(i), i);
@@ -141,13 +141,6 @@ void buildings_chunk::bind_data(io_buffer* iob) {
 }
 
 namespace {
-    struct stub_records_guard_t {
-        bool armed = false;
-        std::vector<uint8_t> building0;
-        std::vector<uint8_t> figure0;
-    };
-    stub_records_guard_t g_stub_guard;
-
     void bind_building0(io_buffer* iob) {
         bind_building_record(iob, building_get(0), 0);
     }
@@ -213,22 +206,22 @@ namespace {
     }
 } // namespace
 
-void stub_records_guard_reset() {
-    g_stub_guard.armed = false;
+void city_building_registry_t::stub_records_guard_reset() {
+    _stub_guard.armed = false;
 }
 
-void stub_records_guard_check(pcstr phase) {
+void city_building_registry_t::stub_records_guard_check(pcstr phase) {
     auto building0 = serialize_record(bind_building0);
     auto figure0 = serialize_figure0_masked();
-    if (g_stub_guard.armed) {
-        if (building0 != g_stub_guard.building0) {
-            report_change("building 0", phase, g_stub_guard.building0, building0);
+    if (_stub_guard.armed) {
+        if (building0 != _stub_guard.building0) {
+            report_change("building 0", phase, _stub_guard.building0, building0);
         }
-        if (figure0 != g_stub_guard.figure0) {
-            report_change("figure 0", phase, g_stub_guard.figure0, figure0);
+        if (figure0 != _stub_guard.figure0) {
+            report_change("figure 0", phase, _stub_guard.figure0, figure0);
         }
     }
-    g_stub_guard.building0 = std::move(building0);
-    g_stub_guard.figure0 = std::move(figure0);
-    g_stub_guard.armed = true;
+    _stub_guard.building0 = std::move(building0);
+    _stub_guard.figure0 = std::move(figure0);
+    _stub_guard.armed = true;
 }

@@ -49,7 +49,7 @@ namespace {
     }
 
     building_ferry* ferry_landing_at(tile2i tile) {
-        building* b = building_at(tile);
+        building* b = city_buildings().at(tile);
         building_ferry* ferry = ferry_of(b);
         return (ferry && b->tile == tile) ? ferry : nullptr;
     }

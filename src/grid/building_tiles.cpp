@@ -298,7 +298,7 @@ void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
             if (map_building_at(grid_offset) != building_id)
                 continue;
 
-            if (building_id && building_at(grid_offset)->type != BUILDING_BURNING_RUIN) {
+            if (building_id && city_buildings().at(grid_offset)->type != BUILDING_BURNING_RUIN) {
                 map_set_rubble_building_type(grid_offset, b->type);
             } else if (!building_id && map_terrain_get(grid_offset) & TERRAIN_WALL) {
                 const e_building_type wall_type = wall_building_type_from_material(map_wall_material_at(grid_offset));

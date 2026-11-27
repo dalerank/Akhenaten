@@ -288,7 +288,7 @@ e_building_type annex_parent_complex_type(tile2i annex_tile) {
             if (!map_grid_is_inside(n, 1)) {
                 continue;
             }
-            building *b = building_at(n);
+            building* b = city_buildings().at(n);
             if (!b || b->state == BUILDING_STATE_UNUSED) {
                 continue;
             }
@@ -490,7 +490,7 @@ bool place_next_complex_annex(int complex_id, const pyramid_causeway_probe &prob
             }
         }
 
-        building *b = building_create(bt, t, 0);
+        building* b = city_buildings().create(bt, t, 0);
         if (!b) {
             return false;
         }
@@ -978,7 +978,7 @@ tile2i building_pyramid::center_point() const {
     tile2i tnw = footprint_nw();
     tile2i tend = tnw.shifted(itiles.x, itiles.y);
     tile2i ctile = tnw.add(tend).div(2);
-    building* b = building_at(ctile);
+    building* b = city_buildings().at(ctile);
     // Mid-footprint must be a pyramid part; fall back to NW tile if the map
     // was corrupted / mid-demolition so sleds don't null-deref.
     return b ? b->tile : tnw;
@@ -1485,7 +1485,7 @@ int building_stepped_pyramid::preview_renderer::construction_place(build_planner
     const tile2i place = pyramid_place_nw_from_cursor(end, base_params.init_tiles);
 
     planer.last_created_building = nullptr;
-    building *b = building_create(planer.build_type, place, orientation);
+    building* b = city_buildings().create(planer.build_type, place, orientation);
     game_undo_add_building(b);
     if (!b || b->id <= 0) {
         return 0;
@@ -1949,28 +1949,28 @@ void building_stepped_pyramid::setup_phase_6_basement() {
     int image_basement = current_params().animations["basement"].first_img();
     {
         tile2i left_top = ctile.shifted(-2, 0);
-        auto m = building_at(left_top)->dcast_monument();
+        auto m = city_buildings().at(left_top)->dcast_monument();
         auto &md = m->runtime_data();
         md.alt_image = image_basement + 1;
     }
 
     {
         tile2i right_top = ctile.shifted(0, 0);
-        auto m = building_at(right_top)->dcast_monument();
+        auto m = city_buildings().at(right_top)->dcast_monument();
         auto &md = m->runtime_data();
         md.alt_image = image_basement + 3;
     }
 
     {
         tile2i left_bottom = ctile.shifted(-2, -2);
-        auto m = building_at(left_bottom)->dcast_monument();
+        auto m = city_buildings().at(left_bottom)->dcast_monument();
         auto &md = m->runtime_data();
         md.alt_image = image_basement + 2;
     }
 
     {
         tile2i right_bottom = ctile.shifted(0, -2);
-        auto m = building_at(right_bottom)->dcast_monument();
+        auto m = city_buildings().at(right_bottom)->dcast_monument();
         auto &md = m->runtime_data();
         md.alt_image = image_basement;
     }
@@ -2072,9 +2072,9 @@ int building_stepped_pyramid::get_masonry_image(int orientation, tile2i tile, ti
         return current_params().first_img("base_bricks") + layer;
     }
 
-    tile = building_at(tile)->tile;
-    start = building_at(start)->tile;
-    end = building_at(end)->tile;
+    tile = city_buildings().at(tile)->tile;
+    start = city_buildings().at(start)->tile;
+    end = city_buildings().at(end)->tile;
 
     const bool is_corner = building_type_any_of(type(), {
         BUILDING_SMALL_STEPPED_PYRAMID_CORNER, BUILDING_MEDIUM_STEPPED_PYRAMID_CORNER, BUILDING_LARGE_STEPPED_PYRAMID_CORNER,
@@ -2604,7 +2604,7 @@ void building_stepped_pyramid::change_parts_types_in_layer(tile2i begin, const v
                 part_type = pi_params.filler_type;
             }
 
-            parts.push_back({ part_type, {tile_x, tile_y}, building_at(part_tile) });
+            parts.push_back({part_type, {tile_x, tile_y}, city_buildings().at(part_tile)});
         }
     }
 
@@ -2683,7 +2683,7 @@ void building_stepped_pyramid::on_place(int orientation, int variant) {
 
     // Create all part buildings
     for (auto &part : parts) {
-        part.b = building_create(part.type, tile().shifted(part.offset), 0);
+        part.b = city_buildings().create(part.type, tile().shifted(part.offset), 0);
         game_undo_add_building(part.b);
         tile2i btile_add = tile().shifted(part.offset);
         map_pyramid_tiles_add(part.b->id, btile_add, part.b->size, -1, TERRAIN_BUILDING);

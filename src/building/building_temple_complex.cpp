@@ -385,7 +385,7 @@ void building_temple_complex::on_post_load() {
 }
 
 building *add_temple_complex_element(tile2i tile, e_building_type type, int orientation, building *prev) {
-    building *b = building_create(type, tile, orientation);
+    building* b = city_buildings().create(type, tile, orientation);
     game_undo_add_building(b);
 
     b->size = 3;

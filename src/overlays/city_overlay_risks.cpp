@@ -64,7 +64,7 @@ int city_overlay_problems::get_column_height(const building *b) const {
 }
 
 void city_overlay_problems::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
-    building *b = building_at(tile);
+    building* b = city_buildings().at(tile);
     overlay_problems_prepare_building(b);
     city_overlay::draw_building_top(pixel, tile, ctx);
 }

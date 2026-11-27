@@ -70,7 +70,7 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
             base.movement_ticks_watchdog++;
             int next_direction = calc_general_direction(tile(), base.destination_tile);
             int dir_grid_offset = tile().grid_offset() + map_grid_direction_delta(next_direction);
-            building *next_tile_b = building_at(dir_grid_offset);
+            building* next_tile_b = city_buildings().at(dir_grid_offset);
             building *next_b = destination();
             auto clear_ruin_destination = [&] { if (next_b && next_b->type == BUILDING_BURNING_RUIN) { next_b->set_figure(3, 0); }};
             if (next_tile_b && next_tile_b->type == BUILDING_BURNING_RUIN) {

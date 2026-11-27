@@ -504,7 +504,7 @@ bool carry_monument_already_finished(e_building_type type) {
 }
 
 bool carry_place_finished_monument(e_building_type type, tile2i tile, uint8_t orientation, uint8_t variant) {
-    building *b = building_create(type, tile, orientation);
+    building* b = city_buildings().create(type, tile, orientation);
     if (!b || b->id <= 0) {
         return false;
     }

@@ -162,9 +162,8 @@ void figure::advance_route_tile(int roaming_enabled) {
     const bool is_deepwater_move = (allow_move_type == EMOVE_DEEPWATER);
     const bool is_ferry_route = map_terrain_is(target_grid_offset, TERRAIN_FERRY_ROUTE);
     const bool is_water_tile = map_terrain_is(target_grid_offset, TERRAIN_WATER);
-    building *target_building = map_terrain_is(target_grid_offset, TERRAIN_BUILDING)
-        ? building_at(target_grid_offset)
-        : nullptr;
+    building* target_building
+      = map_terrain_is(target_grid_offset, TERRAIN_BUILDING) ? city_buildings().at(target_grid_offset) : nullptr;
 
     // OG: ferry-using walkers board at the landing instead of walking the water lane.
     if (!is_water_move && !is_deepwater_move && !is_amphibia_move && !roaming_enabled
@@ -228,7 +227,7 @@ void figure::advance_route_tile(int roaming_enabled) {
         if (map_terrain_is(target_grid_offset, TERRAIN_WATER) && map_terrain_is(target_grid_offset, TERRAIN_FLOODPLAIN)) {
             direction = DIR_FIGURE_REROUTE;
         } else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
-            building* b = building_at(target_grid_offset);
+            building* b = city_buildings().at(target_grid_offset);
             if (b->type == BUILDING_MUD_GATEHOUSE || b->type == BUILDING_ROADBLOCK) {
                 // do not allow roaming through gatehouses or roadblocks
                 if (roaming_enabled)
@@ -236,7 +235,7 @@ void figure::advance_route_tile(int roaming_enabled) {
             }
         }
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
-        building *base = building_at(target_grid_offset);
+        building* base = city_buildings().at(target_grid_offset);
         auto b = base->dcast();
         if (b->target_route_tile_blocked(target_grid_offset)) {
             direction = DIR_FIGURE_REROUTE;

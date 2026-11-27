@@ -776,7 +776,7 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
             return tile2i::invalid;
         }
     } else if (map_terrain_is(invasion_tile, TERRAIN_BUILDING | TERRAIN_CANAL | TERRAIN_GATEHOUSE | TERRAIN_WALL)) {
-        building* b = building_at(invasion_tile);
+        building* b = city_buildings().at(invasion_tile);
         if (b && b->id) {
             city_maintenance().destroy_by_enemy(b);
         }

@@ -261,7 +261,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
             map_basin_rebuild_dirty();
         }
         if (!!game_features::gameplay_change_immediate_delete) {
-            building_update_state();
+            city_buildings().update_state();
         }
         if (items_placed > 0) {
             city_building_stats().update_counters();

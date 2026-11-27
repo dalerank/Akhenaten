@@ -202,7 +202,7 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
 }
 
 void figure_clear_all() {
-    stub_records_guard_reset();
+    city_buildings().stub_records_guard_reset();
     if (!g_figure_data.initialized) {
         return;
     }

@@ -26,8 +26,8 @@ void figure_drunkard::figure_action() {
         base.animctx.frame = 0;
         if (base.wait_ticks++ >= 10) {
             tile2i dest(-1, -1);
-            building_id bid = building_closest_route(*home(),
-                [] (building &b) { return b.type == BUILDING_SENET_HOUSE; });
+            building_id bid
+              = city_buildings().closest_route(*home(), [](building& b) { return b.type == BUILDING_SENET_HOUSE; });
 
             if (bid > 0) {
                 base.animctx.offset = 0;
@@ -43,12 +43,12 @@ void figure_drunkard::figure_action() {
         base.animctx.frame = 0;
         if (base.wait_ticks++ >= 10) {
             tile2i dest(-1, -1);
-            building_id bid = building_closest_route(*home(),
-                [] (building &b) { return !!b.dcast_house(); },
-                [] (building &b) {
-                    auto house = b.dcast_house();
-                    return (house ? house->runtime_data().drunkard_active * 100 : 0);
-                });
+            building_id bid = city_buildings().closest_route(
+              *home(), [](building& b) { return !!b.dcast_house(); },
+              [](building& b) {
+                  auto house = b.dcast_house();
+                  return (house ? house->runtime_data().drunkard_active * 100 : 0);
+              });
 
             if (bid > 0) {
                 base.animctx.offset = 0;

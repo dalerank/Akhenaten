@@ -128,7 +128,7 @@ void figure_missile::figure_action() {
                                   (base.cc_coords.y % 15 >= 6 && base.cc_coords.y % 15 <= 9);
 
     if (at_destination_center || should_die) {
-        building* b = building_at(base.destination_tile);
+        building* b = city_buildings().at(base.destination_tile);
         if (b->is_valid()) {
             missile_hit_building(b->id);
             return;

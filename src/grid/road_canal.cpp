@@ -34,7 +34,7 @@ static bool canal_road_neighbor(tile2i tile, int gate_orientation) {
     if (!map_terrain_is(tile, TERRAIN_BUILDING)) {
         return false;
     }
-    building *b = building_at(tile);
+    building* b = city_buildings().at(tile);
     if (b->type == BUILDING_MUD_GATEHOUSE && b->orientation == gate_orientation) {
         return true;
     }
@@ -49,7 +49,7 @@ static bool canal_network_neighbor(tile2i tile, int direction) {
         return true;
     }
     if (map_terrain_is(tile, TERRAIN_BUILDING)) {
-        building *b = building_at(tile);
+        building* b = city_buildings().at(tile);
         if (b->type == BUILDING_WATER_LIFT) {
             const int lift_direction_binary = b->orientation % 2;
             const int canal_direction_binary = (direction / 2) % 2;

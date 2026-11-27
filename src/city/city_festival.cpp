@@ -55,7 +55,7 @@ void city_festival_t::reset() {
 
 void city_festival_t::execute_festival() {
     tile2i square_pos = city_building_get_festival_square_position();
-    building *square = building_at(square_pos);
+    building* square = city_buildings().at(square_pos);
     if (!square->is_valid()) {
         return;
     }
