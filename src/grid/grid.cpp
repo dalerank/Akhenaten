@@ -353,6 +353,39 @@ std::vector<uint8_t> map_grid_king_distance(const std::function<bool(int grid_of
     return d;
 }
 
+void map_grid_king_reach(xspan<int8_t> reach) {
+    const int w = scenario_map_data()->width;
+    const int h = scenario_map_data()->height;
+    auto relax = [&](int8_t& v, int x, int y) {
+        if (x < 0 || x >= w || y < 0 || y >= h) {
+            return;
+        }
+        const int8_t n = reach[MAP_OFFSET(x, y)];
+        if (n > INT8_MIN && n - 1 > v) {
+            v = (int8_t)(n - 1);
+        }
+    };
+
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            int8_t& v = reach[MAP_OFFSET(x, y)];
+            relax(v, x - 1, y);
+            relax(v, x - 1, y - 1);
+            relax(v, x, y - 1);
+            relax(v, x + 1, y - 1);
+        }
+    }
+    for (int y = h - 1; y >= 0; --y) {
+        for (int x = w - 1; x >= 0; --x) {
+            int8_t& v = reach[MAP_OFFSET(x, y)];
+            relax(v, x + 1, y);
+            relax(v, x + 1, y + 1);
+            relax(v, x, y + 1);
+            relax(v, x - 1, y + 1);
+        }
+    }
+}
+
 void map_grid_mark_near(grid_xx& grid, const std::function<bool(int grid_offset)>& is_source, int radius, int value) {
     const int w = scenario_map_data()->width;
     const int h = scenario_map_data()->height;

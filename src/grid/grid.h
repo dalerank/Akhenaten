@@ -3,6 +3,7 @@
 #include "core/buffer.h"
 #include "core/vec2i.h"
 #include "core/svector.h"
+#include "core/custom_span.hpp"
 #include "core/hvector.h"
 #include "grid_area.h"
 #include "point.h"
@@ -109,6 +110,7 @@ void map_grid_bound(int* x, int* y);
 void map_grid_bound_area(tile2i &tmin, tile2i &tmax);
 grid_area map_grid_get_area(tile2i tile, int size, int radius);
 std::vector<uint8_t> map_grid_king_distance(const std::function<bool(int grid_offset)>& is_source, int cap);
+void map_grid_king_reach(xspan<int8_t> reach);
 void map_grid_mark_near(grid_xx& grid, const std::function<bool(int grid_offset)>& is_source, int radius, int value);
 grid_tiles map_grid_get_tiles(building *b, int radius);
 grid_tiles_sm map_grid_get_tiles_sm(building *b, int radius);

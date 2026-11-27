@@ -79,6 +79,7 @@ enum e_sim_step : uint16_t {
     sim_step_plagues,
     sim_step_figures,
     sim_step_scenario,
+    sim_step_fog_of_war,
     sim_step_distant_battle,
     sim_step_invasion_auto_resolve,
     sim_step_sentiment,

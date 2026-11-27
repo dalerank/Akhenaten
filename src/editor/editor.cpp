@@ -1,5 +1,6 @@
 #include "editor/editor.h"
 
+#include "city/city_fog_of_war.h"
 #include "core/vfs/vfs.h"
 
 #define MAX_EDITOR_FILES 9
@@ -26,6 +27,7 @@ int editor_is_present(void) {
 
 void editor_set_active(int active) {
     is_active = active;
+    city_fog_of_war().set_editor(active != 0);
 }
 
 int editor_is_active(void) {

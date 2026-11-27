@@ -165,6 +165,7 @@ game_features {
     @gameplay_enhanced_festival_calendar {}
     @gameplay_enhanced_city_ambient {}
     @gameplay_enhanced_local_cults {}
+    @gameplay_enhanced_fog_of_war {}
     @gameplay_juggler_school_one_walker {}
     @gameplay_chariots_workshop_needs_weapons {}
     @gameplay_sphinx_artisans {}

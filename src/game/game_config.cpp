@@ -272,6 +272,8 @@ namespace game_features {
       "gameplay_enhanced_city_ambient", "#TR_CONFIG_CITY_AMBIENT", false, false};
     game_feature gameplay_enhanced_festival_calendar{ "gameplay_enhanced_festival_calendar", "#TR_CONFIG_FESTIVAL_CALENDAR", false, false };
     game_feature gameplay_enhanced_local_cults{ "gameplay_enhanced_local_cults", "#TR_CONFIG_LOCAL_CULTS", false, false };
+    game_feature gameplay_enhanced_fog_of_war{
+      "gameplay_enhanced_fog_of_war", "#TR_CONFIG_FOG_OF_WAR", false, false, game_feature::not_in_enhanced};
     game_feature graphics_atlas_render{ "graphics_atlas_render", "", true, true };
     game_feature graphics_atlas_max_sprite_width{ "graphics_atlas_max_sprite_width", "", 512.0f, 512.0f };
     game_feature graphics_atlas_page_size{ "graphics_atlas_page_size", "", 8192.0f, 8192.0f };
@@ -355,14 +357,18 @@ namespace game_features {
             if (name && strncmp(name, "gameplay_og_", 12) == 0) {
                 continue;
             }
+            if (!feature->in_enhanced_profile) {
+                continue;
+            }
             feature->set(true);
         }
         logs::info("Applied Enhanced game-features profile (all toggleable features on)");
     }
 } // namespace game_features
 
-game_features::game_feature::game_feature(const xstring &n, const xstring &t, setting_variant def, setting_variant og)
-    : name(n), text(t), defaultv(def), ogv(og) {
+game_features::game_feature::game_feature(const xstring& n, const xstring& t, setting_variant def, setting_variant og,
+  e_profile profile)
+  : name(n), text(t), defaultv(def), ogv(og), in_enhanced_profile(profile == in_enhanced) {
     _features.push_back(this);
     _settings.set(name, defaultv);
 }

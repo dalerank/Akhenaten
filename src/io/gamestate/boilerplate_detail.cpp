@@ -1,5 +1,6 @@
 #include "boilerplate_detail.h"
 #include "city/buildings.h"
+#include "city/city_fog_of_war.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_migration.h"
@@ -117,6 +118,7 @@ void GamestateLoadDetail::post_load() {
     map_image_fix_icorrect_tiles();
     map_bridge_migrate_from_sprite();
     map_wall_material_migrate_from_terrain();
+    city_fog_of_war().on_post_load();
 
     // Enhanced auto-resolve: honor feature after load, drop ghost pending, reopen UI.
     g_invasion_auto_resolve.on_after_load();

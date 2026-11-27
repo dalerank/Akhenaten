@@ -19,8 +19,11 @@ namespace game_features {
         const xstring text;
         const setting_variant defaultv;
         const setting_variant ogv;
+        const bool in_enhanced_profile;
+        enum e_profile : uint8_t { in_enhanced, not_in_enhanced };
 
-        game_feature(const xstring &n, const xstring &t, setting_variant def, setting_variant og);
+        game_feature(const xstring& n, const xstring& t, setting_variant def, setting_variant og,
+          e_profile profile = in_enhanced);
         bool to_bool() const;
         xstring to_string() const;
         float to_float() const;
@@ -248,6 +251,7 @@ namespace game_features {
     extern game_feature gameplay_enhanced_city_ambient;
     extern game_feature gameplay_enhanced_festival_calendar;
     extern game_feature gameplay_enhanced_local_cults;
+    extern game_feature gameplay_enhanced_fog_of_war;
     extern game_feature graphics_atlas_render;
     extern game_feature graphics_atlas_max_sprite_width;
     extern game_feature graphics_atlas_page_size;

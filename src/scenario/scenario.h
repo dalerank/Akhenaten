@@ -118,6 +118,22 @@ struct scenario_win_criteria_time_t {
 };
 ANK_CONFIG_STRUCT(scenario_win_criteria_time_t, enabled, years)
 
+struct scenario_fog_reveal_t {
+    xstring hint;
+    tile2i tile;
+    int32_t radius = 0;
+    tile2i from;
+    tile2i to;
+};
+ANK_CONFIG_STRUCT(scenario_fog_reveal_t, hint, tile, radius, from, to)
+
+struct scenario_fog_of_war_t {
+    bool enabled = true;
+    int32_t initial_reveal_radius = 0;
+    svector<scenario_fog_reveal_t, 16> reveal;
+};
+ANK_CONFIG_STRUCT(scenario_fog_of_war_t, enabled, initial_reveal_radius, reveal)
+
 struct custom_mission_config {
     int mission_id;
     xstring filename;
@@ -274,6 +290,7 @@ struct scenario_data_t {
     hvector<tile2i, MAX_DISEMBARK_POINTS> disembark_points;
     hvector<tile2i, MAX_INVASION_POINTS_LAND> invasion_points_land;
     hvector<tile2i, MAX_INVASION_POINTS_SEA> invasion_points_sea;
+    scenario_fog_of_war_t fog_of_war;
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
 

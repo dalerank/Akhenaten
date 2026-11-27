@@ -62,6 +62,7 @@ var T587_EXPECTED = [
     'SIM_PHASE_TICK_CITY_END:sim_step_plagues',
     'SIM_PHASE_TICK_END:sim_step_figures',
     'SIM_PHASE_TICK_END:sim_step_scenario',
+    'SIM_PHASE_TICK_END:sim_step_fog_of_war',
     'SIM_PHASE_DAY:sim_step_distant_battle',
     'SIM_PHASE_DAY:sim_step_invasion_auto_resolve',
     'SIM_PHASE_DAY:sim_step_sentiment',
