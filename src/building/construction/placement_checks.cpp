@@ -10,6 +10,7 @@
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "city/city_fog_of_war.h"
 #include "city/city_temple_complexes.h"
 #include "game/game_config.h"
 #include "grid/building.h"
@@ -62,6 +63,7 @@ static bool is_tile_occupied_by_active_building(tile2i tile) {
 
 void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
+    int tiles_blocked_by_fog_only = 0;
     const auto& params = building_static_params::get(build_type);
     const auto& preview = placement_rules_of(build_type);
     const bool edge_margin = !draggable() && !params.flags.no_map_edge_margin;
@@ -111,15 +113,19 @@ void build_planner::update_obstructions_check() {
             const bool not_clear
               = inside_map && (map_terrain_is(current_tile, not_clear_mask) || has_existing_building);
             const bool allow_tile = inside_map && preview.ghost_allow_tile(*this, current_tile);
-            if (!inside_map || not_clear || !allow_tile || blocked_by_floodplain_edge) {
+            const bool unexplored = !city_fog_of_war().is_explored(current_tile);
+            const bool blocked = !inside_map || not_clear || !allow_tile || blocked_by_floodplain_edge;
+            if (blocked || unexplored) {
                 tile_blocked_array[row][column] = true;
                 tiles_blocked_total++;
+                tiles_blocked_by_fog_only += blocked ? 0 : 1;
             }
         }
     }
 
     if (tiles_blocked_total > 0) {
-        immediate_warning = "#must_build_on_cleared_land";
+        immediate_warning = tiles_blocked_by_fog_only == tiles_blocked_total ? "#must_build_on_explored_land"
+                                                                             : "#must_build_on_cleared_land";
         can_place = CAN_NOT_BUT_GREEN;
     }
 }

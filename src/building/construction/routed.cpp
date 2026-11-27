@@ -3,6 +3,7 @@
 #include "building/building_dike.h"
 #include "building/building_wall.h"
 #include "building/building_road.h"
+#include "city/city_fog_of_war.h"
 #include "core/calc.h"
 #include "game/undo.h"
 #include "grid/building.h"
@@ -51,6 +52,10 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
             if (!b || b->type != BUILDING_ROADBLOCK) {
                 return { false, 0 };
             }
+        }
+
+        if (!city_fog_of_war().is_explored(tile2i(grid_offset))) {
+            return {false, 0};
         }
 
         switch (type) {

@@ -2572,4 +2572,5 @@ localization_en = [
   { key: "#western_desert", text: "WESTERN DESERT" }
   { key: "#lebanon", text: "LEBANON" }
   { key: "#canaan", text: "CANAAN" }
+  { key:"#must_build_on_explored_land", text:"You can only build on land you have explored" }
 ]

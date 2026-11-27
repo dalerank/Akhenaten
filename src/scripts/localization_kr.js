@@ -161,4 +161,5 @@ localization_en = [
      { key: "#finance_deben_unit_of_account", text: "deben-weight" },
      { key: "#finance_historical_economy_hint", text: "Debens measure value (metal-weight account). Part of labour is paid from granary grain when available." },
      { key: "#finance_wages_paid_in_grain", text: "Wages paid in grain (deben-eq)" },
+     { key:"#must_build_on_explored_land", text:"탐험한 땅에만 건설할 수 있습니다" },
 ]

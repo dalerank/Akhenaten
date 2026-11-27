@@ -2452,4 +2452,5 @@ localization_hu = [
   { key: "#western_desert", text: "NYUGATI-SIVATAG" }
   { key: "#lebanon", text: "LIBANON" }
   { key: "#canaan", text: "KÁNAÁN" }
+  { key:"#must_build_on_explored_land", text:"Csak felderített területre lehet építeni" }
 ]

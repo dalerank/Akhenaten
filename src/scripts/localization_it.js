@@ -1869,4 +1869,5 @@ localization_it = [
   {key:"#western_desert", text:"DESERTO OCCIDENTALE"}
   {key:"#lebanon", text:"LIBANO"}
   {key:"#canaan", text:"CANAAN"}
+  { key:"#must_build_on_explored_land", text:"Puoi costruire solo su terreno esplorato" }
 ]

@@ -58,6 +58,7 @@
 #include "routed.h"
 #include "city/city.h"
 #include "city/city_animals.h"
+#include "city/city_fog_of_war.h"
 #include "js/js_register.h"
 #include "core/profiler.h"
 #include "scenario/scenario.h"
@@ -158,7 +159,8 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
         for (int x = area.tmin_x, endx = area.tmax_x; x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-                || map_terrain_exists_tile_in_radius_with_type(tile2i(x, y), 1, 1, TERRAIN_FLOODPLAIN)) {
+                || map_terrain_exists_tile_in_radius_with_type(tile2i(x, y), 1, 1, TERRAIN_FLOODPLAIN)
+                || !city_fog_of_war().is_explored(tile2i(x, y))) {
                 continue;
             }
 
@@ -830,6 +832,8 @@ void build_planner::construction_finalize() { // confirm final placement
     if (should_recalc_ferry_routes) {
         building_ferry::update_routes();
     }
+
+    city_fog_of_war().recompute(true);
 }
 
 //////////////////////
@@ -927,9 +931,9 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
 
             tile2i check_tile = tile.shifted(sx, sy);
             bool tile_blocked = map_terrain_is(check_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
-                || (map_terrain_count_directly_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
-                || (map_terrain_count_diagonally_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
-                || map_has_figure_at(check_tile);
+                                || (map_terrain_count_directly_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
+                                || (map_terrain_count_diagonally_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
+                                || map_has_figure_at(check_tile) || !city_fog_of_war().is_explored(check_tile);
 
             blocked_tiles.push_back({ check_tile, tile_blocked });
             blocked += (tile_blocked ? 1 : 0);

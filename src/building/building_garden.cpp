@@ -1,6 +1,7 @@
 #include "building_garden.h"
 
 #include "building/building.h"
+#include "city/city_fog_of_war.h"
 #include "grid/terrain.h"
 #include "grid/property.h"
 #include "grid/image.h"
@@ -38,7 +39,7 @@ bool area_is_bare_garden(tile2i tile, int size) {
 } // namespace
 
 bool building_garden::can_place_on_tile(tile2i tile) {
-    return ((uint32_t)map_terrain_get(tile) & og_terrain_not_empty) == 0;
+    return ((uint32_t)map_terrain_get(tile) & og_terrain_not_empty) == 0 && city_fog_of_war().is_explored(tile);
 }
 
 bool __building_garden_can_place_on_tile(tile2i tile) {

@@ -1759,4 +1759,5 @@ localization_de = [
   { key: "#western_desert", text: "WESTLICHE WÜSTE" }
   { key: "#lebanon", text: "LIBANON" }
   { key: "#canaan", text: "KANAAN" }
+  { key:"#must_build_on_explored_land", text:"Bauen ist nur auf erkundetem Land möglich" }
 ]

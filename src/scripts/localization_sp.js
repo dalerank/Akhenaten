@@ -2469,4 +2469,5 @@ localization_sp = [
   {key:"#antelope_hunter_hunting", text:"¡Los antílopes no son rival para nosotros!"},
   {key:"#antelope_hunter_back", text:"Esta noche habrá filetes para todos."},
   {key:"#antelope_hunter_city_is_good", text:"¡Esta ciudad es buena!"},
+  { key:"#must_build_on_explored_land", text:"Solo se puede construir en terreno explorado" },
 ]

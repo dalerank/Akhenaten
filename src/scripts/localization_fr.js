@@ -1914,4 +1914,5 @@ localization_fr = [
   { key:"#western_desert", text:"DESERT OCCIDENTAL" }
   { key:"#lebanon", text:"LIBAN" }
   { key:"#canaan", text:"CANAAN" }
+  { key:"#must_build_on_explored_land", text:"Vous ne pouvez construire que sur un terrain exploré" }
 ]

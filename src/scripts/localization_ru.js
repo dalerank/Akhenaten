@@ -1835,4 +1835,5 @@ localization_ru = [
     { key: "#causeway_needs_water", group:19, id:212 }
     { key: "#one_caesareum_only", group:19, id:243 }
     { key: "#abu_simbel_not_demolishable", text: "Абу-Симбел нельзя снести" }
+    { key:"#must_build_on_explored_land", text:"Строить можно только на разведанной земле" }
 ]
