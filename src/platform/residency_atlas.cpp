@@ -274,19 +274,12 @@ void flush_pending() {
     SDL_SetRenderTarget(r, g_atlas);
     SDL_RenderSetViewport(r, nullptr);
 
-    const bool can_scale_mode = g_render.has_texture_scale_mode();
-
     for (const blit_t &b : g_pending) {
         SDL_BlendMode old_mode = SDL_BLENDMODE_BLEND;
         SDL_GetTextureBlendMode(b.src, &old_mode);
         Uint8 old_r = 255, old_g = 255, old_b = 255, old_a = 255;
         SDL_GetTextureColorMod(b.src, &old_r, &old_g, &old_b);
         SDL_GetTextureAlphaMod(b.src, &old_a);
-        SDL_ScaleMode old_scale = SDL_ScaleModeNearest;
-        if (can_scale_mode) {
-            SDL_GetTextureScaleMode(b.src, &old_scale);
-            SDL_SetTextureScaleMode(b.src, SDL_ScaleModeNearest);
-        }
 
         SDL_SetTextureBlendMode(b.src, SDL_BLENDMODE_NONE);
         SDL_SetTextureColorMod(b.src, 255, 255, 255);
@@ -296,9 +289,6 @@ void flush_pending() {
         SDL_SetTextureBlendMode(b.src, old_mode);
         SDL_SetTextureColorMod(b.src, old_r, old_g, old_b);
         SDL_SetTextureAlphaMod(b.src, old_a);
-        if (can_scale_mode) {
-            SDL_SetTextureScaleMode(b.src, old_scale);
-        }
     }
     g_pending.clear();
 
