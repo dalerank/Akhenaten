@@ -213,10 +213,29 @@ void city_fog_of_war_t::reveal_area(tile2i center, int radius) {
     }
 }
 
+void city_fog_of_war_t::reveal_rect(tile2i from, tile2i to) {
+    auto& grid = city_fog_of_war_chunk::grid;
+    for (int y = std::min(from.y(), to.y()); y <= std::max(from.y(), to.y()); ++y) {
+        for (int x = std::min(from.x(), to.x()); x <= std::max(from.x(), to.x()); ++x) {
+            if (tile_on_map(x, y)) {
+                map_grid_set(grid, MAP_OFFSET(x, y), 1);
+            }
+        }
+    }
+}
+
 void city_fog_of_war_t::initial_reveal() {
-    const int radius = config.initial_reveal_radius;
+    const auto& mission = g_scenario.fog_of_war;
+    const int radius = mission.initial_reveal_radius > 0 ? mission.initial_reveal_radius : config.initial_reveal_radius;
     reveal_area(g_scenario.entry_point, radius);
     reveal_area(g_scenario.river_entry_point, radius);
+    for (const auto& area : mission.reveal) {
+        if (area.radius > 0) {
+            reveal_area(area.tile, area.radius);
+        } else if (area.from.valid() && area.to.valid()) {
+            reveal_rect(area.from, area.to);
+        }
+    }
     recompute(true);
 }
 

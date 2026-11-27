@@ -274,6 +274,7 @@ void scenario_data_t::apply_editor_allowed_buildings() {
 
 void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_mission) {
     bool mission_config_found = false;
+    fog_of_war = {};
     g_config_arch.r_section(missionid, [this, is_new_mission, &mission_config_found](archive arch) {
         mission_config_found = true;
         meta.tax_percentage.value.clear();
@@ -318,6 +319,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
         // The criteria come from the mission script only; start clean so a previous mission's goals do not linger.
         win_criteria = {};
         arch.r("win_criteria", win_criteria);
+        arch.r("fog_of_war", fog_of_war);
         arch.r("sounds", sounds);
 
         // Optional map-point overlays (pak remains if the key is absent).

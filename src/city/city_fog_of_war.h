@@ -96,6 +96,7 @@ private:
     bool any_explored() const;
     void initial_reveal();
     void reveal_area(tile2i center, int radius);
+    void reveal_rect(tile2i from, tile2i to);
     int building_vision(const building& b) const;
     int figure_vision(const figure& f) const;
 };
