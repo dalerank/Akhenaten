@@ -1,6 +1,7 @@
 #include "widget_figure_follow.h"
 
 #include "city/city_figures.h"
+#include "city/city_fog_of_war.h"
 #include "city/city_warnings.h"
 #include "game/game_events.h"
 #include "core/log.h"
@@ -106,7 +107,7 @@ bool figure_follow_t::target_still_valid() const {
     }
 
     figure* f = figure_get(figure_id_);
-    return f && f->is_alive() && f->type == type_;
+    return f && f->is_alive() && f->type == type_ && city_fog_of_war().figure_seen(*f);
 }
 
 void figure_follow_t::stop(bool toast_lost) {

@@ -404,6 +404,10 @@ void ui::image_abs(int image_id, vec2i abs_pos) {
     push(cmd_t::image, Pos{abs_pos}, ImageId{image_id});
 }
 
+void ui::image_abs(int image_id, vec2i abs_pos, color mask) {
+    push(cmd_t::image, Pos{abs_pos}, ImageId{image_id}, Mask{mask});
+}
+
 void ui::panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags) {
     push(!!(flags & UiFlags_PanelInner) ? cmd_t::panel_inner : cmd_t::panel_outer, Pos{pos}, Size{size_blocks});
 }

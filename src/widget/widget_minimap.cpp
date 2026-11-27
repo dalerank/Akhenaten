@@ -14,6 +14,7 @@
 #include "grid/terrain.h"
 #include "input/scroll.h"
 #include "city/city_buildings.h"
+#include "city/city_fog_of_war.h"
 #include "game/game_events.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
@@ -99,6 +100,7 @@ void minimap_window::subscribe_events() {
     });
 
     events::subscribe([](event_advance_day ev) { widget_minimap_invalidate(); });
+    events::subscribe([](event_fog_explored ev) { widget_minimap_invalidate(); });
 }
 
 vec2i minimap_window::get_mouse_relative_pos(const mouse *m, float &xx, float &yy) {
@@ -233,11 +235,13 @@ bool minimap_window::draw_figure(vec2i screen, tile2i point) {
     return true;
 }
 
-void minimap_window::put_image(int image_id, vec2i pos) {
+void minimap_window::put_image(int image_id, vec2i pos, color mask) {
     if (immediate) {
-        game.painter().img_generic(image_id, pos);
-    } else {
+        game.painter().img_generic(image_id, pos, mask);
+    } else if (mask == COLOR_MASK_NONE) {
         ui::image_abs(image_id, pos);
+    } else {
+        ui::image_abs(image_id, pos, mask);
     }
 }
 
@@ -253,7 +257,13 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
         return;
     }
 
-    if (draw_figure(screen, point)) {
+    const e_fog_shade shade = city_fog_of_war().shade(point);
+    if (shade == fog_unexplored) {
+        put_image(image_id_from_group(GROUP_MINIMAP_BLACK), screen);
+        return;
+    }
+
+    if (shade == fog_visible && draw_figure(screen, point)) {
         return;
     }
 
@@ -356,7 +366,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 
-        put_image(image_id, screen);
+        put_image(image_id, screen, shade == fog_fogged ? city_fog_of_war().config.fogged_mask : COLOR_MASK_NONE);
     }
 }
 

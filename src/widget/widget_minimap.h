@@ -2,6 +2,7 @@
 
 #include "core/vec2i.h"
 #include "graphics/animation.h"
+#include "graphics/color.h"
 #include "window/autoconfig_window.h"
 
 constexpr int MINIMAP_X_OFFSET = 8;
@@ -59,7 +60,7 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
     void draw_uncached(vec2i offset);
     void draw_minimap_tile(vec2i screen, tile2i point);
     void draw_viewport_rectangle();
-    void put_image(int image_id, vec2i pos);
+    void put_image(int image_id, vec2i pos, color mask = COLOR_MASK_NONE);
     void clear();
     virtual void draw(UiFlags flags) override;
 };

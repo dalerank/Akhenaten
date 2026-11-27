@@ -283,6 +283,7 @@ namespace ui {
     void fill_rect(vec2i offset, vec2i size, color c);
     void draw_rect(vec2i pos, vec2i size, color c);
     void image_abs(int image_id, vec2i abs_pos);
+    void image_abs(int image_id, vec2i abs_pos, color mask);
     void panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags = UiFlags_None);
     int text_abs(pcstr str, vec2i pos, e_font font, color clr = 0);
     void text_centered_abs(pcstr str, vec2i pos, int box_width, e_font font, color clr = 0);

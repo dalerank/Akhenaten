@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/city.h"
 #include "city/city_figures.h"
+#include "city/city_fog_of_war.h"
 #include "city/city_resource.h"
 #include "overlays/city_overlay.h"
 #include "core/calc.h"
@@ -110,7 +111,7 @@ void object_info::fill_figures_info(tile2i center) {
                                       == forbidden_figure_types.end();
             const bool is_alive = f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE;
             const bool in_radius = center_pos.dist(map_figure_draw_state(f->id).main_pos) < fill_figure_radius();
-            if (is_alive && valid_figure && in_radius) {
+            if (is_alive && valid_figure && in_radius && city_fog_of_war().figure_seen(*f)) {
                 possible_figures.push_back(f);
             }
             figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;

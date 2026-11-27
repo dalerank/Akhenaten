@@ -1250,6 +1250,8 @@ bool screen_city_t::allow_building_info(tile2i tile) {
 
     if (!tile.valid()) {
         allow = false;
+    } else if (!city_fog_of_war().is_explored(tile)) {
+        allow = false;
     }
 
     return allow;
@@ -2056,7 +2058,8 @@ static const figure* get_figure_at_mouse(vec2i mouse_pos) {
         int figure_id = map_figure_id_get(t);
         while (figure_id > 0) {
             figure *f = figure_get(figure_id);
-            if (f && f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
+            if (f && f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE
+                && city_fog_of_war().figure_seen(*f)) {
                 float dist_sq = center_pos.dist_sq(map_figure_draw_state(f->id).main_pos);
                 if (dist_sq < closest_dist_sq) {
                     closest_dist_sq = dist_sq;
@@ -2079,7 +2082,7 @@ void screen_city_t::draw_tooltip(tooltip_context* c) {
         return;
     }
 
-    if (!current_tile.valid()) {
+    if (!current_tile.valid() || !city_fog_of_war().is_explored(current_tile)) {
         return;
     }
 
