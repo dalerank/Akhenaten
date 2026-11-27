@@ -14,8 +14,11 @@ struct fog_tile_scope {
         shade = fog.shade(tile);
         if (shade == fog_fogged) {
             ctx.tile_tint = fog.config.fogged_mask;
-        } else if (shade == fog_visible && fog.edge(tile) > 0) {
-            ctx.tile_tint = fog.config.edge_mask;
+        } else if (shade == fog_visible) {
+            const int edge = fog.edge(tile);
+            if (edge > 0) {
+                ctx.tile_tint = color_lerp(COLOR_MASK_NONE, fog.config.edge_mask, edge, fog.config.soft_edge_tiles);
+            }
         }
     }
     ~fog_tile_scope() { ctx.tile_tint = saved_tint; }

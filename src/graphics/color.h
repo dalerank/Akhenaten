@@ -128,3 +128,16 @@ inline color color_mul(color a, color b) {
     return channel(COLOR_BITSHIFT_ALPHA) | channel(COLOR_BITSHIFT_RED) | channel(COLOR_BITSHIFT_GREEN)
            | channel(COLOR_BITSHIFT_BLUE);
 }
+
+inline color color_lerp(color from, color to, int step, int steps) {
+    if (steps <= 0 || step >= steps) {
+        return to;
+    }
+    auto channel = [=](int shift) -> color {
+        const int a = COLOR_COMPONENT(from, shift);
+        const int b = COLOR_COMPONENT(to, shift);
+        return (color)(a + (b - a) * step / steps) << shift;
+    };
+    return channel(COLOR_BITSHIFT_ALPHA) | channel(COLOR_BITSHIFT_RED) | channel(COLOR_BITSHIFT_GREEN)
+           | channel(COLOR_BITSHIFT_BLUE);
+}

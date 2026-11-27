@@ -2,9 +2,9 @@ log_info("akhenaten: fog of war started")
 
 city_fog_of_war {
     update_every_ticks : 5
-    soft_edge_tiles : 2
+    soft_edge_tiles : 3
     fogged_mask : 0xff606060
-    edge_mask : 0xffa0a0a0
+    edge_mask : 0xff8c8c8c
     initial_reveal_radius : 12
     default_building_radius : 3
 
