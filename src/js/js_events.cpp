@@ -56,7 +56,7 @@ ANK_SCRIPT_EVENT(event_advance_month, year, month, mday, abdday, years_since_sta
 ANK_SCRIPT_EVENT(event_request_cleared, tag_id, resource, fulfilled, was_overdue)
 ANK_SCRIPT_EVENT(event_building_create, bid)
 ANK_SCRIPT_EVENT(event_city_disease, absday)
-ANK_SCRIPT_EVENT(event_warehouse_filled, bid)
+ANK_SCRIPT_EVENT(event_storageyard_stocks_calculated, reserved)
 ANK_SCRIPT_EVENT(event_mission_briefing_show_after_load, scenario_id)
 ANK_SCRIPT_EVENT(event_finance_changed, value)
 ANK_SCRIPT_EVENT(event_show_advisor, advisor)

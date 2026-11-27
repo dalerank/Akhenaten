@@ -486,14 +486,14 @@
                 <span></span>
               </li>
               <li>
-                <span class="ev-name">event_warehouse_filled (step 1)</span>
+                <span class="ev-name">event_storageyard_stocks_calculated (step 1)</span>
                 <span class="ev-line">line 134</span>
-                <span class="ev-desc">Fires when a Storage Yard receives goods. Once the city's total pottery across all Storage Yards reaches ≥ 100 units (configurable via <code>pottery_step1_stored</code>), sets <code>pottery_step1_stored_handled = true</code>, which lifts the population cap via <code>event_migration_update</code>. Runs only once.</span>
+                <span class="ev-desc">Fires each time the storage yard stocks are recalculated (once a day). Once the city's total pottery across all Storage Yards reaches ≥ 100 units (configurable via <code>pottery_step1_stored</code>), sets <code>pottery_step1_stored_handled = true</code>, which lifts the population cap via <code>event_migration_update</code>. Runs only once.</span>
                 <span class="ev-fn">mission2_warehouse_pottery_1_check</span>
                 <span></span>
               </li>
               <li>
-                <span class="ev-name">event_warehouse_filled (step 2)</span>
+                <span class="ev-name">event_storageyard_stocks_calculated (step 2)</span>
                 <span class="ev-line">line 149</span>
                 <span class="ev-desc">After step 1 is complete, watches for total pottery ≥ 200 units (configurable via <code>pottery_step2_stored</code>). Sets <code>pottery_step2_stored_handled = true</code>, unlocks Road Block / all Statues / Gardens / Plaza / Low Bridge / Ferry, and shows <code>message_tutorial_municipal_structures</code> (ID 256). Runs only once.</span>
                 <span class="ev-fn">mission2_warehouse_pottery_2_check</span>

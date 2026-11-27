@@ -329,7 +329,7 @@ function mission4_handle_victory_state(ev) {
 	city.victory.set_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
-[event=event_warehouse_filled, mission=mission4]
+[event=event_storageyard_stocks_calculated, mission=mission4]
 function mission4_handle_papyrus(ev) {
     if (mission.papyrus_made_handled) {
         return
@@ -350,7 +350,7 @@ function mission4_handle_papyrus(ev) {
 	ui.popup_message("message_tutorial_trade_with_other_cities")
 }
 
-[event=event_warehouse_filled, mission=mission4]
+[event=event_storageyard_stocks_calculated, mission=mission4]
 function mission4_handle_bricks(ev) {
     if (mission.bricks_bought_handled) {
         return

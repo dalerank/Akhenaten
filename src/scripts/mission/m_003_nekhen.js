@@ -94,7 +94,7 @@ function mission3_on_start(ev) {
 	city.set_advisor_available(ADVISOR_FINANCIAL, 1)
 }
 
-[event=event_warehouse_filled, mission=mission3]
+[event=event_storageyard_stocks_calculated, mission=mission3]
 function mission3_warehouse_beer_check(ev) {
     if (mission.beer_stored_handled) {
         return

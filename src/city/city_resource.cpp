@@ -312,7 +312,7 @@ void city_resource_calculate_storageyard_stocks() {
 
         auto warehouse = room->yard();
         if (!warehouse || !warehouse->has_road_access()) {
-            return;
+            continue;
         }
 
         room->base.has_road_access = warehouse->has_road_access();
@@ -325,17 +325,7 @@ void city_resource_calculate_storageyard_stocks() {
         }
     }
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        auto warehouse = building_get(i)->dcast_storage_yard();
-        if (!warehouse || !warehouse->is_valid()) {
-            continue;
-        }
-
-        int total_stored = warehouse->total_stored();
-        if (total_stored > 100) {
-            events::emit(event_warehouse_filled{ warehouse->id() });
-        }
-    }
+    events::emit(event_storageyard_stocks_calculated{});
 }
 
 void city_resource_determine_available() {
