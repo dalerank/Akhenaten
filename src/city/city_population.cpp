@@ -50,19 +50,24 @@ void city_population_t::reset() {
 
 int city_population_t::add_to_houses(int num_people) {
     int added = 0;
-    buildings_house_do([&] (building_house *house) {
-        if (house->state() == BUILDING_STATE_VALID && house->distance_from_entry() > 0 && house->house_population() > 0) {
-            int max_people = house->model().max_people;
-            if (house->is_merged()) {
-                max_people *= 4;
-            }
+    int building_id = last_used_house_add;
+    for (int i = 1; i < MAX_BUILDINGS && added < num_people; i++) {
+        if (++building_id >= MAX_BUILDINGS)
+            building_id = 1;
 
-            if (house->house_population() < max_people) {
-                ++added;
-                ++house->runtime_data().population;
-            }
+        auto house = building_get(building_id)->dcast_house();
+        if (!house || house->state() != BUILDING_STATE_VALID || !house->hsize() || house->distance_from_entry() <= 0
+            || house->house_population() <= 0) {
+            continue;
         }
-    });
+
+        last_used_house_add = building_id;
+        const int max_people = house->model().max_people * (house->is_merged() ? 4 : 1);
+        if (house->house_population() < max_people) {
+            ++added;
+            ++house->runtime_data().population;
+        }
+    }
     return added;
 }
 
